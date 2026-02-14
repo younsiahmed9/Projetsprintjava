@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.TransactionsController"
+            style="-fx-background-color: #f0f2f5;">
+
+    <!-- TOP - HEADER -->
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #2c5aa0, #5dade2); -fx-padding: 20;">
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="FinTrack - Transactions" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Label fx:id="welcomeLabel" style="-fx-font-size: 14; -fx-text-fill: white;"/>
+                <Button text="Retour" onAction="#handleBack" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                <Button text="Deconnexion" onAction="#handleDeconnexion" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER - CONTENT -->
+    <center>
+        <VBox spacing="15" style="-fx-padding: 20;">
+            <Label text="Historique des Transactions" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1a3a52;"/>
+            <ScrollPane style="-fx-background-color: transparent;" fitToWidth="true" VBox.vgrow="ALWAYS">
+                <FlowPane fx:id="transactionsContainer" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- BOTTOM - MESSAGE -->
+    <bottom>
+        <HBox style="-fx-background-color: white; -fx-padding: 15 20; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;">
+            <Label fx:id="messageLabel" style="-fx-font-size: 13;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

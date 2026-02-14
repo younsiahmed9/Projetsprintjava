@@ -1,0 +1,124 @@
+/*
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * FINTRACK - COLOR SYSTEM & DESIGN TOKENS
+ * Modern Finance Dashboard Color Palette
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+.root {
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * PRIMARY COLORS - Main Brand Colors (Blue)
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-primary: #2563EB;           /* Primary Blue - Main buttons, links */
+    -fx-primary-dark: #1D4ED8;      /* Primary Dark - Hover states */
+    -fx-primary-light: #3B82F6;     /* Primary Light - Active states */
+    -fx-primary-soft: #DBEAFE;      /* Primary Soft - Light backgrounds */
+    -fx-primary-muted: #93C5FD;     /* Primary Muted - Borders, dividers */
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * SECONDARY COLORS - Success/Money (Green)
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-secondary: #10B981;         /* Secondary Green - Success, income */
+    -fx-secondary-dark: #059669;    /* Secondary Dark - Hover states */
+    -fx-secondary-light: #34D399;   /* Secondary Light - Active states */
+    -fx-secondary-soft: #D1FAE5;    /* Secondary Soft - Light backgrounds */
+    -fx-secondary-muted: #6EE7B7;   /* Secondary Muted - Borders */
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * ACCENT COLORS - Highlights & Warnings (Orange)
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-accent: #F59E0B;            /* Accent Orange - Highlights, alerts */
+    -fx-accent-dark: #D97706;       /* Accent Dark - Hover states */
+    -fx-accent-light: #FBBF24;      /* Accent Light - Active states */
+    -fx-accent-soft: #FEF3C7;       /* Accent Soft - Light backgrounds */
+    -fx-accent-muted: #FCD34D;      /* Accent Muted - Borders */
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * DANGER COLORS - Errors & Expenses (Red)
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-danger: #EF4444;            /* Danger Red - Errors, expenses */
+    -fx-danger-dark: #DC2626;       /* Danger Dark - Hover states */
+    -fx-danger-light: #F87171;      /* Danger Light - Active states */
+    -fx-danger-soft: #FEE2E2;       /* Danger Soft - Light backgrounds */
+    -fx-danger-muted: #FCA5A5;      /* Danger Muted - Borders */
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * NEUTRAL COLORS - Backgrounds & Surfaces
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-background-primary: #F8FAFC;    /* Main background */
+    -fx-background-secondary: #F1F5F9;  /* Secondary background */
+    -fx-surface: #FFFFFF;               /* Card surfaces */
+    -fx-surface-hover: #F8FAFC;         /* Hover surface */
+    -fx-border-light: #E2E8F0;          /* Light borders */
+    -fx-border-medium: #CBD5E1;         /* Medium borders */
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * TEXT COLORS - Typography
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-text-primary: #1E293B;      /* Primary text - Headings */
+    -fx-text-secondary: #475569;    /* Secondary text - Body */
+    -fx-text-muted: #94A3B8;        /* Muted text - Hints, captions */
+    -fx-text-inverse: #FFFFFF;      /* Inverse text - On dark backgrounds */
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * CARD TYPE COLORS - Virtual Cards
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    /* GOLD Card */
+    -fx-card-gold-start: #F4D03F;
+    -fx-card-gold-end: #F9E79F;
+    -fx-card-gold-border: #D4AF37;
+    -fx-card-gold-text: #5D4E37;
+
+    /* SILVER Card */
+    -fx-card-silver-start: #E2E8F0;
+    -fx-card-silver-end: #F8FAFC;
+    -fx-card-silver-border: #94A3B8;
+    -fx-card-silver-text: #475569;
+
+    /* NORMAL Card */
+    -fx-card-normal-start: #2563EB;
+    -fx-card-normal-end: #3B82F6;
+    -fx-card-normal-border: #1D4ED8;
+    -fx-card-normal-text: #FFFFFF;
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * SHADOWS - Drop Shadow Effects
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 4, 0, 0, 1);
+    -fx-shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
+    -fx-shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 16, 0, 0, 4);
+    -fx-shadow-xl: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 24, 0, 0, 6);
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * SPACING - Consistent Padding & Margins
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-spacing-xs: 4;
+    -fx-spacing-sm: 8;
+    -fx-spacing-md: 16;
+    -fx-spacing-lg: 24;
+    -fx-spacing-xl: 32;
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * BORDER RADIUS - Rounded Corners
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-radius-sm: 6;
+    -fx-radius-md: 10;
+    -fx-radius-lg: 16;
+    -fx-radius-xl: 24;
+    -fx-radius-full: 9999;
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+     * TYPOGRAPHY - Font Sizes
+     * ═══════════════════════════════════════════════════════════════════════════ */
+    -fx-font-xs: 10;
+    -fx-font-sm: 12;
+    -fx-font-md: 14;
+    -fx-font-lg: 16;
+    -fx-font-xl: 20;
+    -fx-font-2xl: 24;
+    -fx-font-3xl: 32;
+
+    /* Base font family */
+    -fx-font-family: "Segoe UI", "SF Pro Display", "Helvetica Neue", sans-serif;
+}
+

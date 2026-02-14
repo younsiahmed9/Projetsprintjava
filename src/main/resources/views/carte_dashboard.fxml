@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- FinTrack - Cartes d'un portefeuille -->
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.CarteController"
+            styleClass="app-shell">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <Label text="FinTrack" styleClass="topbar-title"/>
+            <Label text="|" styleClass="topbar-subtitle"/>
+            <Label fx:id="headerTitleLabel" text="Cartes" styleClass="topbar-subtitle"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="headerUserLabel" text="Utilisateur" styleClass="topbar-user"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="8" prefWidth="240" styleClass="sidebar">
+            <VBox spacing="2" styleClass="sidebar-header">
+                <Label text="Modules" styleClass="sidebar-brand"/>
+                <Label text="Navigation" styleClass="sidebar-subtitle"/>
+            </VBox>
+
+            <Button text="← Retour Portefeuilles" onAction="#goBackPortefeuilles" maxWidth="Infinity">
+                <styleClass>
+                    <String fx:value="sidebar-btn"/>
+                    <String fx:value="sidebar-btn-active"/>
+                </styleClass>
+            </Button>
+            <Button text="Transfert" onAction="#handleTransfert" maxWidth="Infinity" styleClass="sidebar-btn"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <Button text="Déconnexion" onAction="#handleDeconnexion" maxWidth="Infinity">
+                <styleClass>
+                    <String fx:value="sidebar-btn"/>
+                    <String fx:value="sidebar-btn-danger"/>
+                </styleClass>
+            </Button>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="16" styleClass="content">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label fx:id="pageTitleLabel" text="Cartes du portefeuille" styleClass="section-title"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="+ Nouvelle carte" onAction="#handleAjouterCarte">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-primary"/>
+                    </styleClass>
+                </Button>
+                <Button text="Rafraîchir" onAction="#handleRefresh">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-secondary"/>
+                    </styleClass>
+                </Button>
+            </HBox>
+
+            <HBox spacing="10">
+                <Button text="Recharger" onAction="#handleRecharger">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-success"/>
+                    </styleClass>
+                </Button>
+                <Button text="Transfert" onAction="#handleTransfert">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-primary"/>
+                    </styleClass>
+                </Button>
+                <Button text="Activer/Désactiver" onAction="#handleToggle">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-secondary"/>
+                    </styleClass>
+                </Button>
+                <Button text="Supprimer" onAction="#handleSupprimer">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-danger"/>
+                    </styleClass>
+                </Button>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <content>
+                    <FlowPane fx:id="cartesFlow" hgap="16" vgap="16" padding="16"/>
+                </content>
+            </ScrollPane>
+
+            <Label fx:id="messageLabel"/>
+        </VBox>
+    </center>
+
+</BorderPane>
+

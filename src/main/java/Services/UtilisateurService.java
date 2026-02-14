@@ -16,12 +16,13 @@ public class UtilisateurService implements IService<Utilisateur> {
 
     @Override
     public Utilisateur ajouter(Utilisateur utilisateur) {
-        String req = "INSERT INTO utilisateur (email, nom, prenom, solde) VALUES (?, ?, ?, ?)";
+        String req = "INSERT INTO utilisateur (email, nom, prenom, password, solde) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, utilisateur.getEmail());
             ps.setString(2, utilisateur.getNom());
             ps.setString(3, utilisateur.getPrenom());
-            ps.setDouble(4, utilisateur.getSolde());
+            ps.setString(4, utilisateur.getPassword());
+            ps.setDouble(5, utilisateur.getSolde());
 
             ps.executeUpdate();
 
@@ -40,13 +41,14 @@ public class UtilisateurService implements IService<Utilisateur> {
 
     @Override
     public Utilisateur modifier(Utilisateur utilisateur) {
-        String req = "UPDATE utilisateur SET email=?, nom=?, prenom=?, solde=? WHERE id=?";
+        String req = "UPDATE utilisateur SET email=?, nom=?, prenom=?, password=?, solde=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, utilisateur.getEmail());
             ps.setString(2, utilisateur.getNom());
             ps.setString(3, utilisateur.getPrenom());
-            ps.setDouble(4, utilisateur.getSolde());
-            ps.setInt(5, utilisateur.getId());
+            ps.setString(4, utilisateur.getPassword());
+            ps.setDouble(5, utilisateur.getSolde());
+            ps.setInt(6, utilisateur.getId());
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -83,16 +85,7 @@ public class UtilisateurService implements IService<Utilisateur> {
              ResultSet rs = st.executeQuery(req)) {
 
             while (rs.next()) {
-                Utilisateur u = new Utilisateur();
-                u.setId(rs.getInt("id"));
-                u.setEmail(rs.getString("email"));
-                u.setNom(rs.getString("nom"));
-                u.setPrenom(rs.getString("prenom"));
-                u.setSolde(rs.getDouble("solde"));
-                u.setCreatedAt(rs.getTimestamp("created_at") != null ?
-                        rs.getTimestamp("created_at").toLocalDateTime() : null);
-                u.setUpdatedAt(rs.getTimestamp("updated_at") != null ?
-                        rs.getTimestamp("updated_at").toLocalDateTime() : null);
+                Utilisateur u = mapUtilisateur(rs);
                 utilisateurs.add(u);
             }
 
@@ -114,16 +107,7 @@ public class UtilisateurService implements IService<Utilisateur> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                Utilisateur u = new Utilisateur();
-                u.setId(rs.getInt("id"));
-                u.setEmail(rs.getString("email"));
-                u.setNom(rs.getString("nom"));
-                u.setPrenom(rs.getString("prenom"));
-                u.setSolde(rs.getDouble("solde"));
-                u.setCreatedAt(rs.getTimestamp("created_at") != null ?
-                        rs.getTimestamp("created_at").toLocalDateTime() : null);
-                u.setUpdatedAt(rs.getTimestamp("updated_at") != null ?
-                        rs.getTimestamp("updated_at").toLocalDateTime() : null);
+                Utilisateur u = mapUtilisateur(rs);
                 System.out.println("🔍 Utilisateur trouvé: " + u);
                 return u;
             } else {
@@ -135,24 +119,68 @@ public class UtilisateurService implements IService<Utilisateur> {
         return null;
     }
 
+    private Utilisateur mapUtilisateur(ResultSet rs) throws SQLException {
+        Utilisateur u = new Utilisateur();
+        u.setId(rs.getInt("id"));
+        u.setEmail(rs.getString("email"));
+        u.setNom(rs.getString("nom"));
+        u.setPrenom(rs.getString("prenom"));
+        try {
+            u.setPassword(rs.getString("password"));
+        } catch (SQLException ignored) {
+            // column may not exist yet in some environments
+        }
+        try {
+            u.setRole(rs.getString("role"));
+        } catch (SQLException ignored) {
+            u.setRole("user"); // default role
+        }
+        u.setSolde(rs.getDouble("solde"));
+        u.setCreatedAt(rs.getTimestamp("created_at") != null ?
+                rs.getTimestamp("created_at").toLocalDateTime() : null);
+        u.setUpdatedAt(rs.getTimestamp("updated_at") != null ?
+                rs.getTimestamp("updated_at").toLocalDateTime() : null);
+        return u;
+    }
+
     // Méthodes spécifiques
     public Utilisateur login(String email) {
-        String req = "SELECT * FROM utilisateur WHERE email=?";
+        // Backward compatible: email-only login
+        return login(email, null);
+    }
+
+    public Utilisateur login(String email, String password) {
+        if (password == null || password.isBlank()) {
+            String req = "SELECT * FROM utilisateur WHERE email=?";
+            try (PreparedStatement ps = connection.prepareStatement(req)) {
+                ps.setString(1, email);
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    Utilisateur u = mapUtilisateur(rs);
+                    System.out.println("🔑 Connexion réussie: " + u.getPrenom() + " " + u.getNom());
+                    return u;
+                } else {
+                    System.out.println("❌ Email non trouvé: " + email);
+                }
+            } catch (SQLException e) {
+                System.err.println("❌ Erreur connexion: " + e.getMessage());
+            }
+            return null;
+        }
+
+        String req = "SELECT * FROM utilisateur WHERE email=? AND password=?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, email);
+            ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                Utilisateur u = new Utilisateur();
-                u.setId(rs.getInt("id"));
-                u.setEmail(rs.getString("email"));
-                u.setNom(rs.getString("nom"));
-                u.setPrenom(rs.getString("prenom"));
-                u.setSolde(rs.getDouble("solde"));
+                Utilisateur u = mapUtilisateur(rs);
                 System.out.println("🔑 Connexion réussie: " + u.getPrenom() + " " + u.getNom());
                 return u;
             } else {
-                System.out.println("❌ Email non trouvé: " + email);
+                System.out.println("❌ Email/mot de passe incorrect: " + email);
             }
         } catch (SQLException e) {
             System.err.println("❌ Erreur connexion: " + e.getMessage());
@@ -187,3 +215,4 @@ public class UtilisateurService implements IService<Utilisateur> {
         return 0;
     }
 }
+

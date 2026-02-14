@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.components.PortefeuilleCardController"
+      spacing="10">
+    <styleClass>
+        <String fx:value="card"/>
+        <String fx:value="portefeuille-card"/>
+    </styleClass>
+    <Label fx:id="nomLabel" text="Nom" styleClass="section-title"/>
+    <Label fx:id="soldeLabel" text="0.00 DT" styleClass="topbar-subtitle"/>
+    <HBox spacing="8">
+        <Button text="Modifier" onAction="#onEdit">
+            <styleClass><String fx:value="btn"/><String fx:value="btn-secondary"/></styleClass>
+        </Button>
+        <Button text="Supprimer" onAction="#onDelete">
+            <styleClass><String fx:value="btn"/><String fx:value="btn-danger"/></styleClass>
+        </Button>
+        <Button text="Cartes" onAction="#onViewCards">
+            <styleClass><String fx:value="btn"/><String fx:value="btn-primary"/></styleClass>
+        </Button>
+    </HBox>
+</VBox>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.DashboardController" stylesheets="@../styles/dashboard.css">
+
+    <!-- ============ TOP - HEADER ============ -->
+    <top>
+        <VBox styleClass="header" spacing="10" style="-fx-padding: 20;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="FinTrack Dashboard" styleClass="title" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <HBox spacing="15" alignment="CENTER_RIGHT">
+                    <Label fx:id="userGreeting" styleClass="user-greeting" />
+                    <Button text="🚪 Déconnexion" onAction="#handleDeconnexion" styleClass="btn-logout" />
+                </HBox>
+            </HBox>
+            <Label fx:id="headerSubtitle" styleClass="subtitle" />
+        </VBox>
+    </top>
+
+    <!-- ============ CENTER - MAIN CONTENT ============ -->
+    <center>
+        <HBox spacing="15" style="-fx-padding: 20;">
+
+            <!-- LEFT PANEL - CARTES -->
+            <VBox spacing="15" style="-fx-min-width: 350px;">
+                <Label text="💳 Mes Cartes Virtuelles" styleClass="section-title" />
+                <ScrollPane style="-fx-fit-to-width: true;" vbarPolicy="AS_NEEDED">
+                    <VBox fx:id="cartesContainer" spacing="10" style="-fx-padding: 10;" styleClass="cartes-box" />
+                </ScrollPane>
+                <Button text="➕ Nouvelle Carte" onAction="#handleAjouterCarte" styleClass="btn-primary" maxWidth="Infinity" />
+            </VBox>
+
+            <!-- CENTER PANEL - PORTEFEUILLES -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="📊 Mes Portefeuilles" styleClass="section-title" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button text="🔄 Rafraîchir" onAction="#handleRefresh" styleClass="btn-secondary" />
+                </HBox>
+
+                <TableView fx:id="portefeuilleTable" style="-fx-font-size: 12;" styleClass="table-view">
+                    <columns>
+                        <TableColumn fx:id="idColumn" text="ID" prefWidth="50.0" />
+                        <TableColumn fx:id="nomColumn" text="Nom" prefWidth="150.0" />
+                        <TableColumn fx:id="soldeColumn" text="Solde Total" prefWidth="120.0" />
+                        <TableColumn fx:id="deviseColumn" text="Devise" prefWidth="100.0" />
+                        <TableColumn fx:id="dateColumn" text="Date Création" prefWidth="130.0" />
+                    </columns>
+                </TableView>
+
+                <HBox spacing="10">
+                    <Button text="➕ Nouveau Portefeuille" onAction="#handleAjouterPortefeuille" styleClass="btn-primary" />
+                    <Button text="✏️ Modifier" onAction="#handleModifierPortefeuille" styleClass="btn-secondary" />
+                    <Button text="🗑️ Supprimer" onAction="#handleSupprimerPortefeuille" styleClass="btn-danger" />
+                </HBox>
+
+                <Label fx:id="messageLabel" style="-fx-text-fill: #c0392b;" wrapText="true" />
+            </VBox>
+
+            <!-- RIGHT PANEL - STATISTIQUES -->
+            <VBox spacing="15" style="-fx-min-width: 300px; -fx-max-width: 350px;">
+                <Label text="📈 Statistiques" styleClass="section-title" />
+
+                <VBox styleClass="stat-card" spacing="8">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="👛" style="-fx-font-size: 24;" />
+                        <VBox spacing="2">
+                            <Label text="Portefeuilles" styleClass="stat-label" />
+                            <Label fx:id="statPortefeuilles" text="0" styleClass="stat-value" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <VBox styleClass="stat-card" spacing="8">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="💳" style="-fx-font-size: 24;" />
+                        <VBox spacing="2">
+                            <Label text="Cartes Virtuelles" styleClass="stat-label" />
+                            <Label fx:id="statCartes" text="0" styleClass="stat-value" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <VBox styleClass="stat-card" spacing="8">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="💰" style="-fx-font-size: 24;" />
+                        <VBox spacing="2">
+                            <Label text="Solde Total (DT)" styleClass="stat-label" />
+                            <Label fx:id="statSolde" text="0.00" styleClass="stat-value" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <Separator />
+
+                <Label text="Répartition Cartes" styleClass="section-title" style="-fx-font-size: 14;" />
+
+                <VBox styleClass="stat-card" spacing="5">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🟦" style="-fx-font-size: 16;" />
+                        <Label text="NORMAL" style="-fx-font-weight: bold;" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="statNormal" text="0" />
+                    </HBox>
+                </VBox>
+
+                <VBox styleClass="stat-card" spacing="5">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="🟨" style="-fx-font-size: 16;" />
+                        <Label text="GOLD" style="-fx-font-weight: bold;" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="statGold" text="0" />
+                    </HBox>
+                </VBox>
+
+                <VBox styleClass="stat-card" spacing="5">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="⬜" style="-fx-font-size: 16;" />
+                        <Label text="SILVER" style="-fx-font-weight: bold;" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="statSilver" text="0" />
+                    </HBox>
+                </VBox>
+
+            </VBox>
+
+        </HBox>
+    </center>
+
+    <!-- ============ BOTTOM - DERNIÈRES TRANSACTIONS ============ -->
+    <bottom>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-border-top: 1px solid #ddd;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="💸 Dernières Transactions" styleClass="section-title" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button text="➕ Nouvelle Transaction" onAction="#handleAjouterTransaction" styleClass="btn-primary" />
+            </HBox>
+
+            <TableView fx:id="transactionTable" style="-fx-font-size: 11;" styleClass="table-view" prefHeight="150">
+                <columns>
+                    <TableColumn fx:id="txDateColumn" text="Date" prefWidth="140" />
+                    <TableColumn fx:id="txTypeColumn" text="Type" prefWidth="100" />
+                    <TableColumn fx:id="txMontantColumn" text="Montant" prefWidth="100" />
+                    <TableColumn fx:id="txDeviseColumn" text="Devise" prefWidth="80" />
+                    <TableColumn fx:id="txStatutColumn" text="Statut" prefWidth="100" />
+                    <TableColumn fx:id="txDescriptionColumn" text="Description" prefWidth="200" />
+                </columns>
+            </TableView>
+        </VBox>
+    </bottom>
+
+</BorderPane>
+

@@ -336,12 +336,12 @@ public class CarteVirtuelleServiceTest {
 
     @Test
     @Order(10)
-    @DisplayName("❌ Test 10: Ajout carte avec portefeuille inexistant")
+    @DisplayName(" Test 10: Ajout carte avec portefeuille inexistant")
     public void testAjoutCartePortefeuilleInexistant() {
         System.out.println("\n🧪 TEST 10: Ajout carte avec portefeuille inexistant");
 
         int mauvaisId = 99999;
-        System.out.println("🔴 Tentative avec ID inexistant: " + mauvaisId);
+        System.out.println(" Tentative avec ID inexistant: " + mauvaisId);
 
         CarteVirtuelle carte = new CarteVirtuelle(
                 1000, 2000,

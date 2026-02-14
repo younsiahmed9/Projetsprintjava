@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- FinTrack - User dashboard (Portefeuilles) -->
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.PortefeuilleController"
+            styleClass="app-shell">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="16" styleClass="topbar">
+            <Label text="FinTrack" styleClass="topbar-title"/>
+            <Label text="|" styleClass="topbar-subtitle"/>
+            <Label text="Portefeuilles" styleClass="topbar-subtitle"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="headerUserLabel" text="Utilisateur" styleClass="topbar-user"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="8" prefWidth="240" styleClass="sidebar">
+            <VBox spacing="2" styleClass="sidebar-header">
+                <Label text="Modules" styleClass="sidebar-brand"/>
+                <Label text="Navigation" styleClass="sidebar-subtitle"/>
+            </VBox>
+
+            <Button text="Mes Portefeuilles" onAction="#goMesPortefeuilles" maxWidth="Infinity">
+                <styleClass>
+                    <String fx:value="sidebar-btn"/>
+                    <String fx:value="sidebar-btn-active"/>
+                </styleClass>
+            </Button>
+            <Button text="Mes Cartes" onAction="#goMesCartes" maxWidth="Infinity" styleClass="sidebar-btn"/>
+            <Button text="Transactions" onAction="#goTransactions" maxWidth="Infinity" styleClass="sidebar-btn"/>
+            <Button text="Transfert" onAction="#goTransfert" maxWidth="Infinity" styleClass="sidebar-btn"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+
+            <Button text="Déconnexion" onAction="#handleDeconnexion" maxWidth="Infinity">
+                <styleClass>
+                    <String fx:value="sidebar-btn"/>
+                    <String fx:value="sidebar-btn-danger"/>
+                </styleClass>
+            </Button>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="16" styleClass="content">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="Mes portefeuilles" styleClass="section-title"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="+ Nouveau portefeuille" onAction="#handleAjouterPortefeuille">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-success"/>
+                    </styleClass>
+                </Button>
+                <Button text="Rafraîchir" onAction="#handleRefresh">
+                    <styleClass>
+                        <String fx:value="btn"/>
+                        <String fx:value="btn-secondary"/>
+                    </styleClass>
+                </Button>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <content>
+                    <FlowPane fx:id="portefeuillesFlow" hgap="16" vgap="16">
+                        <padding>
+                            <Insets top="16" right="16" bottom="16" left="16"/>
+                        </padding>
+                    </FlowPane>
+                </content>
+            </ScrollPane>
+
+            <Label fx:id="messageLabel"/>
+        </VBox>
+    </center>
+
+</BorderPane>
+

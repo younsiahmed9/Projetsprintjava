@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.AdminDashboardController"
+            style="-fx-background-color: #f0f2f5;">
+
+    <!-- TOP - HEADER -->
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #1a3a52, #2c3e50); -fx-padding: 15;">
+            <!-- Navigation Bar -->
+            <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 0 0 10 0;">
+                <Label text="FinTrack Admin" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="Dashboard" onAction="#handleRefreshAll" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                <Button text="Utilisateurs" onAction="#handleGoToUsers" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                <Button text="Portefeuilles" onAction="#handleGoToPortefeuilles" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                <Button text="Cartes" onAction="#handleGoToCartes" style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+            </HBox>
+            <!-- User Info Row -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label fx:id="welcomeLabel" style="-fx-font-size: 13; -fx-text-fill: white;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button text="Rafraichir" onAction="#handleRefreshAll" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                <Button text="Deconnexion" onAction="#handleDeconnexion" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+            </HBox>
+            <Label fx:id="statsLabel" style="-fx-font-size: 11; -fx-text-fill: #b0c4de; -fx-padding: 8 0 0 0;"/>
+        </VBox>
+    </top>
+
+    <!-- CENTER - TABS -->
+    <center>
+        <TabPane fx:id="tabPane" style="-fx-padding: 10;">
+
+            <!-- TAB UTILISATEURS -->
+            <Tab text="Utilisateurs" closable="false">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Tous les Utilisateurs" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1a3a52;"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <Button text="Rafraichir" onAction="#handleRefreshUsers" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 6 12; -fx-background-radius: 5;"/>
+                    </HBox>
+                    <ScrollPane style="-fx-background-color: transparent; -fx-background: transparent;" fitToWidth="true" VBox.vgrow="ALWAYS">
+                        <FlowPane fx:id="utilisateursContainer" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+
+            <!-- TAB PORTEFEUILLES -->
+            <Tab text="Portefeuilles" closable="false">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Tous les Portefeuilles" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1a3a52;"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <Button text="Rafraichir" onAction="#handleRefreshPortefeuilles" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 6 12; -fx-background-radius: 5;"/>
+                    </HBox>
+                    <ScrollPane style="-fx-background-color: transparent; -fx-background: transparent;" fitToWidth="true" VBox.vgrow="ALWAYS">
+                        <FlowPane fx:id="portefeuillesContainer" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+
+            <!-- TAB CARTES -->
+            <Tab text="Cartes Virtuelles" closable="false">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Toutes les Cartes" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1a3a52;"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <Button text="Rafraichir" onAction="#handleRefreshCartes" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 6 12; -fx-background-radius: 5;"/>
+                    </HBox>
+                    <ScrollPane style="-fx-background-color: transparent; -fx-background: transparent;" fitToWidth="true" VBox.vgrow="ALWAYS">
+                        <FlowPane fx:id="cartesContainer" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <!-- BOTTOM -->
+    <bottom>
+        <HBox style="-fx-background-color: white; -fx-padding: 10 20; -fx-border-color: #e0e0e0; -fx-border-width: 1 0 0 0;">
+            <Label fx:id="messageLabel" style="-fx-font-size: 12;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

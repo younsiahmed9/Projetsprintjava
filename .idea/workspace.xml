@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d67dd247-6e32-4eeb-9afd-88b9a817cce1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DASHBOARD_GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README_DASHBOARD.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/AdminDashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/CarteController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/DashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/LoginController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/PortefeuilleController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/TransactionsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/UserDashboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Controllers/components/PortefeuilleCardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Models/Session.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/.gitkeep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/styles/colors.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/styles/dashboard.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/admin_dashboard.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/carte.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/carte_dashboard.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/components/portefeuille_card.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/dashboard.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/login.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/portefeuille.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/portefeuille_dashboard.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/transactions.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/user_dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Models/Portefeuille.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Models/Portefeuille.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Models/Utilisateur.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Models/Utilisateur.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Services/CarteVirtuelleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/CarteVirtuelleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Services/PortefeuilleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/PortefeuilleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Services/UtilisateurService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/UtilisateurService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Services/CarteVirtuelleServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Services/CarteVirtuelleServiceTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/youns/IdeaProjects/portefeuille-JDBC" value="39YzVMZRyQb9v7GfTSMdFdzBR1C" />
+      <entry key="_C:/Users/youns/IdeaProjects/portfeille-JDBC" value="39WMLD5Rfp9BEfyEZhnA9dgkMTw" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="chat-panel" value="GPT-5 mini" />
+      <entry key="agent-panel" value="GPT-5 mini" />
+    </selectedModels>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="JUnit5 Test Class" />
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.jdks/openjdk-25.0.2/lib/src.zip!/java.base/java/lang/ClassNotFoundException.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="39WMLD5Rfp9BEfyEZhnA9dgkMTw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main (1).executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MyDataBase.executor&quot;: &quot;Run&quot;,
+    &quot;Application.main.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CarteVirtuelleServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CarteVirtuelleServiceTest.testAfficherParId.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CarteVirtuelleServiceTest.testAfficherTous.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CarteVirtuelleServiceTest.testAjouterCarteGold.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CarteVirtuelleServiceTest.testAjouterCarteNormal.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CarteVirtuelleServiceTest.testAjouterCarteSilver.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.CarteVirtuelleServiceTest.testModifierCarte.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PortefeuilleServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PortefeuilleServiceTest.testAfficherTous.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.FinTrack JavaFX Run.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;gestion-portefeuille&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/youns/IdeaProjects/portefeuille-JDBC&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="Services" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="utils" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Maven.FinTrack JavaFX Run">
+    <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="jbr-17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="workshopJdbc" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="workshopJdbc" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CarteVirtuelleServiceTest.testAfficherTous" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="portfeille-JDBC" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Services" />
+      <option name="MAIN_CLASS_NAME" value="Services.CarteVirtuelleServiceTest" />
+      <option name="METHOD_NAME" value="testAfficherTous" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CarteVirtuelleServiceTest.testAjouterCarteGold" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="portfeille-JDBC" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Services" />
+      <option name="MAIN_CLASS_NAME" value="Services.CarteVirtuelleServiceTest" />
+      <option name="METHOD_NAME" value="testAjouterCarteGold" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CarteVirtuelleServiceTest.testAjouterCarteSilver" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="portfeille-JDBC" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Services" />
+      <option name="MAIN_CLASS_NAME" value="Services.CarteVirtuelleServiceTest" />
+      <option name="METHOD_NAME" value="testAjouterCarteSilver" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CarteVirtuelleServiceTest.testModifierCarte" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="portfeille-JDBC" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Services.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Services" />
+      <option name="MAIN_CLASS_NAME" value="Services.CarteVirtuelleServiceTest" />
+      <option name="METHOD_NAME" value="testModifierCarte" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Main" />
+      <item itemvalue="JUnit.CarteVirtuelleServiceTest.testAfficherTous" />
+      <item itemvalue="JUnit.CarteVirtuelleServiceTest.testAjouterCarteGold" />
+      <item itemvalue="JUnit.CarteVirtuelleServiceTest.testAjouterCarteSilver" />
+      <item itemvalue="JUnit.CarteVirtuelleServiceTest.testModifierCarte" />
+      <item itemvalue="Maven.FinTrack JavaFX Run" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.CarteVirtuelleServiceTest.testModifierCarte" />
+        <item itemvalue="JUnit.CarteVirtuelleServiceTest.testAfficherTous" />
+        <item itemvalue="JUnit.CarteVirtuelleServiceTest.testAjouterCarteSilver" />
+        <item itemvalue="JUnit.CarteVirtuelleServiceTest.testAjouterCarteGold" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d67dd247-6e32-4eeb-9afd-88b9a817cce1" name="Changes" comment="" />
+      <created>1770807316931</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770807316931</updated>
+      <workItem from="1770807318721" duration="813000" />
+      <workItem from="1770812042878" duration="3272000" />
+      <workItem from="1770815353103" duration="4144000" />
+      <workItem from="1770819532812" duration="183000" />
+      <workItem from="1770819736002" duration="3638000" />
+      <workItem from="1770830489836" duration="4807000" />
+      <workItem from="1770887805568" duration="380000" />
+      <workItem from="1770967240931" duration="3829000" />
+      <workItem from="1770971204235" duration="7451000" />
+      <workItem from="1771008740526" duration="1424000" />
+      <workItem from="1771012299156" duration="5029000" />
+      <workItem from="1771076000864" duration="14456000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>

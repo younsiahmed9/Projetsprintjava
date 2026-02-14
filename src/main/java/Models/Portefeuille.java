@@ -11,6 +11,7 @@ public class Portefeuille {
     private String devisePrincipale;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Integer utilisateurId;
 
     private List<CarteVirtuelle> cartes = new ArrayList<>();
 
@@ -44,6 +45,14 @@ public class Portefeuille {
     public List<CarteVirtuelle> getCartes() { return cartes; }
     public void setCartes(List<CarteVirtuelle> cartes) { this.cartes = cartes; }
 
+    public Integer getUtilisateurId() {
+        return utilisateurId;
+    }
+
+    public void setUtilisateurId(Integer utilisateurId) {
+        this.utilisateurId = utilisateurId;
+    }
+
     @Override
     public String toString() {
         return "Portefeuille{" +
@@ -51,6 +60,7 @@ public class Portefeuille {
                 ", nom='" + nom + '\'' +
                 ", soldeTotal=" + soldeTotal +
                 ", devisePrincipale='" + devisePrincipale + '\'' +
+                ", utilisateurId=" + utilisateurId +
                 '}';
     }
 }
