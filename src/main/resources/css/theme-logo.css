@@ -1,0 +1,24 @@
+/* Thème LOGO (bleu/vert) - palette de la photo */
+.root {
+    /* Palette */
+    -fx-blue-900: #182d88;
+    -fx-blue-100: #d2e7fe;
+    -fx-green-700: #3e893e;
+    -fx-green-400: #8dbc71;
+    -fx-yellow-400: #fecf47;
+    -fx-orange-500: #f78f34;
+
+    /* Accents */
+    -fx-accent-blue: -fx-blue-900;
+    -fx-accent-blue-hover: #13246f;
+    -fx-accent-green: -fx-green-700;
+    -fx-accent-green-hover: #2f6f2f;
+
+    /* Neutres */
+    -fx-muted-text: #475569;
+    -fx-title-text: #0f172a;
+    -fx-border-soft: rgba(24, 45, 136, 0.14);
+
+    /* Fond */
+    -fx-background-color: -fx-blue-100;
+}

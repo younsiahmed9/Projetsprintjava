@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox spacing="0" stylesheets="@/css/app.css,@/css/theme-orange.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.ui.LoginController">
+
+    <VBox maxWidth="420" minWidth="420" prefWidth="420" styleClass="left-panel">
+        <VBox spacing="14" styleClass="card" VBox.vgrow="ALWAYS">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitHeight="107.0" fitWidth="173.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png" />
+                    </image>
+                </ImageView>
+                <VBox spacing="2" />
+            </HBox>
+
+            <Region prefHeight="10" />
+
+            <Label styleClass="title" text="Login into your account" />
+
+            <VBox spacing="6">
+                <Label styleClass="field-label" text="Email address" />
+                <TextField fx:id="emailField" promptText="ex: abdou@fintrack.tn" />
+            </VBox>
+
+            <VBox spacing="6">
+                <Label styleClass="field-label" text="Password" />
+
+                <!-- On superpose PasswordField + TextField pour le mode "show password" -->
+                <StackPane>
+                    <PasswordField fx:id="passwordField" promptText="Enter your password" />
+                    <TextField fx:id="passwordVisibleField" managed="false" promptText="Enter your password" visible="false" />
+                </StackPane>
+
+                <CheckBox fx:id="showPasswordCheck" text="Afficher le mot de passe" />
+            </VBox>
+
+            <Button maxWidth="1.7976931348623157E308" onAction="#onLogin" styleClass="btn-primary" text="Login now" />
+            <Button maxWidth="1.7976931348623157E308" onAction="#onGoRegister" styleClass="btn-secondary" text="Signup now" />
+
+            <Label fx:id="statusLabel" styleClass="status" wrapText="true" />
+
+        </VBox>
+    </VBox>
+
+    <StackPane styleClass="right-panel" HBox.hgrow="ALWAYS">
+        <ImageView fitWidth="620" preserveRatio="true" smooth="true">
+            <image>
+                <Image url="@/assets/illustration.png" />
+            </image>
+        </ImageView>
+    </StackPane>
+
+</HBox>

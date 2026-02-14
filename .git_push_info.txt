@@ -1,0 +1,10 @@
+origin	https://github.com/younsiahmed9/Projetsprintjava.git (fetch)
+origin	https://github.com/younsiahmed9/Projetsprintjava.git (push)
+master
+bfa6d1775ee5e1c5e8183d80a06d1b584424ad3a	refs/heads/gestion-portefeuille
+ec37a154361692d9caf7edc86e5e54bd25b36ace	refs/heads/gestion_compte
+b3f4de881a4be266c02fd90c7a0436ed63976ccf	refs/heads/gestion_depense
+f35f9fce8c0fbce1ee390ffc946b558c973dff18	refs/heads/gestion_document
+2a7b75a47de9a31718c9ff72a04e48385feb3b26	refs/heads/gestion_service_et_produit
+f35f9fce8c0fbce1ee390ffc946b558c973dff18	refs/heads/gestion_user
+f35f9fce8c0fbce1ee390ffc946b558c973dff18	refs/heads/main

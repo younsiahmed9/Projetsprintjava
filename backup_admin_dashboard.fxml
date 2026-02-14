@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.ui.AdminDashboardController" stylesheets="@/css/app.css">
+    <children>
+        <!-- Sidebar simple -->
+        <VBox prefWidth="220.0" styleClass="sidebar">
+            <children>
+                <Label styleClass="sidebar-title" text="Admin" />
+                <Region VBox.vgrow="ALWAYS" />
+                <Button onAction="#onLogout" styleClass="btn-secondary" text="Déconnexion" />
+            </children>
+        </VBox>
+
+        <!-- Contenu -->
+        <VBox spacing="12" style="-fx-padding: 20;" VBox.vgrow="ALWAYS">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label styleClass="title" text="Dashboard Admin" />
+                <Pane HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <HBox spacing="12">
+                <VBox styleClass="card" spacing="6" prefWidth="220">
+                    <Label styleClass="subtitle" text="Nombre d'admins" />
+                    <Label fx:id="adminCountLabel" styleClass="title" text="0" />
+                </VBox>
+                <VBox styleClass="card" spacing="6" prefWidth="220">
+                    <Label styleClass="subtitle" text="Nombre de clients" />
+                    <Label fx:id="clientCountLabel" styleClass="title" text="0" />
+                </VBox>
+            </HBox>
+
+            <VBox styleClass="card" spacing="10" VBox.vgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="title" text="Utilisateurs" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button onAction="#onRefresh" styleClass="btn-link" text="Rafraîchir" />
+                </HBox>
+
+                <TableView fx:id="usersTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="idCol" text="ID" prefWidth="70" />
+                        <TableColumn fx:id="fullNameCol" text="Nom" prefWidth="200" />
+                        <TableColumn fx:id="emailCol" text="Email" prefWidth="260" />
+                        <TableColumn fx:id="roleCol" text="Rôle" prefWidth="100" />
+                        <TableColumn fx:id="activeCol" text="Actif" prefWidth="80" />
+                    </columns>
+                </TableView>
+
+                <Label fx:id="statusLabel" styleClass="status" wrapText="true" />
+            </VBox>
+
+        </VBox>
+    </children>
+</HBox>

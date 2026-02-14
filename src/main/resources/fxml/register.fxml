@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox spacing="0" stylesheets="@/css/app.css,@/css/theme-orange.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.ui.RegisterController">
+
+    <!-- Colonne gauche -->
+    <VBox minWidth="420" maxWidth="560" prefWidth="480" styleClass="left-panel">
+        <VBox spacing="16" styleClass="card" VBox.vgrow="ALWAYS">
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <ImageView fitHeight="80.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png" />
+                    </image>
+                </ImageView>
+            </HBox>
+
+            <Label styleClass="title" text="Create your account" style="-fx-font-size: 20px;" />
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <GridPane hgap="12" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" minWidth="110" maxWidth="140" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                    </columnConstraints>
+
+                    <Label styleClass="field-label" text="Rôle:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <ComboBox fx:id="roleCombo" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <Label styleClass="field-label" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="emailField" promptText="ex: abdou@fintrack.tn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                    <Label styleClass="field-label" text="Mot de passe:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <PasswordField fx:id="passwordField" promptText="min 6 caractères" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                    <Label styleClass="field-label" text="Nom complet:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="fullNameField" promptText="ex: abdou" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                    <Label fx:id="adminCodeLabel" styleClass="field-label" text="Admin code:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <TextField fx:id="adminCodeField" promptText="ex: ADM-001" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                    <Label fx:id="cinLabel" styleClass="field-label" text="CIN:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <TextField fx:id="cinField" promptText="chiffres 6..20" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                    <Label fx:id="phoneLabel" styleClass="field-label" text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <TextField fx:id="phoneField" promptText="+216 20 000 000" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <rowConstraints>
+                   <RowConstraints />
+                   <RowConstraints />
+                   <RowConstraints />
+                   <RowConstraints />
+                   <RowConstraints />
+                   <RowConstraints />
+                   <RowConstraints />
+                </rowConstraints>
+                </GridPane>
+            </ScrollPane>
+
+            <HBox spacing="12">
+                <Button onAction="#onCreateAccount" styleClass="btn-primary" text="Créer le compte" />
+                <Button onAction="#onGoLogin" styleClass="btn-secondary" text="Retour login" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button onAction="#onClear" styleClass="btn-link" text="Vider" />
+            </HBox>
+
+            <Label fx:id="statusLabel" styleClass="status" wrapText="true" />
+
+        </VBox>
+    </VBox>
+
+    <!-- Colonne droite -->
+    <StackPane styleClass="right-panel" HBox.hgrow="ALWAYS" minWidth="400">
+        <ImageView fitWidth="620" preserveRatio="true" smooth="true">
+            <image>
+                <Image url="@/assets/illustration.png" />
+            </image>
+        </ImageView>
+    </StackPane>
+
+</HBox>

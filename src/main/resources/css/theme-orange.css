@@ -1,0 +1,21 @@
+/* Thème ORANGE (par défaut) */
+.root {
+    /* Palette orange */
+    -fx-orange-500: #f78f34;
+    -fx-orange-600: #ea7c1f;
+    -fx-cream-50: #fff7ed;
+
+    /* Accents */
+    -fx-accent-blue: -fx-orange-500; /* réutilisé comme accent principal */
+    -fx-accent-blue-hover: -fx-orange-600;
+    -fx-accent-green: -fx-orange-500; /* boutons secondaires aussi orange */
+    -fx-accent-green-hover: -fx-orange-600;
+
+    /* Neutres */
+    -fx-muted-text: #6b7280;
+    -fx-title-text: #111827;
+    -fx-border-soft: rgba(247, 143, 52, 0.28);
+
+    /* Fond */
+    -fx-background-color: -fx-cream-50;
+}
