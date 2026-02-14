@@ -54,9 +54,9 @@
                     <Label fx:id="welcomeLabel" styleClass="title" text="Bienvenue" textFill="#002a5e" />
                     <Pane HBox.hgrow="ALWAYS">
                   <children>
-                         <Button layoutX="147.0" layoutY="8.0" onAction="#onLogout" styleClass="btn-secondary" text="🚪 Déconnexion" />
-                         <Button layoutX="57.0" layoutY="10.0" onAction="#onToggleTheme" prefHeight="35.0" prefWidth="73.0" styleClass="btn-primary" text="🎨 Changer thème" />
-                          <ImageView fx:id="headerAvatarView" fitHeight="50" fitWidth="50" layoutY="1.0" onMouseClicked="#onHeaderAvatarClick" preserveRatio="true" styleClass="avatar" />
+                         <Button layoutX="187.0" layoutY="9.0" onAction="#onLogout" styleClass="btn-secondary" text="🚪 Déconnexion" />
+                         <Button layoutX="43.0" layoutY="10.0" onAction="#onToggleTheme" prefHeight="35.0" prefWidth="135.0" styleClass="btn-primary" text="🎨 Changer thème" />
+                          <ImageView fx:id="headerAvatarView" fitHeight="50" fitWidth="50" layoutX="-11.0" layoutY="4.0" onMouseClicked="#onHeaderAvatarClick" preserveRatio="true" styleClass="avatar" />
                   </children></Pane>
                 </HBox>
 
