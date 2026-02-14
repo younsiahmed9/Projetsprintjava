@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaces.AjoutProduitController">
+    <header>
+        <Text style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #182d88;" text="Ajouter un nouveau produit" />
+    </header>
+
+    <content>
+        <GridPane hgap="10" vgap="10">
+            <padding>
+                <Insets bottom="20" left="20" right="20" top="20" />
+            </padding>
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Nom :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField fx:id="nomField" promptText="Nom du produit" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Type :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <ComboBox fx:id="typeCombo" prefWidth="200" promptText="Sélectionner le type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Montant (TND) :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="montantField" promptText="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Code unique :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="codeField" promptText="CODE-123" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Statut :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <ComboBox fx:id="statutCombo" prefWidth="200" promptText="Statut" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        </GridPane>
+    </content>
+
+    <ButtonType fx:constant="OK" />
+    <ButtonType fx:constant="CANCEL" />
+</DialogPane>

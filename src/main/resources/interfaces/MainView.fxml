@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane style="-fx-background-color: #d2e7fe;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaces.MainController">
+
+    <!-- LEFT: Navbar -->
+    <left>
+        <VBox prefWidth="260" spacing="10" style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(24,45,136,0.1), 10, 0, 0, 0);">
+            <padding>
+                <Insets bottom="30" left="20" right="20" top="30" />
+            </padding>
+
+            <!-- Logo Section -->
+            <VBox alignment="CENTER" spacing="15">
+                <StackPane>
+                    <Circle radius="40" fill="#182d88"/>
+                    <ImageView fitHeight="50" fitWidth="50">
+                        <image>
+                            <Image url="@/images/logo.png" />
+                        </image>
+                    </ImageView>
+                </StackPane>
+                <Text style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-fill: #182d88;" text="FinTrack" />
+                <Text style="-fx-font-size: 12px; -fx-fill: #182d88; -fx-opacity: 0.7;" text="Gestion financière" />
+            </VBox>
+
+            <Separator style="-fx-background-color: #d2e7fe;">
+                <padding><Insets top="10" bottom="10"/></padding>
+            </Separator>
+
+            <!-- Navigation Items -->
+            <VBox spacing="5">
+                <HBox fx:id="navDashboard" alignment="CENTER_LEFT" spacing="12" style="-fx-background-radius: 10; -fx-padding: 12 15;" onMouseClicked="#handleNavigation">
+                    <Circle fill="#182d88" opacity="0.5" radius="6" />
+                    <Text style="-fx-font-size: 14px; -fx-fill: #182d88;" text="Tableau de bord" />
+                </HBox>
+
+                <HBox fx:id="navServices" alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: #d2e7fe; -fx-background-radius: 10; -fx-padding: 12 15;" onMouseClicked="#handleNavigation">
+                    <Circle fill="#182d88" radius="6" />
+                    <Text style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: #182d88;" text="Services & Abonnements" />
+                </HBox>
+
+                <HBox fx:id="navComptes" alignment="CENTER_LEFT" spacing="12" style="-fx-background-radius: 10; -fx-padding: 12 15;" onMouseClicked="#handleNavigation">
+                    <Circle fill="#182d88" opacity="0.5" radius="6" />
+                    <Text style="-fx-font-size: 14px; -fx-fill: #182d88;" text="Comptes" />
+                </HBox>
+
+                <HBox fx:id="navDepenses" alignment="CENTER_LEFT" spacing="12" style="-fx-background-radius: 10; -fx-padding: 12 15;" onMouseClicked="#handleNavigation">
+                    <Circle fill="#182d88" opacity="0.5" radius="6" />
+                    <Text style="-fx-font-size: 14px; -fx-fill: #182d88;" text="Dépenses" />
+                </HBox>
+
+                <HBox fx:id="navDocuments" alignment="CENTER_LEFT" spacing="12" style="-fx-background-radius: 10; -fx-padding: 12 15;" onMouseClicked="#handleNavigation">
+                    <Circle fill="#182d88" opacity="0.5" radius="6" />
+                    <Text style="-fx-font-size: 14px; -fx-fill: #182d88;" text="Documents" />
+                </HBox>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <!-- User Profile -->
+            <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: #d2e7fe; -fx-background-radius: 10; -fx-padding: 15;">
+                <Circle fill="#182d88" radius="20" />
+                <VBox>
+                    <Text style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: #182d88;" text="Syrine Chakroun" />
+                    <Text style="-fx-font-size: 11px; -fx-fill: #182d88; -fx-opacity: 0.7;" text="syrine@email.com" />
+                </VBox>
+            </HBox>
+        </VBox>
+    </left>
+
+    <!-- CENTER: Main Content -->
+    <center>
+        <VBox style="-fx-background-color: #d2e7fe;">
+            <!-- Top Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: white; -fx-border-color: #182d88; -fx-border-width: 0 0 1 0;">
+                <padding>
+                    <Insets bottom="15" left="30" right="30" top="15" />
+                </padding>
+
+                <TextField fx:id="searchField" promptText="Rechercher un service..." HBox.hgrow="ALWAYS"
+                           style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #182d88; -fx-background-color: white; -fx-prompt-text-fill: #182d88; -fx-opacity: 0.7;">
+                    <padding><Insets bottom="8" left="15" right="15" top="8" /></padding>
+                </TextField>
+
+                <ComboBox fx:id="typeFilter" promptText="Type" prefWidth="120"
+                          style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #182d88; -fx-background-color: white;">
+                    <padding><Insets bottom="5" left="15" right="15" top="5" /></padding>
+                </ComboBox>
+
+                <ComboBox fx:id="statutFilter" promptText="Statut" prefWidth="120"
+                          style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #182d88; -fx-background-color: white;">
+                    <padding><Insets bottom="5" left="15" right="15" top="5" /></padding>
+                </ComboBox>
+
+                <MenuButton style="-fx-background-color: #182d88; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20;" text="Nouveau">
+                    <items>
+                        <MenuItem text="Ajouter un Service" onAction="#openAjoutService"/>
+                        <MenuItem text="Ajouter un Produit" onAction="#openAjoutProduit"/>
+                    </items>
+                    <padding><Insets bottom="8" left="20" right="20" top="8" /></padding>
+                </MenuButton>
+            </HBox>
+
+            <!-- Stats Cards -->
+            <HBox spacing="20" style="-fx-padding: 20 30 20 30;">
+                <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(24,45,136,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Circle fill="#8dbc71" radius="8" />
+                        <Text style="-fx-font-size: 14px; -fx-fill: #182d88; -fx-opacity: 0.7;" text="Abonnements" />
+                    </HBox>
+                    <Text fx:id="totalAbonnements" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #182d88;" text="0" />
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(24,45,136,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Circle fill="#f78f34" radius="8" />
+                        <Text style="-fx-font-size: 14px; -fx-fill: #182d88; -fx-opacity: 0.7;" text="Services" />
+                    </HBox>
+                    <Text fx:id="totalServices" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #182d88;" text="0" />
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(24,45,136,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Circle fill="#fecf47" radius="8" />
+                        <Text style="-fx-font-size: 14px; -fx-fill: #182d88; -fx-opacity: 0.7;" text="Produits" />
+                    </HBox>
+                    <Text fx:id="totalProduits" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #182d88;" text="0" />
+                </VBox>
+            </HBox>
+
+            <!-- Content Area with Tabs -->
+            <TabPane style="-fx-background-color: #d2e7fe;" VBox.vgrow="ALWAYS">
+                <Tab text="Abonnements" closable="false">
+                    <ScrollPane fitToWidth="true" style="-fx-background: #d2e7fe; -fx-background-color: #d2e7fe; -fx-border-color: transparent;">
+                        <FlowPane fx:id="abonnementsFlow" hgap="20" vgap="20" style="-fx-padding: 20;" />
+                    </ScrollPane>
+                </Tab>
+                <Tab text="Services" closable="false">
+                    <ScrollPane fitToWidth="true" style="-fx-background: #d2e7fe; -fx-background-color: #d2e7fe; -fx-border-color: transparent;">
+                        <FlowPane fx:id="servicesFlow" hgap="20" vgap="20" style="-fx-padding: 20;" />
+                    </ScrollPane>
+                </Tab>
+                <Tab text="Produits" closable="false">
+                    <ScrollPane fitToWidth="true" style="-fx-background: #d2e7fe; -fx-background-color: #d2e7fe; -fx-border-color: transparent;">
+                        <FlowPane fx:id="produitsFlow" hgap="20" vgap="20" style="-fx-padding: 20;" />
+                    </ScrollPane>
+                </Tab>
+            </TabPane>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,76 @@
+/* Styles généraux */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Cartes avec effet hover */
+.card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(24,45,136,0.2), 15, 0, 0, 5);
+    -fx-translate-y: -2;
+    -fx-transition: all 0.3s;
+}
+
+/* Boutons */
+.button {
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s;
+}
+
+.button:hover {
+    -fx-opacity: 0.9;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Navigation items */
+.nav-item {
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s;
+}
+
+.nav-item:hover {
+    -fx-background-color: #d2e7fe;
+}
+
+/* ScrollPane styling */
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #182d88;
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
+}
+
+/* TabPane styling */
+.tab-pane {
+    -fx-background-color: #d2e7fe;
+}
+
+.tab {
+    -fx-background-color: white;
+    -fx-background-radius: 10 10 0 0;
+}
+
+.tab:selected {
+    -fx-background-color: #182d88;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
+
+.tab-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #182d88;
+}
