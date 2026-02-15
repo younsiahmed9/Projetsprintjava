@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.MainPageController"
+            styleClass="main-container"
+            stylesheets="@assets/style.css">
+    <left>
+        <VBox spacing="12" styleClass="sidebar">
+            <ImageView fitHeight="80" fitWidth="80" preserveRatio="true">
+                <Image url="@assets/logo.png"/>
+            </ImageView>
+            <Button text="🔄 Transactions" styleClass="menu-button"/>
+            <Button text="💳 Accounts" styleClass="menu-button"/>
+            <Label text="💰 Budget" styleClass="menu-label-active"/>
+            <Button text="🎯 Goals" styleClass="menu-button"/>
+            <Button text="⚙️ Settings" styleClass="menu-button"/>
+        </VBox>
+    </left>
+
+    <center>
+        <AnchorPane fx:id="mainContent">
+            <VBox fx:id="mainPageContent" spacing="20" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+                  AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+                <padding>
+                    <Insets top="24" left="24" right="24" bottom="24"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Subscription" styleClass="header-title-blue"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Button text="+" styleClass="btn-add-circle" onAction="#onAjouter"/>
+                </HBox>
+
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <Label text="All" styleClass="filter-label-active"/>
+                    <ToggleButton text="Current" styleClass="filter-link"/>
+                    <ToggleButton text="Savings" styleClass="filter-link"/>
+                </HBox>
+
+                <FlowPane fx:id="budgetList" hgap="30" vgap="30"/>
+
+                <!-- Graphique d'analyse des dépenses -->
+                <VBox fx:id="chartContainer" spacing="10" styleClass="card" alignment="CENTER_LEFT" prefHeight="400">
+                    <Label text="📊 Analyse des Dépenses" styleClass="section-title" style="-fx-font-size: 16;"/>
+                </VBox>
+            </VBox>
+        </AnchorPane>
+    </center>
+</BorderPane>

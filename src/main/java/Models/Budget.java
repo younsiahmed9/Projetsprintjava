@@ -7,6 +7,7 @@ public class Budget {
     private int idUtilisateur;
     private String nomBudget;
     private double montantTotal;
+    private double montantInitial; // Montant initial du budget
     private String periode; // "mensuel" ou "annuel"
     private String statut;  // "actif" ou "cloture"
     private Date dateCreation;
@@ -17,6 +18,7 @@ public class Budget {
         this.idUtilisateur = idUtilisateur;
         this.nomBudget = nomBudget;
         this.montantTotal = montantTotal;
+        this.montantInitial = montantTotal;
         this.periode = periode;
         this.dateCreation = dateCreation;
         this.statut = statut;
@@ -35,6 +37,9 @@ public class Budget {
     public double getMontantTotal() { return montantTotal; }
     public void setMontantTotal(double montantTotal) { this.montantTotal = montantTotal; }
 
+    public double getMontantInitial() { return montantInitial; }
+    public void setMontantInitial(double montantInitial) { this.montantInitial = montantInitial; }
+
     public String getPeriode() { return periode; }
     public void setPeriode(String periode) { this.periode = periode; }
 
@@ -44,5 +49,5 @@ public class Budget {
     public Date getDateCreation() { return dateCreation; }
     public void setDateCreation(Date dateCreation) { this.dateCreation = dateCreation; }
 
-    @Override public String toString() { return "Budget{" + "idBudget=" + idBudget + ", idUtilisateur=" + idUtilisateur + ", nomBudget='" + nomBudget + '\'' + ", montantTotal=" + montantTotal + ", periode='" + periode + '\'' + ", statut='" + statut + '\'' + ", dateCreation=" + dateCreation + '}'; }
+    @Override public String toString() { return "Budget{" + "idBudget=" + idBudget + ", idUtilisateur=" + idUtilisateur + ", nomBudget='" + nomBudget + '\'' + ", montantTotal=" + montantTotal + ", montantInitial=" + montantInitial + ", periode='" + periode + '\'' + ", statut='" + statut + '\'' + ", dateCreation=" + dateCreation + '}'; }
 }

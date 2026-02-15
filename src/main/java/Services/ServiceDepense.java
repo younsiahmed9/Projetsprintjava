@@ -87,4 +87,31 @@ public class ServiceDepense {
             throw new SQLDataException(e.getMessage());
         }
     }
+
+    // --- Récupérer les dépenses par ID Budget ---
+    public List<Depense> getDepensesByBudget(int idBudget) throws SQLDataException {
+        List<Depense> depenses = new ArrayList<>();
+        String req = "SELECT * FROM depense WHERE id_budget = ? ORDER BY date_depense DESC";
+        try (PreparedStatement ps = cnx.prepareStatement(req)) {
+            ps.setInt(1, idBudget);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Depense d = new Depense(
+                            rs.getInt("id_depense"),
+                            rs.getInt("id_utilisateur"),
+                            rs.getInt("id_budget"),
+                            rs.getString("categorie"),
+                            rs.getDouble("montant"),
+                            rs.getDate("date_depense"),
+                            rs.getString("description"),
+                            rs.getString("mode_paiement")
+                    );
+                    depenses.add(d);
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLDataException(e.getMessage());
+        }
+        return depenses;
+    }
 }

@@ -1,19 +1,34 @@
 package tn.esprit;
 
-import static java.lang.System.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // Charger ton FXML principal
+        Parent root = FXMLLoader.load(getClass().getResource("/MainPage.fxml"));
+
+
+        // Créer la scène
+        Scene scene = new Scene(root);
+
+        // Ajouter ton CSS externe
+        scene.getStylesheets().add(getClass().getResource("/assets/style.css").toExternalForm());
+
+        // Configurer la fenêtre
+        primaryStage.setTitle("Gestion Budget & Comptes");
+        primaryStage.setScene(scene);
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(700);
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        out.printf("Hello and welcome!");
-
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            out.println("i = " + i);
-        }
+        launch(args);
     }
 }

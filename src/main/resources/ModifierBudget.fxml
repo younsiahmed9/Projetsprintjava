@@ -1,0 +1,49 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.Region?>
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.ModifierBudgetController"
+      spacing="20" alignment="TOP_CENTER" styleClass="popup-container">
+
+    <padding>
+        <Insets top="30" left="40" right="40" bottom="40"/>
+    </padding>
+
+    <!-- Header with Close Button -->
+    <HBox alignment="TOP_LEFT" spacing="500">
+        <Label text="Modifier Budget" styleClass="header-title-blue"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" onAction="#onRetour" styleClass="btn-close"/>
+    </HBox>
+
+    <VBox spacing="15" style="-fx-padding: 20 0;">
+        <Label text="ID Utilisateur (Non modifiable)" styleClass="form-label"/>
+        <TextField fx:id="txtIdUtilisateur" promptText="ID utilisateur" styleClass="modern-input" disable="true"/>
+
+        <Label text="Nom du Budget" styleClass="form-label"/>
+        <TextField fx:id="txtNom" promptText="Nom du budget" styleClass="modern-input"/>
+
+        <Label text="Montant Total" styleClass="form-label"/>
+        <TextField fx:id="txtMontant" promptText="Ex: 1000.00" styleClass="modern-input"/>
+
+        <Label text="Période" styleClass="form-label"/>
+        <ComboBox fx:id="comboPeriode" promptText="Sélectionner la période" styleClass="modern-input" maxWidth="Infinity"/>
+
+        <Label text="Statut" styleClass="form-label"/>
+        <ComboBox fx:id="comboStatut" promptText="Sélectionner le statut" styleClass="modern-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <Label fx:id="lblError" text="" styleClass="error-text"/>
+
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button text="Enregistrer" onAction="#onEnregistrer" styleClass="btn-orange"/>
+        <Button text="Annuler" onAction="#onAnnuler" styleClass="btn-gray"/>
+    </HBox>
+</VBox>
+

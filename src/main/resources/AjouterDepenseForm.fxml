@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.AjouterDepenseController"
+            stylesheets="@assets/style.css"
+            fitToWidth="true">
+
+    <VBox styleClass="main-container" spacing="20">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+
+        <!-- Header avec croix de fermeture -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="➕ Ajouter une Dépense" styleClass="header-title-blue"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="✕" styleClass="btn-close" onAction="#onRetour"/>
+        </HBox>
+
+        <!-- Formulaire dans une card -->
+        <VBox styleClass="card" spacing="15">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <GridPane hgap="15" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="150" halignment="RIGHT"/>
+                    <ColumnConstraints hgrow="ALWAYS" minWidth="250"/>
+                </columnConstraints>
+
+                <!-- ID Utilisateur -->
+                <Label text="ID Utilisateur:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextField fx:id="txtUtilisateur"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"
+                           styleClass="modern-input"
+                           promptText="Défaut: 1"
+                           text="1"/>
+
+                <!-- ID Budget -->
+                <Label text="ID Budget:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextField fx:id="txtBudget"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="1"
+                           styleClass="modern-input"
+                           promptText="Auto-rempli"
+                           editable="false"/>
+
+                <!-- Catégorie -->
+                <Label text="Catégorie:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextField fx:id="txtCategorie"
+                           GridPane.rowIndex="2"
+                           GridPane.columnIndex="1"
+                           styleClass="modern-input"
+                           promptText="Ex: Alimentation, Transport..."/>
+
+                <!-- Montant -->
+                <Label text="Montant:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextField fx:id="txtMontant"
+                           GridPane.rowIndex="3"
+                           GridPane.columnIndex="1"
+                           styleClass="modern-input"
+                           promptText="Ex: 50.00"/>
+
+                <!-- Date -->
+                <Label text="Date:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                <DatePicker fx:id="dateDepense"
+                            GridPane.rowIndex="4"
+                            GridPane.columnIndex="1"
+                            styleClass="modern-input"/>
+
+                <!-- Description -->
+                <Label text="Description:" GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.valignment="TOP" styleClass="form-label"/>
+                <TextArea fx:id="txtDescription"
+                          GridPane.rowIndex="5"
+                          GridPane.columnIndex="1"
+                          styleClass="modern-input"
+                          prefRowCount="3"
+                          wrapText="true"
+                          promptText="Ex: Courses du supermarché..."/>
+
+                <!-- Mode Paiement -->
+                <Label text="Mode Paiement:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="cbModePaiement"
+                          GridPane.rowIndex="6"
+                          GridPane.columnIndex="1"
+                          styleClass="modern-input"
+                          promptText="Sélectionnez un mode...">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Carte"/>
+                            <String fx:value="Virement"/>
+                            <String fx:value="Cash"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+            </GridPane>
+
+            <!-- Boutons -->
+            <HBox spacing="15" alignment="CENTER" style="-fx-padding: 15 0 0 0;">
+                <Button text="✓ Enregistrer" styleClass="btn-orange" onAction="#onAjouter"/>
+                <Button text="✕ Annuler" styleClass="btn-gray" onAction="#onAnnuler"/>
+            </HBox>
+
+        </VBox>
+
+        <!-- Bouton pour voir la liste des dépenses -->
+        <Button fx:id="btnAfficherListe" text="📋 Voir les dépenses du budget" styleClass="btn-primary" onAction="#afficherListeDependances" prefWidth="250"/>
+
+        <!-- Section Liste des dépenses -->
+        <VBox fx:id="sectionListe" styleClass="card" spacing="15" visible="false" managed="false">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="📋 Dépenses du Budget" styleClass="section-title" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+
+            <!-- ScrollPane pour la liste des dépenses -->
+            <ScrollPane fitToWidth="true" prefHeight="400" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <VBox fx:id="depensesContainer" spacing="10" style="-fx-padding: 10;">
+                    <!-- Les cartes de dépenses seront ajoutées ici dynamiquement -->
+                </VBox>
+            </ScrollPane>
+
+        </VBox>
+
+    </VBox>
+
+</ScrollPane>
+

@@ -13,7 +13,7 @@ public class DepenseController {
     @FXML private TextField txtCategorie;
     @FXML private TextField txtMontant;
     @FXML private DatePicker dateDepense;
-    @FXML private TextField txtDescription;
+    @FXML private TextArea txtDescription;
     @FXML private TextField txtModePaiement;
 
     // TableView et colonnes
@@ -24,7 +24,7 @@ public class DepenseController {
     @FXML private TableColumn<Depense, String> colCategorie;
     @FXML private TableColumn<Depense, Double> colMontant;
     @FXML private TableColumn<Depense, Date> colDateDepense;
-    @FXML private TableColumn<Depense, String> colDescription;
+    @FXML private TableColumn<Depense, String> coltxtDescription;
     @FXML private TableColumn<Depense, String> colModePaiement;
 
     // Méthodes liées aux boutons

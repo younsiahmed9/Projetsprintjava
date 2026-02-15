@@ -16,17 +16,16 @@ public class ServiceBudget implements Iservice<Budget> {
 
     @Override
     public void ajouter(Budget budget) throws SQLDataException {
-        String sql = "INSERT INTO budget (id_utilisateur, nom_budget, montant_total, periode, statut, date_creation) VALUES ('"
-                + budget.getIdUtilisateur() + "', '"
-                + budget.getNomBudget() + "', '"
-                + budget.getMontantTotal() + "', '"
-                + budget.getPeriode() + "', '"
-                + budget.getStatut() + "', '"
-                + new java.sql.Date(budget.getDateCreation().getTime()) + "')";
+        String sql = "INSERT INTO budget (id_utilisateur, nom_budget, montant_total, periode, statut, date_creation) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, budget.getIdUtilisateur());
+            ps.setString(2, budget.getNomBudget());
+            ps.setDouble(3, budget.getMontantTotal());
+            ps.setString(4, budget.getPeriode());
+            ps.setString(5, budget.getStatut());
+            ps.setDate(6, new java.sql.Date(budget.getDateCreation().getTime()));
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new SQLDataException(e.getMessage());
         }
@@ -80,5 +79,27 @@ public class ServiceBudget implements Iservice<Budget> {
             throw new SQLDataException(e.getMessage());
         }
         return budgets;
+    }
+
+    public Budget recupererParId(int idBudget) throws SQLDataException {
+        String sql = "SELECT * FROM budget WHERE id_budget = " + idBudget;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            if (rs.next()) {
+                Budget b = new Budget();
+                b.setIdBudget(rs.getInt("id_budget"));
+                b.setIdUtilisateur(rs.getInt("id_utilisateur"));
+                b.setNomBudget(rs.getString("nom_budget"));
+                b.setMontantTotal(rs.getDouble("montant_total"));
+                b.setPeriode(rs.getString("periode"));
+                b.setStatut(rs.getString("statut"));
+                b.setDateCreation(rs.getDate("date_creation"));
+                return b;
+            }
+        } catch (SQLException e) {
+            throw new SQLDataException(e.getMessage());
+        }
+        return null;
     }
 }

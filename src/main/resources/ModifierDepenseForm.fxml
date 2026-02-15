@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.ModifierDepenseController"
+            stylesheets="@assets/style.css"
+            fitToWidth="true">
+
+    <VBox styleClass="main-container" spacing="20">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="📋 Dépenses du Budget" styleClass="header-title-blue"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="✕" styleClass="btn-close" onAction="#onRetour"/>
+        </HBox>
+
+        <!-- Section Liste -->
+        <VBox spacing="15" styleClass="card">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Bouton pour afficher/masquer et compteur -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="btnToggleExpenses" text="📋 Afficher la liste"
+                        styleClass="btn-primary"
+                        onAction="#onToggleExpenses"
+                        prefWidth="200"/>
+                <Label fx:id="lblExpenseCount" text="0 dépense(s)"
+                       style="-fx-text-fill: #666; -fx-font-weight: bold; -fx-font-size: 14;"/>
+            </HBox>
+
+            <!-- VBox contenant les cartes des dépenses -->
+            <ScrollPane fx:id="scrollDepenses" visible="false" fitToWidth="true" style="-fx-padding: 0;">
+                <VBox fx:id="vboxDepenses" spacing="15" style="-fx-padding: 10;"/>
+            </ScrollPane>
+
+        </VBox>
+
+    </VBox>
+
+</ScrollPane>
+
