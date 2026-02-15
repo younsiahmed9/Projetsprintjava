@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.AfficherCreditController" stylesheets="@../css/styles.css">
+
+    <BorderPane fx:id="mainContent" styleClass="main-container">
+        <top>
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 25 35;">
+                <Button onAction="#handleRetour" styleClass="btn-back" text="←"/>
+                <VBox spacing="2">
+                    <Label text="Mes Crédits" styleClass="header-title-blue"/>
+                    <Label fx:id="lblInfosCompte" text="Compte N° XXXX" style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleAjouterCredit" styleClass="btn-add-circle" text="+"/>
+            </HBox>
+        </top>
+
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="30" style="-fx-padding: 0 35 35 35;">
+
+                    <HBox spacing="30">
+                        <VBox spacing="20" prefWidth="280">
+                            <VBox styleClass="kpi-card">
+                                <Label text="Total des Emprunts" styleClass="field-label"/>
+                                <Label fx:id="lblTotalEmprunt" text="0.00 DT" styleClass="kpi-value-blue"/>
+                            </VBox>
+                            <VBox styleClass="kpi-card">
+                                <Label text="Mensualité Globale" styleClass="field-label"/>
+                                <Label fx:id="lblTotalMensualite" text="0.00 DT" styleClass="kpi-value-green"/>
+                            </VBox>
+                            <VBox styleClass="kpi-card">
+                                <Label text="Crédits Actifs" styleClass="field-label"/>
+                                <Label fx:id="lblNbCredits" text="0" styleClass="kpi-value-dark"/>
+                            </VBox>
+                        </VBox>
+
+                        <VBox HBox.hgrow="ALWAYS" styleClass="chart-container">
+                            <Label text="Répartition des Mensualités" styleClass="card-title-internal" style="-fx-padding: 0 0 15 0;"/>
+                            <BarChart fx:id="barChartCredits" legendVisible="false" prefHeight="280">
+                                <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                                <yAxis><NumberAxis side="LEFT" /></yAxis>
+                            </BarChart>
+                        </VBox>
+                    </HBox>
+
+                    <VBox styleClass="table-card-container" VBox.vgrow="ALWAYS">
+                        <Label text="Historique des Crédits" styleClass="card-title-internal" style="-fx-padding: 0 0 20 0;"/>
+
+                        <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 12 25; -fx-background-color: #f8f9fa; -fx-background-radius: 10;">
+                            <Label text="INFOS CRÉDIT"  minWidth="300" prefWidth="300" maxWidth="300" styleClass="column-header-custom" />
+                            <Label text="DURÉE"        minWidth="150" prefWidth="150" maxWidth="150" styleClass="column-header-custom" alignment="CENTER"/>
+                            <Label text="MENSUALITÉ"  minWidth="200" prefWidth="200" maxWidth="200" styleClass="column-header-custom" alignment="CENTER"/>
+                            <Label text="STATUT"       minWidth="150" prefWidth="150" maxWidth="150" styleClass="column-header-custom" alignment="CENTER"/>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="ACTIONS"      minWidth="120" prefWidth="120" maxWidth="120" styleClass="column-header-custom" alignment="CENTER_RIGHT"/>
+                        </HBox>
+
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="NEVER">
+                            <VBox fx:id="containerCredits" spacing="0" style="-fx-padding: 5 0 0 0;" />
+                        </ScrollPane>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+
+</StackPane>

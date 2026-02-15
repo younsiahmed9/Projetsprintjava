@@ -132,4 +132,47 @@ public class ServiceCompte implements Iservice<Compte> {
 
         return compteList;
     }
+    public Compte recupererParId(int id) throws SQLDataException {
+        // Vérifie bien que les noms (numero_compte, etc.) sont identiques à ta table SQL
+        String sql = "SELECT * FROM compte WHERE id_compte = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Compte c = new Compte();
+                c.setIdCompte(rs.getInt("id_compte"));
+                c.setNumeroCompte(rs.getString("numero_compte"));
+                c.setSolde(rs.getDouble("solde"));
+                c.setTypeCompte(rs.getString("type_compte"));
+                c.setTauxInteret(rs.getObject("taux_interet") != null ? rs.getDouble("taux_interet") : null);
+                c.setPlafondDecouvert(rs.getObject("plafond_decouvert") != null ? rs.getDouble("plafond_decouvert") : null);
+                c.setDateCreation(rs.getDate("date_creation").toLocalDate());
+                c.setEtat(rs.getString("etat"));
+                return c;
+            } else {
+                System.out.println("Aucun compte trouvé pour l'ID : " + id);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL recupererParId: " + e.getMessage());
+        }
+        return null;
+    }
+    public String getEtatParId(int idCompte) {
+        // REMPLACE 'id' PAR LE VRAI NOM (id_compte)
+        String sql = "SELECT etat FROM compte WHERE id_compte = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idCompte);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("etat");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

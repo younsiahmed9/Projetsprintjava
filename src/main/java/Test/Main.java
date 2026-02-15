@@ -73,14 +73,14 @@ public class Main {
         ServiceCredit serviceCredit = new ServiceCredit();
        try {
             // Ajouter des crédits
-            Credit credit1 = new Credit(2000, 5.5, 12, 200, LocalDate.now(), "EN_COURS", new Compte(4));
-            Credit credit2 = new Credit(5000, 4.5, 24, 220, LocalDate.now(), "EN_COURS", new Compte(4));
+            Credit credit1 = new Credit(2000, 5.5, 12, 200, LocalDate.now(), "EN_COURS", 17);
+            Credit credit2 = new Credit(5000, 4.5, 24, 220, LocalDate.now(), "EN_COURS", 11);
 
             serviceCredit.ajouter(credit1);
             serviceCredit.ajouter(credit2);
 
             // Modifier un crédit (id = 1)
-            serviceCredit.modifier(new Credit(2500, 5.5, 12, 210, LocalDate.now(), "EN_COURS", new Compte(4), 1));
+            serviceCredit.modifier(new Credit(2500, 5.5, 12, 210, LocalDate.now(), "EN_COURS", 12, 1));
 
             // Afficher tous les crédits
             System.out.println(serviceCredit.recuperer());

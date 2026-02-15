@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="25" alignment="TOP_CENTER" styleClass="popup-container"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.AjouterCompteController"
+      prefWidth="550" prefHeight="650">
+
+    <padding>
+        <Insets top="40" right="50" bottom="40" left="50"/>
+    </padding>
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Nouveau Compte" styleClass="header-title-blue" style="-fx-font-size: 30;"/>
+        <Label text="Remplissez les informations pour créer un nouveau compte bancaire dans votre système."
+               wrapText="true" style="-fx-text-fill: #999; -fx-text-alignment: center; -fx-font-size: 14;"/>
+    </VBox>
+
+    <Separator style="-fx-opacity: 0.5;"/>
+
+    <VBox spacing="18" VBox.vgrow="ALWAYS">
+
+        <VBox spacing="8">
+            <Label text="NUMÉRO DE COMPTE" styleClass="card-type-header"/>
+            <TextField fx:id="txtNumero" promptText="Ex: 2088 4577 1254" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="SOLDE INITIAL (DT)" styleClass="card-type-header"/>
+            <TextField fx:id="txtSolde" promptText="0.00" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="TYPE DE COMPTE" styleClass="card-type-header"/>
+            <ComboBox fx:id="comboType" promptText="Sélectionnez le type" maxWidth="Infinity" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox fx:id="boxTaux" spacing="8" managed="false" visible="false">
+            <Label text="TAUX D'INTÉRÊT (%)" styleClass="card-type-header"/>
+            <TextField fx:id="txtTaux" promptText="Ex: 3.5" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox fx:id="boxDecouvert" spacing="8" managed="false" visible="false">
+            <Label text="PLAFOND DE DÉCOUVERT (DT)" styleClass="card-type-header"/>
+            <TextField fx:id="txtDecouvert" promptText="Ex: 1000" styleClass="modern-input"/>
+        </VBox>
+
+    </VBox>
+
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel" prefWidth="150" prefHeight="45"/>
+        <Button text="Créer le compte" onAction="#handleEnregistrer" styleClass="btn-details-orange" prefWidth="250" prefHeight="45" style="-fx-font-size: 16;"/>
+    </HBox>
+
+</VBox>

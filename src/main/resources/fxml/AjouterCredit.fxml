@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="25" alignment="TOP_CENTER" styleClass="popup-container"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.AjouterCreditController"
+      prefWidth="500" maxWidth="500" maxHeight="-Infinity" minHeight="-Infinity">
+
+    <padding>
+        <Insets top="35" right="45" bottom="35" left="45"/>
+    </padding>
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Nouvelle Demande" styleClass="header-title-blue" style="-fx-font-size: 26;"/>
+        <Label text="Calculez votre mensualité en quelques secondes."
+               wrapText="true" style="-fx-text-fill: #999; -fx-text-alignment: center; -fx-font-size: 13;"/>
+    </VBox>
+
+    <Separator style="-fx-opacity: 0.3;"/>
+
+    <VBox spacing="15">
+        <VBox spacing="5">
+            <Label text="MONTANT DU CRÉDIT (DT)" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+            <TextField fx:id="txtMontant" promptText="Ex: 15000" styleClass="modern-input"/>
+        </VBox>
+
+        <HBox spacing="15">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="TAUX (%)" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+                <TextField fx:id="txtTaux" promptText="5.5" styleClass="modern-input"/>
+            </VBox>
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="DURÉE (MOIS)" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+                <TextField fx:id="txtDuree" promptText="24" styleClass="modern-input"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="5" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 12; -fx-border-color: #eee; -fx-border-radius: 12;">
+            <Label text="MENSUALITÉ ESTIMÉE" styleClass="card-type-header" style="-fx-text-fill: #666; -fx-font-size: 9;"/>
+            <Label fx:id="lblMensualite" text="0.00 DT" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #3e893e;"/>
+        </VBox>
+    </VBox>
+
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+        <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel" prefWidth="120" prefHeight="40"/>
+        <Button text="Confirmer" onAction="#handleConfirmer" styleClass="btn-details-orange" prefWidth="200" prefHeight="40"/>
+    </HBox>
+
+</VBox>

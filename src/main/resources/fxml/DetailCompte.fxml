@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+
+<VBox spacing="0" alignment="TOP_CENTER" styleClass="popup-container"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.DetailCompteController"
+      prefWidth="450" style="-fx-background-radius: 30; -fx-overflow: hidden;">
+
+    <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #182d88; -fx-padding: 30; -fx-background-radius: 30 30 0 0;">
+        <Label fx:id="lblType" style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 14; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
+
+        <Label text="Solde Actuel" style="-fx-text-fill: rgba(255,255,255,0.5); -fx-font-size: 12;"/>
+        <Label fx:id="lblSolde" style="-fx-text-fill: white; -fx-font-size: 32; -fx-font-weight: bold;"/>
+    </VBox>
+
+    <VBox spacing="20" style="-fx-padding: 30;">
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="NUMÉRO DE COMPTE" styleClass="card-type-header"/>
+                <Label fx:id="lblNumero" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            </VBox>
+            <Label fx:id="lblEtat" style="-fx-padding: 5 12; -fx-background-radius: 10; -fx-font-weight: bold; -fx-font-size: 11;"/>
+        </HBox>
+
+        <Line endX="350" stroke="#F0F0F0" />
+
+        <VBox spacing="8" fx:id="boxSpecifique">
+            <Label fx:id="lblSpecifiqueTitre" text="DÉTAILS TECHNIQUE" styleClass="card-type-header"/>
+            <Label fx:id="lblSpecifiqueValeur" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+        </VBox>
+
+        <Region prefHeight="20"/>
+
+        <VBox spacing="12" alignment="CENTER">
+            <Button fx:id="btnCredits" text="Consulter les crédits" onAction="#handleConsulterCredits" maxWidth="Infinity" styleClass="btn-details-orange" style="-fx-pref-height: 45;"/>
+
+            <HBox spacing="10" maxWidth="Infinity">
+                <Button text="Modifier" onAction="#handleModifier" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="btn-action-light-blue" style="-fx-pref-height: 40;"/>
+                <Button text="Supprimer" onAction="#handleSupprimer" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="btn-action-light-red" style="-fx-pref-height: 40;"/>
+            </HBox>
+
+            <Button text="Fermer" onAction="#handleFermer" styleClass="btn-cancel"/>
+        </VBox>
+    </VBox>
+</VBox>

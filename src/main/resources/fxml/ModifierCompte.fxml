@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" styleClass="form-container" stylesheets="@../css/styles.css"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.ModifierCompteController" prefWidth="400">
+
+    <padding>
+        <Insets top="25" right="35" bottom="25" left="35"/>
+    </padding>
+
+    <Label text="Modifier le compte" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+
+    <VBox spacing="5">
+        <Label text="Numéro de Compte" styleClass="field-label"/>
+        <TextField fx:id="txtNumero" styleClass="form-field"/>
+    </VBox>
+
+    <VBox spacing="5">
+        <Label text="Solde actuel" styleClass="field-label"/>
+        <TextField fx:id="txtSolde" styleClass="form-field"/>
+    </VBox>
+
+    <VBox fx:id="boxPlafond" spacing="5">
+        <Label text="Plafond de découvert" styleClass="field-label"/>
+        <TextField fx:id="txtPlafond" styleClass="form-field"/>
+    </VBox>
+
+    <VBox fx:id="boxTaux" spacing="5">
+        <Label text="Taux d'intérêt (%)" styleClass="field-label"/>
+        <TextField fx:id="txtTaux" styleClass="form-field"/>
+    </VBox>
+
+    <VBox spacing="5">
+        <Label text="État" styleClass="field-label"/>
+        <ComboBox fx:id="comboEtat" styleClass="form-field" prefWidth="400"/>
+    </VBox>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+        <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel-flat" prefWidth="100"/>
+        <Button text="Enregistrer" onAction="#handleEnregistrer" styleClass="btn-save" prefWidth="130"/>
+    </HBox>
+</VBox>

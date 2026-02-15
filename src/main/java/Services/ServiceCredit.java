@@ -1,7 +1,6 @@
 package Services;
 
 import Models.Credit;
-import Models.Compte;
 import utils.MyDatabase;
 
 import java.sql.*;
@@ -17,28 +16,34 @@ public class ServiceCredit implements Iservice<Credit> {
 
     @Override
     public void ajouter(Credit credit) throws SQLDataException {
-        String sql = "INSERT INTO credit (montant, taux_interet, duree_mois, mensualite, date_debut, statut, id_compte) VALUES ("
-                + credit.getMontant() + ", "
-                + credit.getTauxInteret() + ", "
-                + credit.getDureeMois() + ", "
-                + credit.getMensualite() + ", '"
-                + Date.valueOf(credit.getDateDebut()) + "', '"
-                + credit.getStatut() + "', "
-                + credit.getCompte().getIdCompte() + ")";
-        try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(sql);
+        String sql = "INSERT INTO credit (montant, taux_interet, duree_mois, mensualite, date_debut, statut, id_compte) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) { // Try-with-resources pour fermer le PS
+            ps.setDouble(1, credit.getMontant());
+            ps.setDouble(2, credit.getTauxInteret());
+            ps.setInt(3, credit.getDureeMois());
+            ps.setDouble(4, credit.getMensualite());
+            ps.setDate(5, Date.valueOf(credit.getDateDebut()));
+            ps.setString(6, credit.getStatut());
+            ps.setInt(7, credit.getCompte());
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 0) {
+                System.out.println("⚠️ Aucune ligne ajoutée, vérifiez vos contraintes DB.");
+            }
         } catch (SQLException e) {
-            System.out.println("Erreur ajout credit : " + e.getMessage());
+            // TRÈS IMPORTANT : Afficher l'erreur complète pour savoir si c'est un nom de colonne faux
+            System.err.println("❌ Erreur SQL détaillée : " + e.getSQLState() + " - " + e.getMessage());
+            throw new SQLDataException(e.getMessage());
         }
     }
 
     @Override
     public void supprimer(Credit credit) throws SQLDataException {
-        String sql = "DELETE FROM credit WHERE id_credit = " + credit.getIdCredit();
+        String sql = "DELETE FROM credit WHERE id_credit = ?";
         try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(sql);
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, credit.getIdCredit());
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur suppression credit : " + e.getMessage());
         }
@@ -55,7 +60,7 @@ public class ServiceCredit implements Iservice<Credit> {
             ps.setDouble(4, credit.getMensualite());
             ps.setDate(5, Date.valueOf(credit.getDateDebut()));
             ps.setString(6, credit.getStatut());
-            ps.setInt(7, credit.getCompte().getIdCompte());
+            ps.setInt(7, credit.getCompte());
             ps.setInt(8, credit.getIdCredit());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -71,24 +76,41 @@ public class ServiceCredit implements Iservice<Credit> {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
-                Credit c = new Credit();
-                c.setIdCredit(rs.getInt("id_credit"));
-                c.setMontant(rs.getDouble("montant"));
-                c.setTauxInteret(rs.getDouble("taux_interet"));
-                c.setDureeMois(rs.getInt("duree_mois"));
-                c.setMensualite(rs.getDouble("mensualite"));
-                c.setDateDebut(rs.getDate("date_debut").toLocalDate());
-                c.setStatut(rs.getString("statut"));
-
-                Compte compte = new Compte();
-                compte.setIdCompte(rs.getInt("id_compte"));
-                c.setCompte(compte);
-
-                creditList.add(c);
+                creditList.add(mapResultSetToCredit(rs));
             }
         } catch (SQLException e) {
             System.out.println("Erreur récupération credit : " + e.getMessage());
         }
         return creditList;
+    }
+
+    public List<Credit> recupererParCompte(int idCompte) {
+        String sql = "SELECT * FROM credit WHERE id_compte = ?";
+        List<Credit> creditList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, idCompte);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                creditList.add(mapResultSetToCredit(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur récupération crédits par compte : " + e.getMessage());
+        }
+        return creditList;
+    }
+
+    // Méthode utilitaire interne pour éviter la répétition de code
+    private Credit mapResultSetToCredit(ResultSet rs) throws SQLException {
+        Credit c = new Credit();
+        c.setIdCredit(rs.getInt("id_credit"));
+        c.setMontant(rs.getDouble("montant"));
+        c.setTauxInteret(rs.getDouble("taux_interet"));
+        c.setDureeMois(rs.getInt("duree_mois"));
+        c.setMensualite(rs.getDouble("mensualite"));
+        c.setDateDebut(rs.getDate("date_debut").toLocalDate());
+        c.setStatut(rs.getString("statut"));
+        c.setCompte(rs.getInt("id_compte")); // On assigne directement l'int
+        return c;
     }
 }

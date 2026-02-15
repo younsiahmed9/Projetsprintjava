@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="mainContainer" spacing="20" alignment="CENTER" styleClass="popup-card"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.SupprimerCreditController"
+      prefWidth="400" maxWidth="400">
+
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Label text="⚠" style="-fx-font-size: 40; -fx-text-fill: #c62828;"/>
+
+    <VBox spacing="10" alignment="CENTER">
+        <Label text="Confirmer la suppression" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+        <Text text="Êtes-vous sûr de vouloir supprimer ce crédit ? Cette action est irréversible."
+              wrappingWidth="300" style="-fx-fill: #7f8c8d; -fx-text-alignment: center; -fx-font-size: 14;"/>
+    </VBox>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button text="Annuler" onAction="#handleAnnuler" prefWidth="130" styleClass="btn-cancel"/>
+        <Button text="Supprimer" onAction="#handleSupprimer" prefWidth="130" styleClass="btn-delete-final"/>
+    </HBox>
+</VBox>

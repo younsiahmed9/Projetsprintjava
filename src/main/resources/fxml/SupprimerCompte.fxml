@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" alignment="CENTER" styleClass="delete-popup"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.SupprimerCompteController"
+      prefWidth="380">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <Label text="⚠" style="-fx-font-size: 40; -fx-text-fill: #c62828;"/>
+
+    <VBox spacing="10" alignment="CENTER">
+        <Label text="Confirmer la suppression" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+        <Label text="Êtes-vous sûr de vouloir supprimer ce compte ? Cette action est irréversible."
+               wrapText="true" style="-fx-text-alignment: center; -fx-text-fill: #666; -fx-font-size: 13;"/>
+    </VBox>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="btnAnnuler" text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel-flat" prefWidth="120"/>
+        <Button text="Supprimer" onAction="#handleConfirmer" styleClass="btn-confirm-delete" prefWidth="120"/>
+    </HBox>
+</VBox>

@@ -10,12 +10,12 @@ public class Credit {
     private double mensualite;
     private LocalDate dateDebut;
     private String statut;
-    private Compte compte;
+    private int compte;
 
     public Credit() {
     }
 
-    public Credit(double montant, double tauxInteret, int dureeMois, double mensualite, LocalDate dateDebut, String statut, Compte compte) {
+    public Credit(double montant, double tauxInteret, int dureeMois, double mensualite, LocalDate dateDebut, String statut, int compte) {
         this.montant = montant;
         this.tauxInteret = tauxInteret;
         this.dureeMois = dureeMois;
@@ -25,7 +25,7 @@ public class Credit {
         this.compte = compte;
     }
 
-    public Credit(double montant, double tauxInteret, int dureeMois, double mensualite, LocalDate dateDebut, String statut, Compte compte, int idCredit) {
+    public Credit(double montant, double tauxInteret, int dureeMois, double mensualite, LocalDate dateDebut, String statut, int compte, int idCredit) {
         this.montant = montant;
         this.tauxInteret = tauxInteret;
         this.dureeMois = dureeMois;
@@ -96,11 +96,11 @@ public class Credit {
         this.statut = statut;
     }
 
-    public Compte getCompte() {
+    public int getCompte() {
         return compte;
     }
 
-    public void setCompte(Compte compte) {
+    public void setCompte(int compte) {
         this.compte = compte;
     }
     @Override

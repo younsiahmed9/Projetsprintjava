@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.AfficherCompteController"
+           stylesheets="@../css/styles.css">
+
+    <BorderPane fx:id="mainContent" styleClass="main-container">
+
+        <left>
+            <VBox fx:id="sidebar" spacing="40" styleClass="sidebar">
+                <ImageView fitHeight="160" fitWidth="160" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Button text="Mes Comptes" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💳" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Mes Portefeuilles" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💼" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Mes Dépenses" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📉" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Mes Services" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="🛠" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Mes Documents" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📄" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </VBox>
+        </left>
+
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="30" style="-fx-padding: 35;">
+
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="5">
+                            <Label text="Mes Comptes" styleClass="header-title-blue"/>
+                            <Label text="Gérez vos avoirs et visualisez vos soldes en temps réel." style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleAjouter" styleClass="btn-add-circle" text="+"/>
+                    </HBox>
+
+                    <HBox spacing="25" alignment="CENTER_LEFT" style="-fx-padding: 10 0;">
+                        <Button fx:id="btnTous" text="Tous" onAction="#filterTous" styleClass="filter-link, filter-active"/>
+                        <Button fx:id="btnCourant" text="Courant" onAction="#filterCourant" styleClass="filter-link"/>
+                        <Button fx:id="btnEpargne" text="Epargne" onAction="#filterEpargne" styleClass="filter-link"/>
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="search-box">
+                            <Label text="🔍" style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                            <TextField fx:id="txtRecherche" promptText="Rechercher un numéro..." styleClass="search-field" prefWidth="200"/>
+                        </HBox>
+                    </HBox>
+
+                    <FlowPane fx:id="containerCartes" hgap="30" vgap="30" prefWrapLength="1100">
+                    </FlowPane>
+
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+
+</StackPane>

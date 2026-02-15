@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox fx:id="mainContainer" spacing="12" styleClass="popup-card" stylesheets="@../css/styles.css"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.ModifierCreditController"
+      prefWidth="400" maxWidth="400" fillWidth="true">
+
+    <padding>
+        <Insets top="25" right="30" bottom="25" left="30"/>
+    </padding>
+
+    <Label text="Modifier le crédit" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #182d88;">
+        <VBox.margin><Insets bottom="5"/></VBox.margin>
+    </Label>
+
+    <VBox spacing="4">
+        <Label text="Montant Initial" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-weight: bold;"/>
+        <TextField fx:id="txtMontantReadOnly" editable="false" styleClass="modern-input"
+                   style="-fx-background-color: #f1f2f6; -fx-text-fill: #7f8c8d;"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Taux d’intérêt (%)" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-weight: bold;"/>
+        <TextField fx:id="txtTaux" styleClass="modern-input" promptText="ex: 5.5"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Durée (Mois)" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-weight: bold;"/>
+        <TextField fx:id="txtDuree" styleClass="modern-input" promptText="ex: 24"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Statut du crédit" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-font-weight: bold;"/>
+        <ComboBox fx:id="comboStatut" maxWidth="Infinity" styleClass="modern-input"/>
+    </VBox>
+
+    <VBox spacing="2" style="-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 10; -fx-border-color: #e0e0e0; -fx-border-radius: 10;">
+        <Label text="Nouvelle Mensualité" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+        <Label fx:id="lblMensualite" text="0.00 DT" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+    </VBox>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <VBox.margin><Insets top="10"/></VBox.margin>
+        <Button text="Annuler" onAction="#handleAnnuler" prefWidth="100" styleClass="btn-cancel"/>
+        <Button text="Enregistrer" onAction="#handleModifier" prefWidth="130" styleClass="btn-confirm"/>
+    </HBox>
+</VBox>
