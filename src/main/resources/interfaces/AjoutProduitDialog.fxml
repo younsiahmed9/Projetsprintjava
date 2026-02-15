@@ -16,20 +16,35 @@
                 <Insets bottom="20" left="20" right="20" top="20" />
             </padding>
 
+            <!-- Ligne 0 : Nom -->
             <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Nom :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
             <TextField fx:id="nomField" promptText="Nom du produit" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label fx:id="nomError" style="-fx-font-size: 11px; -fx-pref-width: 150;" text="" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
+            <!-- Ligne 1 : Type -->
             <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Type :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <ComboBox fx:id="typeCombo" prefWidth="200" promptText="Sélectionner le type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="typeError" style="-fx-font-size: 11px; -fx-pref-width: 150;" text="" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
+            <!-- Ligne 2 : Montant -->
             <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Montant (TND) :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <TextField fx:id="montantField" promptText="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="montantError" style="-fx-font-size: 11px; -fx-pref-width: 150;" text="" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
+            <!-- Ligne 3 : Code unique -->
             <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Code unique :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             <TextField fx:id="codeField" promptText="CODE-123" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="codeError" style="-fx-font-size: 11px; -fx-pref-width: 150;" text="" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
+            <!-- Ligne 4 : Statut -->
             <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Statut :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
             <ComboBox fx:id="statutCombo" prefWidth="200" promptText="Statut" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="statutError" style="-fx-font-size: 11px; -fx-pref-width: 150;" text="" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+            <!-- Message d'information -->
+            <Text style="-fx-font-size: 11px; -fx-fill: #718096;"
+                  text="Le code doit contenir au moins 5 caractères (majuscules, chiffres, tirets)"
+                  GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="2" />
         </GridPane>
     </content>
 

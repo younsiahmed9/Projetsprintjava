@@ -100,7 +100,7 @@
             <HBox spacing="20" style="-fx-padding: 20 30 20 30;">
                 <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(24,45,136,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Circle fill="#f78f34" radius="8" />
+                        <Circle fill="#f49b36" radius="8" />
                         <Text style="-fx-font-size: 14px; -fx-fill: #182d88; -fx-opacity: 0.7;" text="Services" />
                     </HBox>
                     <Text fx:id="totalServices" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #182d88;" text="0" />
@@ -108,7 +108,7 @@
 
                 <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(24,45,136,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Circle fill="#fecf47" radius="8" />
+                        <Circle fill="#16cb20" radius="8" />
                         <Text style="-fx-font-size: 14px; -fx-fill: #182d88; -fx-opacity: 0.7;" text="Produits" />
                     </HBox>
                     <Text fx:id="totalProduits" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #182d88;" text="0" />
