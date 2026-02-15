@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1.0"
+            fx:controller="Controllers.MainController"
+            stylesheets="@../css/styles.css"
+            styleClass="main-container">
+
+    <!-- TOP: Logo FinTrack -->
+    <top>
+        <VBox style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0; -fx-padding: 10 20;">
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-min-height: 80;">
+                <!-- Logo Image -->
+                <ImageView fitHeight="70" fitWidth="70" preserveRatio="true" smooth="true">
+                    <Image url="@../images/fintrack-complete-logo.svg"/>
+                </ImageView>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- LEFT: Sidebar avec menu -->
+    <left>
+        <VBox prefWidth="280" styleClass="sidebar" spacing="15" style="-fx-padding: 20;">
+
+            <!-- Menu items -->
+            <Label text="Menu Principal" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            <Separator style="-fx-border-color: #E5E7EB;"/>
+
+            <Button fx:id="btnDossiers" text="📁 Dossiers" onAction="#onDossiers" styleClass="menu-button"/>
+            <Button fx:id="btnDocuments" text="📄 Documents" onAction="#onDocuments" styleClass="menu-button"/>
+            <Button fx:id="btnCategories" text="🏷️ Catégories" onAction="#onCategories" styleClass="menu-button"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="v1.0.0" style="-fx-text-fill: #C0C0C0; -fx-font-size: 12;"/>
+        </VBox>
+    </left>
+
+    <!-- CENTER: Content area -->
+    <center>
+        <StackPane fx:id="content" style="-fx-padding: 20;"/>
+    </center>
+</BorderPane>

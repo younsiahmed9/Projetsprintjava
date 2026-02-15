@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1.0"
+            fx:controller="Controllers.MainController"
+            stylesheets="@../css/styles.css"
+            styleClass="main-container">
+
+    <!-- TOP: Header professionnel avec logo -->
+    <top>
+        <VBox style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0; -fx-padding: 15 30;">
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-min-height: 70;">
+                <!-- Logo Image -->
+                <ImageView fitHeight="60" fitWidth="60" preserveRatio="true" smooth="true">
+                    <Image url="@../images/fintrack-complete-logo.svg"/>
+                </ImageView>
+
+                <!-- Titre -->
+                <Label text="FinTrack" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1d4ed8;"/>
+
+                <!-- Spacer -->
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- User info (optionnel) -->
+                <Label text="👤 Admin" style="-fx-font-size: 12; -fx-text-fill: #666;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER: Contenu principal (chargerait le fichier document.fxml) -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-padding: 30;"/>
+    </center>
+
+</BorderPane>
+

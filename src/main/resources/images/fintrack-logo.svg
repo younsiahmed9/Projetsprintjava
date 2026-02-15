@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Cercle externe avec dégradé -->
+  <defs>
+    <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Cercle principal -->
+  <circle cx="100" cy="100" r="95" fill="url(#circleGradient)" stroke="#ffffff" stroke-width="3"/>
+
+  <!-- Cercle interne blanc -->
+  <circle cx="100" cy="100" r="75" fill="none" stroke="#ffffff" stroke-width="2"/>
+
+  <!-- Lettre F stylisée -->
+  <g>
+    <!-- Barre horizontale supérieure -->
+    <rect x="75" y="55" width="50" height="8" fill="#ffffff" rx="4"/>
+
+    <!-- Barre verticaleau milieu -->
+    <rect x="75" y="70" width="35" height="8" fill="#ffffff" rx="4"/>
+
+    <!-- Trait vertical principal -->
+    <rect x="75" y="55" width="8" height="70" fill="#ffffff" rx="4"/>
+  </g>
+
+  <!-- Flèche montante -->
+  <g>
+    <!-- Trait diagonal -->
+    <line x1="110" y1="95" x2="135" y2="70" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Pointe flèche (haut droit) -->
+    <polygon points="135,70 145,75 140,85" fill="#f59e0b"/>
+  </g>
+</svg>
+

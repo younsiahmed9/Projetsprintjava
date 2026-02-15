@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1.0"
+      fx:controller="Controllers.DocumentController"
+      spacing="20"
+      style="-fx-padding: 20;">
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Label text="Documents" styleClass="header-title-blue"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="⟳" onAction="#onRefresh" styleClass="btn-secondary" style="-fx-font-size: 16;"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="card">
+            <Label text="Liste des documents" styleClass="section-title"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-padding: 0; -fx-border-color: transparent;">
+                <ListView fx:id="listDocuments" VBox.vgrow="ALWAYS" style="-fx-padding: 5;"/>
+            </ScrollPane>
+        </VBox>
+
+        <VBox spacing="15" prefWidth="420" styleClass="card">
+            <Label text="Ajouter/Modifier Document" styleClass="section-title"/>
+
+            <Label text="Titre du document" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            <TextField fx:id="tfTitre" styleClass="modern-input" promptText="Ex: Facture Internet"/>
+
+            <Label text="Dossier" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            <ComboBox fx:id="cbDossier" styleClass="modern-input" promptText="Choisir un dossier"/>
+
+            <Label text="Catégorie" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            <ComboBox fx:id="cbCategorie" styleClass="modern-input" promptText="Choisir une catégorie (optionnel)"/>
+
+            <Label text="Description" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            <TextArea fx:id="taDesc" styleClass="modern-input" promptText="Description..." prefRowCount="3"/>
+
+            <Label text="Fichier" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            <HBox spacing="8">
+                <TextField fx:id="tfPath" styleClass="modern-input" promptText="Chemin du fichier..." HBox.hgrow="ALWAYS"/>
+                <Button text="📂" onAction="#onBrowse" styleClass="btn-secondary" style="-fx-font-size: 14; -fx-min-width: 40;"/>
+            </HBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <HBox spacing="10">
+                <Button text="✓ Ajouter" onAction="#onAdd" styleClass="btn-primary" HBox.hgrow="ALWAYS"/>
+                <Button text="✎ Modifier" onAction="#onUpdate" styleClass="btn-action-light-blue" HBox.hgrow="ALWAYS"/>
+                <Button text="✕ Supprimer" onAction="#onDelete" styleClass="btn-danger" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <Button text="Effacer" onAction="#onClear" styleClass="btn-secondary" maxWidth="Infinity"/>
+        </VBox>
+    </HBox>
+</VBox>
