@@ -10,6 +10,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/fxml/main_new.fxml"));
         Scene scene = new Scene(loader.load(), 1400, 800);
+        scene.getStylesheets().add(Main.class.getResource("/css/styles.css").toExternalForm());
         stage.setTitle("FinTrack - Gestion des Documents");
         stage.setScene(scene);
         stage.setMinWidth(1200);
@@ -21,4 +22,3 @@ public class Main extends Application {
         launch(args);
     }
 }
-

@@ -7,6 +7,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import utils.UiStyles;
 
 /**
  * Dialog professionnel et personnalisé pour la suppression d'entités
@@ -15,6 +16,7 @@ public class DeleteConfirmationDialog extends Dialog<ButtonType> {
 
     public DeleteConfirmationDialog(String entityType, String entityName, String additionalInfo) {
         this.setTitle("⚠️ Confirmation de suppression");
+        UiStyles.applyDialogStyles(this.getDialogPane());
         this.setWidth(500);
 
         VBox headerBox = createHeaderBox();

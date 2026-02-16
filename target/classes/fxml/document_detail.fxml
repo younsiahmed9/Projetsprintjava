@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1.0"
+            fx:controller="Controllers.DocumentDetailController"
+            stylesheets="@../css/styles.css"
+            style="-fx-background-color: #f5f7fa;">
+
+    <!-- HEADER -->
+    <top>
+        <VBox style="-fx-background-color: #ffffff; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0; -fx-padding: 20;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label fx:id="lblTitle" text="Détail du Document" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnEdit" text="✎ Modifier" styleClass="btn-primary" />
+                <Button fx:id="btnDownload" text="⬇ Télécharger" styleClass="btn-secondary" />
+                <Button fx:id="btnDelete" text="🗑 Supprimer" styleClass="btn-danger" />
+                <Button fx:id="btnClose" text="✕" styleClass="btn-icon-small" />
+            </HBox>
+            <Label fx:id="lblPath" text="Chemin: " style="-fx-font-size: 11; -fx-text-fill: #6b7280; -fx-padding: 10 0 0 0;"/>
+        </VBox>
+    </top>
+
+    <!-- CONTENU PRINCIPAL -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-padding: 0; -fx-border-color: transparent;">
+            <HBox spacing="20" style="-fx-padding: 20;">
+                <!-- SECTION GAUCHE : APERÇU DU FICHIER -->
+                <VBox spacing="15" prefWidth="400" styleClass="card" style="-fx-padding: 20;">
+                    <Label text="📄 APERÇU DU FICHIER" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+                    <Separator />
+
+                    <!-- Conteneur pour l'aperçu -->
+                    <StackPane fx:id="previewContainer" style="-fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 8; -fx-padding: 10;" minHeight="350" maxHeight="400">
+                        <!-- Sera rempli dynamiquement selon le type de fichier -->
+                        <Label text="Chargement de l'aperçu..." alignment="CENTER" style="-fx-text-fill: #9ca3af;"/>
+                    </StackPane>
+
+                    <!-- Infos fichier -->
+                    <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #f9fafb; -fx-border-radius: 5;">
+                        <HBox spacing="10">
+                            <Label text="Type:" style="-fx-font-weight: bold; -fx-min-width: 60;"/>
+                            <Label fx:id="lblFileType" text="-"/>
+                        </HBox>
+                        <HBox spacing="10">
+                            <Label text="Taille:" style="-fx-font-weight: bold; -fx-min-width: 60;"/>
+                            <Label fx:id="lblFileSize" text="-"/>
+                        </HBox>
+                        <HBox spacing="10">
+                            <Label text="Chemin:" style="-fx-font-weight: bold; -fx-min-width: 60;"/>
+                            <Label fx:id="lblFilePath" text="-" wrapText="true"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Boutons actions fichier -->
+                    <HBox spacing="10">
+                        <Button fx:id="btnOpenFile" text="🔓 Ouvrir le fichier" maxWidth="Infinity" styleClass="btn-secondary" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnOpenFolder" text="📁 Ouvrir le dossier" maxWidth="Infinity" styleClass="btn-secondary" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                </VBox>
+
+                <!-- SECTION DROITE : INFORMATIONS ET RELEVÉ FINANCIER -->
+                <VBox spacing="15" HBox.hgrow="ALWAYS">
+                    <!-- INFORMATIONS DU DOCUMENT -->
+                    <VBox spacing="15" styleClass="card" style="-fx-padding: 20;">
+                        <Label text="ℹ️ INFORMATIONS" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+                        <Separator />
+
+                        <GridPane hgap="15" vgap="15">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="120" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label text="Description:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextArea fx:id="taDescription" wrapText="true" prefRowCount="3" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                            <Label text="Catégorie:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Label fx:id="lblCategory" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Dossier:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <Label fx:id="lblFolder" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                            <Label text="Créé le:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                            <Label fx:id="lblCreatedDate" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                            <Label text="ID Document:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                            <Label fx:id="lblDocId" text="-" style="-fx-text-fill: #6b7280; -fx-font-size: 11;" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        </GridPane>
+                    </VBox>
+
+                    <!-- RELEVÉ FINANCIER -->
+                    <VBox spacing="15" styleClass="card" style="-fx-padding: 20; -fx-background-color: #f0f9ff; -fx-border-color: #0284c7; -fx-border-width: 1; -fx-border-radius: 8;">
+                        <Label text="💰 RELEVÉ FINANCIER" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+                        <Separator />
+
+                        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #ffffff; -fx-border-radius: 5;">
+                            <HBox spacing="15" alignment="CENTER">
+                                <Label text="Budget:" style="-fx-font-weight: bold; -fx-font-size: 12; -fx-min-width: 100;"/>
+                                <Label fx:id="lblBudget" text="0.00 €" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #0284c7;"/>
+                            </HBox>
+                            <Separator style="-fx-padding: 5;"/>
+                            <HBox spacing="15">
+                                <Label text="Statut:" style="-fx-font-weight: bold; -fx-min-width: 100;"/>
+                                <Label fx:id="lblBudgetStatus" text="N/A" style="-fx-padding: 5 10; -fx-background-color: #f3f4f6; -fx-border-radius: 5;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Détails supplémentaires -->
+                        <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-background-color: #ffffff; -fx-border-radius: 5;">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="150" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+
+                            <Label text="Devise:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <Label text="EUR" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                            <Label text="Dernière modification:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <Label fx:id="lblLastModified" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="Notes financières:" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <TextArea fx:id="taFinancialNotes" wrapText="true" prefRowCount="3" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        </GridPane>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </ScrollPane>
+    </center>
+
+    <!-- FOOTER -->
+    <bottom>
+        <HBox style="-fx-background-color: #f7f9fc; -fx-border-color: #E5E7EB; -fx-border-width: 1 0 0 0; -fx-padding: 15 30;">
+            <Label fx:id="lblStatus" text="Détail du document chargé" style="-fx-font-size: 11; -fx-text-fill: #666;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Appuyez sur Ctrl+S pour modifier" style="-fx-font-size: 10; -fx-text-fill: #999;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
+

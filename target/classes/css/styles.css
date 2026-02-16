@@ -1,3 +1,6 @@
+/* ===============================================
+   FINTRACK - STYLES MODERNES AVEC EFFETS ELEVATED
+   =============================================== */
 /* --- Variables & Fond --- */
 .root {
     -fx-font-family: "Segoe UI";
@@ -28,7 +31,6 @@
     -fx-cursor: hand;
 }
 
-/* Hover sur les menus */
 .menu-button:hover {
     -fx-background-color: #F8F9FF;
     -fx-text-fill: #182d88;
@@ -41,7 +43,30 @@
     -fx-background-radius: 12;
 }
 
-/* --- En-tête --- */
+.menu-active-text {
+    -fx-font-size: 18;
+    -fx-text-fill: #182d88;
+    -fx-font-weight: bold;
+}
+
+.menu-label-active {
+    -fx-font-size: 18;
+    -fx-text-fill: #182d88;
+    -fx-font-weight: bold;
+    -fx-padding: 15 25;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.filter-label-active {
+    -fx-font-size: 18;
+    -fx-text-fill: #182d88;
+    -fx-font-weight: bold;
+    -fx-padding: 5 0;
+    -fx-border-color: #182d88;
+    -fx-border-width: 0 0 3 0;
+}
+
+/* --- Header --- */
 .header-title-blue {
     -fx-font-size: 32;
     -fx-font-weight: bold;
@@ -54,8 +79,9 @@
     -fx-text-fill: #182d88;
 }
 
-/* --- Bouton Plus Circulaire Elevated --- */
-.btn-add-circle {
+/* --- Plus button --- */
+.btn-add-circle,
+.btn-add-document {
     -fx-background-color: #FFC107;
     -fx-text-fill: white;
     -fx-font-size: 28;
@@ -69,12 +95,13 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 10);
 }
 
-.btn-add-circle:hover {
+.btn-add-circle:hover,
+.btn-add-document:hover {
     -fx-background-color: #f78f34;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 20, 0, 0, 12);
 }
 
-/* --- Filtres (Tous, Courant, Epargne) --- */
+/* --- Filters --- */
 .filter-link {
     -fx-background-color: transparent;
     -fx-text-fill: #A0A0A0;
@@ -95,17 +122,22 @@
     -fx-border-color: #182d88;
 }
 
-/* --- Cartes de Compte Elevated --- */
+/* --- Cards --- */
 .account-card {
     -fx-background-color: white;
-    -fx-background-radius: 25;
-    -fx-padding: 30;
-    -fx-alignment: CENTER;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 20, 0, 0, 10);
+    -fx-background-radius: 20;
+    -fx-padding: 25 30;
+    -fx-alignment: TOP_LEFT;
+    -fx-spacing: 15;
+    -fx-border-color: #F0F0F0;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 8);
 }
 
 .account-card:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 25, 0, 0, 15);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 20, 0, 0, 12);
+    -fx-border-color: #E0E0E0;
 }
 
 .card {
@@ -120,24 +152,24 @@
 }
 
 .card-type-header {
-    -fx-text-fill: #C0C0C0;
-    -fx-font-size: 13;
-    -fx-font-family: monospace;
+    -fx-text-fill: #888;
+    -fx-font-size: 14;
+    -fx-font-weight: normal;
 }
 
 .card-solde-text {
-    -fx-font-size: 26;
-    -fx-font-weight: bold;
-    -fx-text-fill: #222;
-}
-
-.section-title {
-    -fx-font-size: 18;
+    -fx-font-size: 28;
     -fx-font-weight: bold;
     -fx-text-fill: #182d88;
 }
 
-/* --- Bouton Détails Orange --- */
+.section-title {
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: #182d88;
+}
+
+/* --- Buttons --- */
 .btn-details-orange {
     -fx-background-color: #FFC107;
     -fx-text-fill: white;
@@ -152,7 +184,6 @@
     -fx-background-color: #f78f34;
 }
 
-/* Boutons Primaires */
 .btn-primary {
     -fx-background-color: #FFC107;
     -fx-text-fill: white;
@@ -166,7 +197,6 @@
     -fx-background-color: #f78f34;
 }
 
-/* Boutons Secondaires */
 .btn-secondary {
     -fx-background-color: #eef2ff;
     -fx-text-fill: #182d88;
@@ -180,7 +210,6 @@
     -fx-background-color: #cbd4f6;
 }
 
-/* Boutons Danger */
 .btn-danger {
     -fx-background-color: #FFEBEE;
     -fx-text-fill: #C62828;
@@ -195,7 +224,6 @@
     -fx-text-fill: white;
 }
 
-/* --- BOUTON MODIFIER (VERT) --- */
 .btn-action-light-blue {
     -fx-background-color: #E8F5E9;
     -fx-text-fill: #175905;
@@ -209,7 +237,6 @@
     -fx-background-color: #d3f4ca;
 }
 
-/* --- BOUTON SUPPRIMER (BLEU) --- */
 .btn-action-light-red {
     -fx-background-color: #E8EAF6;
     -fx-text-fill: #182d88;
@@ -223,7 +250,7 @@
     -fx-background-color: #cbd4f6;
 }
 
-/* --- Style du conteneur Popup --- */
+/* --- Popups --- */
 .popup-container {
     -fx-background-color: white;
     -fx-background-radius: 30;
@@ -234,7 +261,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 40, 0, 0, 20);
 }
 
-/* Inputs Modernes */
+/* --- Inputs --- */
 .modern-input {
     -fx-background-color: #F4F7FB;
     -fx-background-radius: 10;
@@ -266,7 +293,7 @@
     -fx-text-fill: #BCBCBC;
 }
 
-/* Boutons Cancel */
+/* --- Cancel --- */
 .btn-cancel {
     -fx-background-color: transparent;
     -fx-text-fill: #888;
@@ -279,36 +306,43 @@
     -fx-text-fill: #444;
 }
 
-/* Fond grisâtre qui recouvre tout l'écran */
+/* --- Overlay --- */
 .overlay {
     -fx-background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Etat de compte badges */
+/* --- Badges --- */
 .badge-actif {
     -fx-background-color: #E8F5E9;
     -fx-text-fill: #2E7D32;
     -fx-font-weight: bold;
-    -fx-padding: 5 10;
-    -fx-background-radius: 5;
+    -fx-font-size: 14;
+    -fx-padding: 8 15;
+    -fx-background-radius: 10;
+    -fx-border-color: #C8E6C9;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
 }
 
 .badge-bloque {
     -fx-background-color: #FFEBEE;
     -fx-text-fill: #C62828;
     -fx-font-weight: bold;
-    -fx-padding: 5 10;
-    -fx-background-radius: 5;
+    -fx-font-size: 14;
+    -fx-padding: 8 15;
+    -fx-background-radius: 10;
+    -fx-border-color: #EFBFBF;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
 }
 
-/* Style des labels pour qu'ils soient plus lisibles */
 .form-group Label {
     -fx-font-weight: bold;
     -fx-padding: 5 0 0 0;
     -fx-text-fill: #182d88;
 }
 
-/* Topbar */
+/* --- Topbar / Nav --- */
 .topbar {
     -fx-padding: 16;
     -fx-background-color: white;
@@ -316,7 +350,6 @@
     -fx-border-width: 0 0 1 0;
 }
 
-/* Navigation buttons */
 .nav-btn {
     -fx-background-color: transparent;
     -fx-text-fill: #8E92AC;
@@ -339,156 +372,254 @@
     -fx-background-radius: 12;
 }
 
-/* --- NOUVEAUX STYLES INTERFACE MODERNE --- */
-
-/* Bouton Ajouter Document (rond avec +) */
-.btn-add-document {
-    -fx-background-color: #f9b233;
-    -fx-text-fill: white;
-    -fx-font-size: 28;
+/* --- Validation errors --- */
+.error-text {
+    -fx-text-fill: #C62828;
+    -fx-font-size: 12;
     -fx-font-weight: bold;
-    -fx-min-width: 70;
-    -fx-max-width: 70;
-    -fx-min-height: 70;
-    -fx-max-height: 70;
-    -fx-background-radius: 35;
+}
+
+/* --- Large buttons --- */
+.btn-large {
+    -fx-font-size: 16;
+    -fx-padding: 14 40;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 4);
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 3);
+    -fx-min-width: 140;
 }
 
-.btn-add-document:hover {
-    -fx-background-color: #f5a621;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 6);
+.btn-primary.btn-large {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: white;
 }
 
-.btn-add-document:pressed {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+.btn-primary.btn-large:hover {
+    -fx-background-color: #f78f34;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);
 }
 
-/* Boutons icônes petits */
-.btn-icon-small {
-    -fx-background-color: transparent;
+.btn-secondary.btn-large {
+    -fx-background-color: #eef2ff;
+    -fx-text-fill: #182d88;
+}
+
+.btn-secondary.btn-large:hover {
+    -fx-background-color: #cbd4f6;
+}
+
+.btn-cancel.btn-large {
+    -fx-background-color: #f5f5f5;
     -fx-text-fill: #666;
-    -fx-font-size: 14;
+}
+
+.btn-cancel.btn-large:hover {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #333;
+}
+
+/* --- Close button --- */
+.btn-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: #999;
+    -fx-font-size: 24;
     -fx-padding: 5 10;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-close:hover {
+    -fx-text-fill: #333;
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 5;
+}
+
+/* --- Orange / Gray buttons --- */
+.btn-orange {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-padding: 14 50;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);
+    -fx-min-width: 150;
+}
+
+.btn-orange:hover {
+    -fx-background-color: #f78f34;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 12, 0, 0, 5);
+}
+
+.btn-gray {
+    -fx-background-color: #E8E8E8;
+    -fx-text-fill: #666;
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-padding: 14 50;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 3);
+    -fx-min-width: 150;
+}
+
+.btn-gray:hover {
+    -fx-background-color: #D0D0D0;
+    -fx-text-fill: #333;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);
+}
+
+/* --- Small action buttons --- */
+.btn-action-small {
+    -fx-background-color: #F5F5F5;
+    -fx-text-fill: #333;
+    -fx-font-size: 18;
+    -fx-cursor: hand;
+    -fx-padding: 8;
+    -fx-background-radius: 8;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-max-width: 40;
+    -fx-max-height: 40;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.btn-action-small:hover {
+    -fx-background-color: #E8E8E8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 7, 0, 0, 3);
+}
+
+.btn-delete {
+    -fx-background-color: #FFEBEE;
+    -fx-text-fill: #C62828;
+    -fx-font-size: 22;
+    -fx-cursor: hand;
+    -fx-padding: 10;
+    -fx-background-radius: 10;
+    -fx-min-width: 45;
+    -fx-min-height: 45;
+    -fx-pref-width: 45;
+    -fx-pref-height: 45;
+    -fx-effect: dropshadow(three-pass-box, rgba(198, 40, 40, 0.2), 6, 0, 0, 3);
+    -fx-border-color: #EFBFBF;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+}
+
+.btn-modify {
+    -fx-background-color: #FFF3E0;
+    -fx-text-fill: #E65100;
+    -fx-font-size: 22;
+    -fx-cursor: hand;
+    -fx-padding: 10;
+    -fx-background-radius: 10;
+    -fx-min-width: 45;
+    -fx-min-height: 45;
+    -fx-pref-width: 45;
+    -fx-pref-height: 45;
+    -fx-effect: dropshadow(three-pass-box, rgba(230, 81, 0, 0.2), 6, 0, 0, 3);
+    -fx-border-color: #FFD8B2;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+}
+
+.btn-modify:hover {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(230, 81, 0, 0.35), 10, 0, 0, 5);
+    -fx-border-color: #F57C00;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.btn-add-expense {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(230, 81, 0, 0.2), 6, 0, 0, 3);
+    -fx-border-width: 0;
+    -fx-min-width: 180;
+}
+
+.btn-add-expense:hover {
+    -fx-background-color: #f78f34;
+    -fx-effect: dropshadow(three-pass-box, rgba(230, 81, 0, 0.35), 10, 0, 0, 5);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.form-label {
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-text-fill: #182d88;
+}
+
+.btn-circle-small {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+    -fx-min-width: 55;
+    -fx-max-width: 55;
+    -fx-min-height: 55;
+    -fx-max-height: 55;
+    -fx-background-radius: 50;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 10);
+    -fx-padding: 0;
+}
+
+.btn-circle-small:hover {
+    -fx-background-color: #f78f34;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 20, 0, 0, 12);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* --- Document view helpers --- */
+.btn-icon-small {
+    -fx-background-color: #F0F5FF;
+    -fx-text-fill: #182d88;
+    -fx-font-size: 14;
+    -fx-background-radius: 10;
+    -fx-padding: 6 10;
     -fx-cursor: hand;
 }
 
 .btn-icon-small:hover {
-    -fx-background-color: #f0f0f0;
-    -fx-text-fill: #1d4ed8;
-    -fx-background-radius: 6;
+    -fx-background-color: #cbd4f6;
 }
 
-/* Bouton dossier dans la liste */
+.filter-combo {
+    -fx-background-color: #F4F7FB;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: transparent;
+    -fx-padding: 8 10;
+    -fx-font-size: 12;
+}
+
 .folder-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #333;
-    -fx-padding: 12 15;
-    -fx-font-size: 13;
-    -fx-cursor: hand;
+    -fx-text-fill: #182d88;
+    -fx-font-weight: bold;
+    -fx-padding: 8 10;
     -fx-alignment: CENTER_LEFT;
-    -fx-border-radius: 8;
+    -fx-cursor: hand;
 }
 
 .folder-button:hover {
-    -fx-background-color: #f0f5ff;
-    -fx-text-fill: #1d4ed8;
+    -fx-background-color: #F8F9FF;
 }
 
-.folder-button:selected {
-    -fx-background-color: #1d4ed8;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-/* Liste des dossiers */
-.folders-list {
-    -fx-padding: 5;
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.folders-list:focused {
-    -fx-border-color: transparent;
-    -fx-focus-color: transparent;
-}
-
-/* Liste des documents */
+.folders-list,
 .documents-list {
-    -fx-padding: 10;
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-}
-
-.documents-list:focused {
-    -fx-border-color: transparent;
-    -fx-focus-color: transparent;
-}
-
-/* Champ de recherche */
-.search-field {
-    -fx-background-color: #f7f9fc;
-    -fx-border-color: #e5e7eb;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-padding: 10 15;
-    -fx-font-size: 12;
-    -fx-text-fill: #333;
-}
-
-.search-field:focused {
-    -fx-border-color: #1d4ed8;
-    -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(29, 78, 216, 0.1), 8, 0, 0, 0);
-}
-
-/* ComboBox pour catégories */
-.filter-combo {
-    -fx-background-color: #f7f9fc;
-    -fx-border-color: #e5e7eb;
-    -fx-border-width: 1;
-    -fx-border-radius: 8;
-    -fx-padding: 10 15;
-    -fx-font-size: 12;
-}
-
-.filter-combo:focused {
-    -fx-border-color: #1d4ed8;
-    -fx-background-color: white;
-}
-
-/* Cartes professionnelles */
-.document-card {
-    -fx-background-color: white;
-    -fx-border-color: #e5e7eb;
-    -fx-border-width: 1;
-    -fx-border-radius: 12;
-    -fx-padding: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 1);
-}
-
-.document-card:hover {
-    -fx-border-color: #1d4ed8;
-    -fx-effect: dropshadow(gaussian, rgba(29, 78, 216, 0.15), 10, 0, 0, 3);
-}
-
-/* Titre de document */
-.doc-title {
-    -fx-font-size: 14;
-    -fx-font-weight: bold;
-    -fx-text-fill: #1d4ed8;
-}
-
-/* Description de document */
-.doc-description {
-    -fx-font-size: 11;
-    -fx-text-fill: #666;
-    -fx-wrap-text: true;
-}
-
-/* Métadonnées */
-.doc-meta {
-    -fx-font-size: 10;
-    -fx-text-fill: #999;
 }

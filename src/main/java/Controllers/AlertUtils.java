@@ -3,6 +3,7 @@ package Controllers;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
+import utils.UiStyles;
 
 /**
  * Classe utilitaire pour gérer les alertes et messages
@@ -14,6 +15,7 @@ public class AlertUtils {
      */
     public static void showError(String title, String message) {
         Alert alert = new Alert(AlertType.ERROR);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -25,6 +27,7 @@ public class AlertUtils {
      */
     public static void showInfo(String title, String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -36,6 +39,7 @@ public class AlertUtils {
      */
     public static void showWarning(String title, String message) {
         Alert alert = new Alert(AlertType.WARNING);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -47,6 +51,7 @@ public class AlertUtils {
      */
     public static boolean showConfirmation(String title, String message) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -58,6 +63,7 @@ public class AlertUtils {
      */
     public static void showErrorWithDetails(String title, String message, String details) {
         Alert alert = new Alert(AlertType.ERROR);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle(title);
         alert.setHeaderText(message);
         alert.setContentText(details);
@@ -69,6 +75,7 @@ public class AlertUtils {
      */
     public static void showSuccess(String title, String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle(title);
         alert.setHeaderText("✓ Succès");
         alert.setContentText(message);
@@ -80,6 +87,7 @@ public class AlertUtils {
      */
     public static void showDeleteSuccess(String entityType, String entityName) {
         Alert alert = new Alert(AlertType.INFORMATION);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle("✓ Suppression réussie");
         alert.setHeaderText("L'élément a été supprimé avec succès");
         alert.setContentText(entityType + " : \"" + entityName + "\" supprimé(e) définitivement.");
@@ -91,6 +99,7 @@ public class AlertUtils {
      */
     public static void showCreateSuccess(String entityType, String entityName) {
         Alert alert = new Alert(AlertType.INFORMATION);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle("✓ Création réussie");
         alert.setHeaderText("L'élément a été créé avec succès");
         alert.setContentText(entityType + " : \"" + entityName + "\" créé(e).");
@@ -102,6 +111,7 @@ public class AlertUtils {
      */
     public static void showUpdateSuccess(String entityType, String entityName) {
         Alert alert = new Alert(AlertType.INFORMATION);
+        UiStyles.applyDialogStyles(alert.getDialogPane());
         alert.setTitle("✓ Modification réussie");
         alert.setHeaderText("L'élément a été modifié avec succès");
         alert.setContentText(entityType + " : \"" + entityName + "\" mis à jour.");

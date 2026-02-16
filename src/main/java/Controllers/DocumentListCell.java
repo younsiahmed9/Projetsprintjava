@@ -2,7 +2,8 @@ package Controllers;
 
 import Models.Document;
 import Services.ServiceDocument;
-import Controllers.Dialogs.DeleteConfirmationDialog;
+// import Controllers.Dialogs.DeleteConfirmationDialog;
+import Controllers.Dialogs.CrudDialogManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ public class DocumentListCell extends ListCell<Document> {
     private final Label lblDossier;
     private final Label lblPath;
     private final Label lblUploaded;
+    private final Button editBtn;
     private final Button deleteBtn;
     private HBox container;
     private final ServiceDocument docService = new ServiceDocument();
@@ -38,30 +40,26 @@ public class DocumentListCell extends ListCell<Document> {
         lblUploaded = new Label();
         lblUploaded.setStyle("-fx-font-size: 11; -fx-text-fill: #9ca3af;");
 
-        deleteBtn = new Button("🗑️ Supprimer");
-        deleteBtn.setStyle(
-            "-fx-background-color: #dc2626; -fx-text-fill: white; -fx-font-size: 11; " +
-            "-fx-padding: 6 12; -fx-border-radius: 5; -fx-background-radius: 5;"
-        );
-        deleteBtn.setPrefWidth(110);
-        deleteBtn.setOnMouseEntered(e -> deleteBtn.setStyle(
-            "-fx-background-color: #b91c1c; -fx-text-fill: white; -fx-font-size: 11; " +
-            "-fx-padding: 6 12; -fx-border-radius: 5; -fx-background-radius: 5;"
-        ));
-        deleteBtn.setOnMouseExited(e -> deleteBtn.setStyle(
-            "-fx-background-color: #dc2626; -fx-text-fill: white; -fx-font-size: 11; " +
-            "-fx-padding: 6 12; -fx-border-radius: 5; -fx-background-radius: 5;"
-        ));
+        editBtn = new Button("Modifier");
+        editBtn.getStyleClass().add("btn-modify");
+        editBtn.setStyle("-fx-font-size: 12; -fx-min-width: 110; -fx-pref-width: 110; -fx-max-width: 110; -fx-text-overrun: clip;");
+
+        deleteBtn = new Button("Supprimer");
+        deleteBtn.getStyleClass().add("btn-delete");
+        deleteBtn.setStyle("-fx-font-size: 12; -fx-min-width: 110; -fx-pref-width: 110; -fx-max-width: 110; -fx-text-overrun: clip;");
 
         VBox infoBox = new VBox(5);
         infoBox.getChildren().addAll(lblTitre, lblDossier, lblPath, lblUploaded);
         VBox.setVgrow(infoBox, Priority.ALWAYS);
 
+        HBox actionsBox = new HBox(10, editBtn, deleteBtn);
+        actionsBox.setAlignment(Pos.CENTER_RIGHT);
+
         container = new HBox(10);
         container.setAlignment(Pos.CENTER_LEFT);
         container.setPadding(new Insets(10));
         container.setStyle("-fx-border-color: #e5e7eb; -fx-border-width: 0 0 1 0;");
-        container.getChildren().addAll(infoBox, deleteBtn);
+        container.getChildren().addAll(infoBox, actionsBox);
         HBox.setHgrow(infoBox, Priority.ALWAYS);
     }
 
@@ -82,12 +80,29 @@ public class DocumentListCell extends ListCell<Document> {
                 lblUploaded.setText("");
             }
 
+            editBtn.setOnAction(e -> editDocument(item));
             deleteBtn.setOnAction(e -> deleteDocument(item));
             setGraphic(container);
         }
     }
 
+    private void editDocument(Document document) {
+        CrudDialogManager dialogManager = new CrudDialogManager();
+        dialogManager.showDocumentDialog(document, true).ifPresent(updated -> {
+            try {
+                docService.update(updated);
+                getListView().getItems().set(getIndex(), updated);
+                getListView().refresh();
+                AlertUtils.showSuccess("Succès", "Document modifié avec succès !");
+            } catch (SQLException e) {
+                AlertUtils.showError("Erreur", "Impossible de modifier le document : " + e.getMessage());
+            }
+        });
+    }
+
     private void deleteDocument(Document document) {
+        // Utilisé seulement par l'ancien système ListView - désactivé
+        /*
         if (DeleteConfirmationDialog.showAndWait(
             "Document",
             document.getTitre(),
@@ -101,6 +116,6 @@ public class DocumentListCell extends ListCell<Document> {
                 AlertUtils.showError("Erreur", "Impossible de supprimer le document : " + e.getMessage());
             }
         }
+        */
     }
 }
-

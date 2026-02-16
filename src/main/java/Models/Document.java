@@ -10,7 +10,7 @@ public class Document {
     private LocalDateTime uploadedAt;
     private Dossier dossier;
     private Categorie categorie;
-    private Double budget;
+    private double montant;
 
     public Document() {}
 
@@ -21,6 +21,7 @@ public class Document {
         this.filePath = filePath;
         this.uploadedAt = uploadedAt;
         this.dossier = dossier;
+        this.montant = 0.0;
     }
 
     public int getId() {
@@ -76,15 +77,17 @@ public class Document {
     }
 
     public void setCategorie(Categorie categorie) {
+        if (categorie == null) {
+            throw new IllegalArgumentException("La catégorie est obligatoire");
+        }
         this.categorie = categorie;
     }
 
-    public Double getBudget() {
-        return budget;
+    public double getMontant() {
+        return montant;
     }
 
-    public void setBudget(Double budget) {
-        this.budget = budget;
+    public void setMontant(double montant) {
+        this.montant = montant;
     }
 }
-

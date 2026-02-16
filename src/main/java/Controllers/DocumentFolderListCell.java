@@ -2,7 +2,7 @@ package Controllers;
 
 import Models.Dossier;
 import Services.ServiceDossier;
-import Controllers.Dialogs.DeleteConfirmationDialog;
+// import Controllers.Dialogs.DeleteConfirmationDialog;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -85,6 +85,8 @@ public class DocumentFolderListCell extends ListCell<Dossier> {
     }
 
     private void deleteFolder(Dossier dossier) {
+        // Utilisé seulement par l'ancien système ListView - désactivé
+        /*
         if (DeleteConfirmationDialog.showAndWait(
             "Dossier",
             dossier.getNom(),
@@ -98,6 +100,7 @@ public class DocumentFolderListCell extends ListCell<Dossier> {
                 AlertUtils.showError("Erreur", "Impossible de supprimer : " + e.getMessage());
             }
         }
+        */
     }
 }
 

@@ -5,6 +5,8 @@
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1.0"
       fx:controller="Controllers.DossierController"
+      stylesheets="@../css/styles.css"
+      styleClass="main-container"
       spacing="20"
       style="-fx-padding: 20;">
 
@@ -17,7 +19,9 @@
     <HBox spacing="20" VBox.vgrow="ALWAYS">
         <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="card">
             <Label text="Liste des dossiers" styleClass="section-title"/>
-            <ListView fx:id="listDossiers" VBox.vgrow="ALWAYS"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <VBox fx:id="containerDossiers" spacing="10" style="-fx-padding: 5;"/>
+            </ScrollPane>
         </VBox>
 
         <VBox spacing="15" prefWidth="400" styleClass="card">

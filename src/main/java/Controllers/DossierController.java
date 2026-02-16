@@ -112,7 +112,6 @@ public class DossierController {
         tfNom.clear();
         taDesc.clear();
         tfNom.setStyle("-fx-border-color: transparent;");
-        listDossiers.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -133,11 +132,19 @@ public class DossierController {
      */
     private boolean validateForm() {
         String nom = tfNom.getText();
+        String desc = taDesc.getText();
 
         // Validation du nom
         if (!ValidationUtils.isValidNom(nom)) {
             AlertUtils.showError("Champ invalide", ValidationUtils.getErrorNom());
             tfNom.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");
+            return false;
+        }
+
+        // Validation de la description (optionnelle)
+        if (!ValidationUtils.isValidDescription(desc)) {
+            AlertUtils.showError("Champ invalide", ValidationUtils.getErrorDescription());
+            taDesc.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");
             return false;
         }
 

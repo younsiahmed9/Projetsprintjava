@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1.0"
+            fx:controller="Controllers.DashboardController"
+            fitToWidth="true"
+            style="-fx-background-color: #F4F7FB;">
+
+    <VBox spacing="20" style="-fx-background-color: #F4F7FB;">
+
+        <!-- Header Section -->
+        <VBox spacing="5">
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label text="Dashboard Documents" styleClass="header-title-blue"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="🔄" onAction="#onRefresh" styleClass="btn-add-circle"
+                        style="-fx-font-size: 20; -fx-min-width: 50; -fx-max-width: 50; -fx-min-height: 50; -fx-max-height: 50;"/>
+            </HBox>
+            <Label text="Analyse et aperçu de vos documents" style="-fx-text-fill: #666; -fx-font-size: 14;"/>
+        </VBox>
+
+        <!-- Statistics Cards -->
+        <HBox spacing="20">
+            <!-- Card 1: Total Documents -->
+            <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="📄 Total Documents" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                <Label fx:id="lblTotalDocuments" text="0"
+                       style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                <Label text="Documents enregistrés" style="-fx-text-fill: #999; -fx-font-size: 11;"/>
+            </VBox>
+
+            <!-- Card 2: Total Dossiers -->
+            <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="📁 Total Dossiers" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                <Label fx:id="lblTotalDossiers" text="0"
+                       style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                <Label text="Dossiers actifs" style="-fx-text-fill: #999; -fx-font-size: 11;"/>
+            </VBox>
+
+            <!-- Card 3: Total Catégories -->
+            <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="🏷️ Total Catégories" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                <Label fx:id="lblTotalCategories" text="0"
+                       style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                <Label text="Catégories définies" style="-fx-text-fill: #999; -fx-font-size: 11;"/>
+            </VBox>
+
+            <!-- Card 4: Documents ce mois -->
+            <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                <Label text="📅 Ce Mois" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                <Label fx:id="lblDocumentsThisMonth" text="0"
+                       style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #FFC107;"/>
+                <Label text="Nouveaux documents" style="-fx-text-fill: #999; -fx-font-size: 11;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Charts Section -->
+        <HBox spacing="20">
+            <!-- Left: Pie Chart - Categories -->
+            <VBox styleClass="card" spacing="15" HBox.hgrow="ALWAYS">
+                <Label text="Répartition par Catégorie" styleClass="section-title"/>
+                <PieChart fx:id="pieChartCategories" legendVisible="true"
+                         style="-fx-min-height: 350; -fx-max-height: 350;"/>
+            </VBox>
+
+            <!-- Right: Bar Chart - Dossiers -->
+            <VBox styleClass="card" spacing="15" HBox.hgrow="ALWAYS">
+                <Label text="Documents par Dossier" styleClass="section-title"/>
+                <BarChart fx:id="barChartDossiers" legendVisible="false"
+                         style="-fx-min-height: 350; -fx-max-height: 350;">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis side="LEFT"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+
+        <!-- Recent Documents Section - SCROLLABLE -->
+        <VBox styleClass="card" spacing="15" style="-fx-min-height: 400;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="Documents Récents" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="(5 derniers documents)" style="-fx-text-fill: #999; -fx-font-size: 12;"/>
+            </HBox>
+            <ListView fx:id="lvRecentDocuments"
+                      style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0; -fx-min-height: 350;"
+                      VBox.vgrow="ALWAYS"/>
+        </VBox>
+
+        <!-- Analyse Montant KPI -->
+        <VBox spacing="10">
+            <Label text="Analyse Montant" styleClass="section-title"/>
+            <HBox spacing="20">
+                <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                    <Label text="Total Montant" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                    <Label fx:id="lblMontantTotal" text="0,00 €"
+                           style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                </VBox>
+                <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                    <Label text="Montant moyen" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                    <Label fx:id="lblMontantAvg" text="0,00 €"
+                           style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                </VBox>
+                <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                    <Label text="Montant max" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                    <Label fx:id="lblMontantMax" text="0,00 €"
+                           style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                </VBox>
+                <VBox styleClass="account-card" spacing="10" HBox.hgrow="ALWAYS">
+                    <Label text="Montant min" style="-fx-text-fill: #666; -fx-font-size: 13;"/>
+                    <Label fx:id="lblMontantMin" text="0,00 €"
+                           style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Charts Montant Section -->
+        <HBox spacing="20">
+            <VBox styleClass="card" spacing="15" HBox.hgrow="ALWAYS">
+                <Label text="Montant par Catégorie" styleClass="section-title"/>
+                <PieChart fx:id="pieChartMontantCategories" legendVisible="true"
+                          style="-fx-min-height: 300; -fx-max-height: 300;"/>
+            </VBox>
+
+            <VBox styleClass="card" spacing="15" HBox.hgrow="ALWAYS">
+                <Label text="Montant par Dossier" styleClass="section-title"/>
+                <BarChart fx:id="barChartMontantDossiers" legendVisible="false"
+                          style="-fx-min-height: 300; -fx-max-height: 300;">
+                    <xAxis>
+                        <CategoryAxis side="BOTTOM"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis side="LEFT"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+        </HBox>
+
+        <!-- Top 5 Documents par Montant -->
+        <VBox styleClass="card" spacing="15" style="-fx-min-height: 320;">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="Top 5 documents par montant" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <VBox fx:id="containerTopDocuments" spacing="10" style="-fx-padding: 5;"/>
+            </ScrollPane>
+        </VBox>
+
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+    </VBox>
+
+</ScrollPane>
+

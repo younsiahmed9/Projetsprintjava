@@ -9,9 +9,17 @@ import Services.ServiceDocument;
 import Services.ServiceDossier;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import utils.UiStyles;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -32,8 +40,8 @@ public class DocumentViewController {
     @FXML private Button btnRefresh;
     @FXML private Button btnManageCategories;
 
-    @FXML private ListView<Dossier> listFolders;
-    @FXML private ListView<Document> listDocuments;
+    @FXML private VBox containerFolders;
+    @FXML private VBox containerDocuments;
 
     @FXML private TextField tfSearch;
     @FXML private ComboBox<Categorie> cbCategory;
@@ -54,21 +62,14 @@ public class DocumentViewController {
 
     @FXML
     public void initialize() {
-        setupListViews();
         loadAllData();
         setupEventHandlers();
         updateDocumentCount();
+        setupEmptyState();
     }
 
     // ===== SETUP =====
 
-    private void setupListViews() {
-        listFolders.setCellFactory(param -> new DocumentFolderListCell());
-        listFolders.setOnMouseClicked(event -> onFolderSelected());
-
-        listDocuments.setCellFactory(param -> new DocumentCardListCell());
-        listDocuments.setOnMouseClicked(event -> onDocumentSelected());
-    }
 
     private void setupEventHandlers() {
         btnAddDocument.setOnAction(e -> createDocument());
@@ -80,31 +81,85 @@ public class DocumentViewController {
 
         tfSearch.textProperty().addListener((obs, oldVal, newVal) -> filterDocuments());
         cbCategory.valueProperty().addListener((obs, oldVal, newVal) -> filterDocuments());
+    }
 
-        // Clic simple sur un dossier pour filtrer
-        listFolders.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                selectedFolder = newVal;
-                updateDocumentList();
-                updateFilterInfo();
-            }
+    // ===== CRÉATION DES CARTES =====
+
+    /**
+     * Crée une card personnalisée pour un dossier
+     */
+    private VBox createFolderCard(Dossier dossier) {
+        VBox card = new VBox(6);
+        card.setStyle("-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
+
+        Label lblNom = new Label("📁 " + dossier.getNom());
+        lblNom.setStyle("-fx-font-weight: bold; -fx-font-size: 12; -fx-text-fill: #182d88;");
+
+        HBox btnBox = new HBox(6);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+        Button btnSelect = new Button("Filtrer");
+        btnSelect.getStyleClass().add("btn-secondary");
+        btnSelect.setStyle("-fx-font-size: 10; -fx-min-width: 70;");
+        btnSelect.setOnAction(e -> {
+            selectedFolder = dossier;
+            updateDocumentList();
+            updateFilterInfo();
         });
 
-        // Double-clic sur document pour éditer
-        listDocuments.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                Document selected = listDocuments.getSelectionModel().getSelectedItem();
-                if (selected != null) editDocument(selected);
-            }
-        });
+        btnBox.getChildren().add(btnSelect);
+        card.getChildren().addAll(lblNom, btnBox);
 
-        // Double-clic sur dossier pour éditer
-        listFolders.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                Dossier selected = listFolders.getSelectionModel().getSelectedItem();
-                if (selected != null) editFolder(selected);
-            }
-        });
+        return card;
+    }
+
+    /**
+     * Crée une card personnalisée pour un document
+     */
+    private VBox createDocumentCard(Document doc) {
+        VBox card = new VBox(5);
+        card.setStyle("-fx-padding: 12; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
+
+        Label lblTitle = new Label("📄 " + doc.getTitre());
+        lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13; -fx-text-fill: #1d4ed8;");
+
+
+        Label lblDesc = new Label(doc.getDescription() != null && !doc.getDescription().isEmpty()
+                ? doc.getDescription() : "(Pas de description)");
+        lblDesc.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
+        lblDesc.setWrapText(true);
+
+        HBox hboxMeta = new HBox(12);
+        Label lblDossier = new Label("📁 " + (doc.getDossier() != null ? doc.getDossier().getNom() : "N/A"));
+        lblDossier.setStyle("-fx-font-size: 9; -fx-text-fill: #999;");
+
+        Label lblCategorie = new Label("🏷️ " + (doc.getCategorie() != null ? doc.getCategorie().getNom() : "N/A"));
+        lblCategorie.setStyle("-fx-font-size: 9; -fx-text-fill: #999;");
+
+        hboxMeta.getChildren().addAll(lblDossier, lblCategorie);
+
+        HBox btnBox = new HBox(8);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+        Button btnView = new Button("Détail");
+        btnView.getStyleClass().add("btn-primary");
+        btnView.setStyle("-fx-font-size: 10; -fx-min-width: 70;");
+        btnView.setOnAction(e -> showDocumentDetail(doc));
+
+        Button btnEdit = new Button("Modifier");
+        btnEdit.getStyleClass().add("btn-modify");
+        btnEdit.setStyle("-fx-font-size: 10; -fx-min-width: 70;");
+        btnEdit.setOnAction(e -> editDocument(doc));
+
+        Button btnDelete = new Button("Supprimer");
+        btnDelete.getStyleClass().add("btn-delete");
+        btnDelete.setStyle("-fx-font-size: 10; -fx-min-width: 70;");
+        btnDelete.setOnAction(e -> deleteDocument(doc));
+
+        btnBox.getChildren().addAll(btnView, btnEdit, btnDelete);
+
+        card.getChildren().addAll(lblTitle, lblDesc, hboxMeta, btnBox);
+        return card;
     }
 
     // ===== CHARGEMENT DONNÉES =====
@@ -117,8 +172,11 @@ public class DocumentViewController {
 
     private void loadFolders() {
         try {
+            containerFolders.getChildren().clear();
             List<Dossier> dossiers = dossierService.findAll();
-            listFolders.setItems(FXCollections.observableArrayList(dossiers));
+            for (Dossier dossier : dossiers) {
+                containerFolders.getChildren().add(createFolderCard(dossier));
+            }
             updateStatus("Dossiers chargés (" + dossiers.size() + ")");
         } catch (SQLException e) {
             AlertUtils.showError("Erreur", "Impossible de charger les dossiers: " + e.getMessage());
@@ -171,7 +229,11 @@ public class DocumentViewController {
                     .toList();
         }
 
-        listDocuments.setItems(FXCollections.observableArrayList(filteredDocs));
+        containerDocuments.getChildren().clear();
+        for (Document doc : filteredDocs) {
+            containerDocuments.getChildren().add(createDocumentCard(doc));
+        }
+
         updateDocumentCount();
     }
 
@@ -220,13 +282,6 @@ public class DocumentViewController {
         }
     }
 
-    private void onDocumentSelected() {
-        Document selected = listDocuments.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            updateStatus("Sélectionné: " + selected.getTitre());
-            // Optionnel : afficher menu contextuel ou détails
-        }
-    }
 
     // ===== CRUD DOSSIERS =====
 
@@ -293,12 +348,14 @@ public class DocumentViewController {
 
     private void manageFolders() {
         Dialog<Void> dialog = new Dialog<>();
+        UiStyles.applyDialogStyles(dialog.getDialogPane());
         dialog.setTitle("Gérer les dossiers");
         dialog.setHeaderText("Créer, modifier ou supprimer des dossiers");
         dialog.setWidth(700);
         dialog.setHeight(600);
 
         ListView<Dossier> folderList = new ListView<>();
+        folderList.getStyleClass().add("folders-list");
         folderList.setPrefHeight(300);
         try {
             folderList.setItems(FXCollections.observableArrayList(dossierService.findAll()));
@@ -338,13 +395,14 @@ public class DocumentViewController {
         folderList.setContextMenu(contextMenu);
 
         VBox content = new VBox(15);
+        content.getStyleClass().add("card");
         content.setStyle("-fx-padding: 20;");
         content.getChildren().addAll(
             new Label("Liste des dossiers (clic-droit pour éditer/supprimer) :"),
             folderList,
             new Label("Ou créer un nouveau dossier :"),
             new Button("+ Ajouter un dossier") {{
-                setStyle("-fx-padding: 8 15; -fx-font-size: 12;");
+                getStyleClass().add("btn-secondary");
                 setOnAction(e -> {
                     createFolder();
                     try {
@@ -375,7 +433,6 @@ public class DocumentViewController {
 
     private void showAllDocuments() {
         selectedFolder = null;
-        listFolders.getSelectionModel().clearSelection();
         updateDocumentList();
         updateFilterInfo();
         updateStatus("Tous les documents");
@@ -387,19 +444,66 @@ public class DocumentViewController {
         tfSearch.clear();
         cbCategory.setValue(null);
         selectedFolder = null;
-        listFolders.getSelectionModel().clearSelection();
-        listDocuments.getSelectionModel().clearSelection();
         updateFilterInfo();
         updateStatus("Données rafraîchies");
     }
 
     private void updateDocumentCount() {
-        int count = listDocuments.getItems().size();
+        int count = containerDocuments.getChildren().size();
         lblDocCount.setText(count + " document" + (count > 1 ? "s" : ""));
     }
 
     private void updateStatus(String message) {
         lblStatus.setText(message);
     }
-}
 
+    private void setupEmptyState() {
+        // Pas nécessaire avec les cartes VBox
+    }
+
+    /**
+     * Affiche la fenêtre de détail d'un document
+     */
+    private void showDocumentDetail(Document document) {
+        try {
+            // Vérifier que la ressource existe
+            var resource = getClass().getResource("/fxml/document_detail_simple.fxml");
+            if (resource == null) {
+                AlertUtils.showError("Erreur",
+                    "Fichier FXML non trouvé: /fxml/document_detail_simple.fxml");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            BorderPane root = loader.load();
+
+            DocumentDetailController controller = loader.getController();
+            if (controller == null) {
+                AlertUtils.showError("Erreur",
+                    "Contrôleur DocumentDetailController non initialisé");
+                return;
+            }
+
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Détail du Document - " + document.getTitre());
+            Scene scene = new Scene(root, 1000, 700);
+            detailStage.setScene(scene);
+            detailStage.setResizable(true);
+
+            controller.setStage(detailStage);
+            controller.showDocument(document);
+
+            detailStage.show();
+
+            updateStatus("Détail du document ouvert: " + document.getTitre());
+        } catch (IOException e) {
+            e.printStackTrace();
+            AlertUtils.showError("Erreur IO",
+                "Impossible de charger le fichier FXML:\n" + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertUtils.showError("Erreur",
+                "Erreur inattendue:\n" + e.getMessage());
+        }
+    }
+}

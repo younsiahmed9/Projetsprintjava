@@ -10,31 +10,39 @@
             stylesheets="@../css/styles.css"
             styleClass="main-container">
 
-    <!-- TOP: Header professionnel avec logo -->
-    <top>
-        <VBox style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0; -fx-padding: 15 30;">
-            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-min-height: 70;">
-                <!-- Logo Image -->
-                <ImageView fitHeight="60" fitWidth="60" preserveRatio="true" smooth="true">
-                    <Image url="@../images/fintrack-complete-logo.svg"/>
+    <!-- LEFT: Sidebar avec navigation -->
+    <left>
+        <VBox styleClass="sidebar" spacing="10">
+            <!-- Logo + Titre -->
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 30 0;">
+                <ImageView fitHeight="48" fitWidth="48" preserveRatio="true" smooth="true" styleClass="app-logo">
+                    <Image url="@../assets/logo.png"/>
                 </ImageView>
+                <Label text="FinTrack" styleClass="app-title" style="-fx-font-size: 24;"/>
+            </VBox>
 
-                <!-- Titre -->
-                <Label text="FinTrack" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1d4ed8;"/>
+            <!-- Boutons de navigation -->
+            <Button fx:id="btnDashboard" text="📊 Dashboard" styleClass="menu-button"
+                    onAction="#loadDashboardView" maxWidth="Infinity"/>
 
-                <!-- Spacer -->
-                <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnDocuments" text="📄 Documents" styleClass="menu-button"
+                    onAction="#loadDocumentView" maxWidth="Infinity"/>
 
-                <!-- User info (optionnel) -->
-                <Label text="👤 Admin" style="-fx-font-size: 12; -fx-text-fill: #666;"/>
-            </HBox>
+
+            <!-- Spacer -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- User info en bas -->
+            <VBox alignment="CENTER" spacing="5" style="-fx-padding: 20 0 0 0; -fx-border-color: #EEE; -fx-border-width: 1 0 0 0;">
+                <Label text="👤 Administrateur" style="-fx-font-size: 12; -fx-text-fill: #666; -fx-font-weight: bold;"/>
+                <Label text="Version 1.0" style="-fx-font-size: 10; -fx-text-fill: #999;"/>
+            </VBox>
         </VBox>
-    </top>
+    </left>
 
-    <!-- CENTER: Contenu principal (chargerait le fichier document.fxml) -->
+    <!-- CENTER: Contenu dynamique -->
     <center>
-        <StackPane fx:id="contentArea" style="-fx-padding: 30;"/>
+        <StackPane fx:id="contentArea"/>
     </center>
 
 </BorderPane>
-

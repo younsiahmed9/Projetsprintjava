@@ -5,70 +5,49 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1.0"
-            fx:controller="Controllers.DocumentViewController">
+            fx:controller="Controllers.DocumentViewController"
+            stylesheets="@../css/styles.css"
+            styleClass="main-container">
 
-    <!-- TOP: Titre + Bouton Ajouter -->
     <top>
-        <VBox spacing="20" style="-fx-padding: 0 0 20 0;">
-            <!-- Titre principal -->
+        <VBox spacing="8">
             <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label text="📄 Gestion des Documents"
-                       style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1d4ed8;"/>
+                <Label text="Gestion des Documents" styleClass="header-title-blue"/>
                 <Region HBox.hgrow="ALWAYS"/>
-
-                <!-- Bouton Ajouter (rond avec +) -->
-                <Button fx:id="btnAddDocument"
-                        text="+"
-                        styleClass="btn-add-document"
-                        style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+                <Button fx:id="btnAddDocument" text="+" styleClass="btn-add-circle"/>
             </HBox>
-
-            <!-- Sous-titre -->
-            <Label text="Organisez et gérez vos documents en toute facilité"
-                   style="-fx-font-size: 13; -fx-text-fill: #666; -fx-font-style: italic;"/>
+            <Label text="Organisez et gerez vos documents en toute facilite"
+                   style="-fx-font-size: 13; -fx-text-fill: #666;"/>
         </VBox>
     </top>
 
-    <!-- CENTER: Contenu principal (gauche: dossiers, droite: documents) -->
     <center>
-        <HBox spacing="20" style="-fx-padding: 20;">
-
-            <!-- GAUCHE: Panneau Dossiers (sidebar) -->
-            <VBox spacing="15" prefWidth="280" styleClass="card" style="-fx-padding: 20; -fx-background-color: white; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
-
-                <!-- Header Dossiers -->
+        <HBox spacing="25" VBox.vgrow="ALWAYS">
+            <!-- Carte Dossiers (≈30%) -->
+            <VBox spacing="12" styleClass="card"
+                  prefWidth="330" minWidth="300" maxWidth="380"
+                  maxHeight="Infinity">
                 <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label text="📁 Dossiers" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1d4ed8;"/>
+                    <Label text="📁 Dossiers" styleClass="section-title"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="btnManageFolders" text="⚙️" styleClass="btn-icon-small"/>
+                    <Button fx:id="btnManageFolders" text="⚙" styleClass="btn-icon-small"/>
                 </HBox>
 
-                <Separator style="-fx-border-color: #E5E7EB;"/>
+                <Separator />
 
-                <!-- Bouton Tous les documents -->
-                <Button fx:id="btnAllDocuments"
-                        text="📋 Tous les documents"
-                        styleClass="folder-button"
-                        style="-fx-font-size: 13;"/>
+                <Button fx:id="btnAllDocuments" text="📋 Tous les documents" styleClass="folder-button"/>
 
-                <!-- Liste des dossiers (ScrollPane) -->
-                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-padding: 0; -fx-border-color: transparent;">
-                    <ListView fx:id="listFolders" styleClass="folders-list" style="-fx-padding: 5;"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                    <VBox fx:id="containerFolders" spacing="5" style="-fx-padding: 5;"/>
                 </ScrollPane>
 
-                <!-- Bouton Ajouter Dossier -->
-                <Button fx:id="btnAddFolder"
-                        text="+ Ajouter un dossier"
-                        maxWidth="Infinity"
-                        styleClass="btn-secondary"
-                        style="-fx-font-size: 12;"/>
+                <Button fx:id="btnAddFolder" text="+ Ajouter un dossier" maxWidth="Infinity" styleClass="btn-secondary"/>
             </VBox>
 
-            <!-- DROITE: Panneau Documents (principal) -->
-            <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="card" style="-fx-padding: 25; -fx-background-color: white; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
-
-                <!-- Barre de recherche et filtres -->
-                <HBox spacing="15" alignment="CENTER_LEFT">
+            <!-- Carte Documents (≈70%) -->
+            <VBox spacing="12" styleClass="card"
+                  HBox.hgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
+                <HBox spacing="12" alignment="CENTER_LEFT">
                     <TextField fx:id="tfSearch"
                                promptText="🔍 Rechercher un document..."
                                styleClass="search-field"
@@ -76,46 +55,36 @@
                                style="-fx-padding: 10 15; -fx-font-size: 12; -fx-border-radius: 8;"/>
 
                     <ComboBox fx:id="cbCategory"
-                              promptText="📁 Catégorie"
+                              promptText="📁 Categorie"
                               styleClass="filter-combo"
-                              style="-fx-font-size: 12;"/>
+                              prefWidth="180"/>
 
-                    <Button fx:id="btnManageCategories"
-                            text="🏷️"
-                            styleClass="btn-icon-small"
-                            style="-fx-font-size: 14;"/>
+                    <Button fx:id="btnManageCategories" text="🏷" styleClass="btn-icon-small"/>
                 </HBox>
 
-                <!-- Compteur et actions -->
                 <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label fx:id="lblDocCount"
-                           text="0 documents"
-                           style="-fx-font-size: 12; -fx-text-fill: #666;"/>
+                    <Label fx:id="lblDocCount" text="0 documents" style="-fx-font-size: 12; -fx-text-fill: #666;"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="lblFilterInfo"
-                           text=""
-                           style="-fx-font-size: 11; -fx-text-fill: #1d4ed8; -fx-font-weight: bold;"/>
+                    <Label fx:id="lblFilterInfo" text="" style="-fx-font-size: 11; -fx-text-fill: #1d4ed8; -fx-font-weight: bold;"/>
                     <Button fx:id="btnRefresh" text="⟳" styleClass="btn-icon-small"/>
                 </HBox>
 
-                <!-- Liste des documents (style carte) -->
-                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-padding: 0; -fx-border-color: transparent;">
-                    <ListView fx:id="listDocuments" styleClass="documents-list"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                    <VBox fx:id="containerDocuments" spacing="10" style="-fx-padding: 5;"/>
                 </ScrollPane>
             </VBox>
         </HBox>
     </center>
 
-    <!-- BOTTOM: Barre de statut (optionnel) -->
     <bottom>
         <HBox style="-fx-background-color: #f7f9fc; -fx-border-color: #E5E7EB; -fx-border-width: 1 0 0 0; -fx-padding: 10 30;">
-            <Label fx:id="lblStatus"
-                   text="Prêt"
-                   style="-fx-font-size: 11; -fx-text-fill: #666;"/>
+            <Label fx:id="lblStatus" text="Pret" style="-fx-font-size: 11; -fx-text-fill: #666;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label text="v2.0" style="-fx-font-size: 10; -fx-text-fill: #999;"/>
         </HBox>
     </bottom>
 
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
 </BorderPane>
-

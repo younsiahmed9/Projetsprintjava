@@ -6,6 +6,7 @@ tn\esprit\Main.class
 utils\MyDatabase.class
 Controllers\DossierController.class
 Controllers\MainController.class
+Controllers\DashboardController.class
 Models\Document.class
 Controllers\CategorieListCell.class
 Controllers\DocumentCardListCell.class
@@ -13,11 +14,14 @@ Controllers\CategoryManagerDialog$CategoryListCell.class
 Services\ServiceCategorie.class
 Models\Categorie.class
 Models\Dossier.class
+Controllers\DashboardController$1.class
 Services\ServiceDocument.class
 Controllers\DocumentController.class
+Controllers\DocumentDetailController.class
 Controllers\Dialogs\DeleteConfirmationDialog.class
 Controllers\CategoryManagerDialog.class
 Controllers\DocumentViewController$1.class
+utils\UiStyles.class
 Services\ServiceDossier.class
 Controllers\DossierListCell.class
 Controllers\CategorieController.class

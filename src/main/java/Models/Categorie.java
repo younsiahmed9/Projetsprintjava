@@ -42,6 +42,7 @@ public class Categorie {
         this.description = description;
     }
 
+
     @Override
     public String toString() {
         return nom;

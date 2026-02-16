@@ -16,7 +16,17 @@ public class ValidationUtils {
      * Valide que le champ description n'est pas vide (optionnel mais recommandé)
      */
     public static boolean isValidDescription(String description) {
-        return description == null || description.trim().length() >= 0;
+        if (description == null || description.trim().isEmpty()) {
+            return true;
+        }
+        return description.trim().length() >= 3;
+    }
+
+    /**
+     * Retourne un message d'erreur pour description invalide
+     */
+    public static String getErrorDescription() {
+        return "La description doit contenir au moins 3 caractères.";
     }
 
     /**
@@ -31,6 +41,13 @@ public class ValidationUtils {
      */
     public static boolean isValidDossier(Object dossier) {
         return dossier != null;
+    }
+
+    /**
+     * Valide qu'une catégorie a été sélectionnée
+     */
+    public static boolean isValidCategorie(Object categorie) {
+        return categorie != null;
     }
 
     /**
@@ -70,6 +87,13 @@ public class ValidationUtils {
      */
     public static String getErrorDossier() {
         return "Veuillez sélectionner un dossier.";
+    }
+
+    /**
+     * Retourne un message d'erreur pour catégorie non sélectionnée
+     */
+    public static String getErrorCategorie() {
+        return "Veuillez sélectionner une catégorie.";
     }
 
     /**
@@ -115,5 +139,46 @@ public class ValidationUtils {
         }
         return input.trim();
     }
-}
 
+    /**
+     * Valide un budget (optionnel, >= 0 si renseigné)
+     */
+    public static boolean isValidBudget(String budget) {
+        if (budget == null || budget.trim().isEmpty()) {
+            return true;
+        }
+        try {
+            return Double.parseDouble(budget.trim()) >= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Retourne un message d'erreur pour budget invalide
+     */
+    public static String getErrorBudget() {
+        return "Le budget doit être un nombre positif.";
+    }
+
+    /**
+     * Valide un montant (obligatoire, >= 0)
+     */
+    public static boolean isValidMontant(String montant) {
+        if (montant == null || montant.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            return Double.parseDouble(montant.trim()) >= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Retourne un message d'erreur pour montant invalide
+     */
+    public static String getErrorMontant() {
+        return "Le montant doit être un nombre positif ou zéro (ex: 250.00).";
+    }
+}

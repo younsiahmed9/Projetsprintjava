@@ -2,7 +2,8 @@ package Controllers;
 
 import Models.Document;
 import Services.ServiceDocument;
-import Controllers.Dialogs.DeleteConfirmationDialog;
+// import Controllers.Dialogs.DeleteConfirmationDialog;
+import Controllers.Dialogs.CrudDialogManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -20,11 +21,13 @@ public class DocumentCardListCell extends ListCell<Document> {
     private Label titleLabel;
     private Label descLabel;
     private Label metaLabel;
+    private Label amountLabel;
+    private Button editBtn;
     private Button deleteBtn;
     private final ServiceDocument docService = new ServiceDocument();
 
     public DocumentCardListCell() {
-        setPrefHeight(100);
+        setPrefHeight(110);
         initializeUI();
     }
 
@@ -34,56 +37,40 @@ public class DocumentCardListCell extends ListCell<Document> {
 
         descLabel = new Label();
         descLabel.setStyle("-fx-font-size: 11; -fx-text-fill: #666; -fx-wrap-text: true;");
-        descLabel.setMaxWidth(300);
+        descLabel.setMaxWidth(420);
 
         metaLabel = new Label();
         metaLabel.setStyle("-fx-font-size: 10; -fx-text-fill: #999;");
 
-        deleteBtn = new Button("🗑️ Supprimer");
-        deleteBtn.setStyle(
-            "-fx-background-color: #dc2626; " +
-            "-fx-text-fill: white; " +
-            "-fx-font-size: 11; " +
-            "-fx-padding: 6 12; " +
-            "-fx-border-radius: 6; " +
-            "-fx-background-radius: 6; " +
-            "-fx-cursor: hand;"
-        );
-        deleteBtn.setPrefWidth(110);
-        deleteBtn.setOnMouseEntered(e -> deleteBtn.setStyle(
-            "-fx-background-color: #b91c1c; -fx-text-fill: white; -fx-font-size: 11; " +
-            "-fx-padding: 6 12; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand;"
-        ));
-        deleteBtn.setOnMouseExited(e -> deleteBtn.setStyle(
-            "-fx-background-color: #dc2626; -fx-text-fill: white; -fx-font-size: 11; " +
-            "-fx-padding: 6 12; -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand;"
-        ));
+        amountLabel = new Label();
+        amountLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #111827; -fx-font-weight: bold;");
+
+        editBtn = new Button("Modifier");
+        editBtn.getStyleClass().add("btn-modify");
+        editBtn.setStyle("-fx-font-size: 12; -fx-min-width: 110; -fx-pref-width: 110; -fx-max-width: 110; -fx-text-overrun: clip;");
+
+        deleteBtn = new Button("Supprimer");
+        deleteBtn.getStyleClass().add("btn-delete");
+        deleteBtn.setStyle("-fx-font-size: 12; -fx-min-width: 110; -fx-pref-width: 110; -fx-max-width: 110; -fx-text-overrun: clip;");
 
         VBox infoBox = new VBox(5);
         infoBox.getChildren().addAll(titleLabel, descLabel, metaLabel);
         VBox.setVgrow(infoBox, Priority.ALWAYS);
 
-        HBox contentBox = new HBox(10);
+        HBox actionsRow = new HBox(10, editBtn, deleteBtn);
+        actionsRow.setAlignment(Pos.CENTER_RIGHT);
+
+        VBox rightBox = new VBox(6, amountLabel, actionsRow);
+        rightBox.setAlignment(Pos.CENTER_RIGHT);
+
+        HBox contentBox = new HBox(12, infoBox, rightBox);
         contentBox.setAlignment(Pos.CENTER_LEFT);
-        contentBox.getChildren().addAll(infoBox, deleteBtn);
         HBox.setHgrow(infoBox, Priority.ALWAYS);
 
-        container = new VBox(5);
+        container = new VBox(6);
         container.setPadding(new Insets(12));
-        container.setStyle(
-            "-fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 12; " +
-            "-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 1);"
-        );
+        container.getStyleClass().add("account-card");
         container.getChildren().add(contentBox);
-
-        container.setOnMouseEntered(e -> container.setStyle(
-            "-fx-border-color: #1d4ed8; -fx-border-width: 1; -fx-border-radius: 12; " +
-            "-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(29, 78, 216, 0.15), 10, 0, 0, 3);"
-        ));
-        container.setOnMouseExited(e -> container.setStyle(
-            "-fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 12; " +
-            "-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 1);"
-        ));
     }
 
     @Override
@@ -107,13 +94,32 @@ public class DocumentCardListCell extends ListCell<Document> {
             }
             metaLabel.setText(meta);
 
+            amountLabel.setText(String.format("Montant: %.2f €", document.getMontant()));
+
+            editBtn.setOnAction(e -> editDocument(document));
             deleteBtn.setOnAction(e -> deleteDocument(document));
 
             setGraphic(container);
         }
     }
 
+    private void editDocument(Document document) {
+        CrudDialogManager dialogManager = new CrudDialogManager();
+        dialogManager.showDocumentDialog(document, true).ifPresent(updated -> {
+            try {
+                docService.update(updated);
+                getListView().getItems().set(getIndex(), updated);
+                getListView().refresh();
+                AlertUtils.showSuccess("Succès", "Document modifié avec succès !");
+            } catch (SQLException e) {
+                AlertUtils.showError("Erreur", "Impossible de modifier le document : " + e.getMessage());
+            }
+        });
+    }
+
     private void deleteDocument(Document document) {
+        // Utilisé seulement par l'ancien système ListView - désactivé
+        /*
         if (DeleteConfirmationDialog.showAndWait(
             "Document",
             document.getTitre(),
@@ -127,6 +133,6 @@ public class DocumentCardListCell extends ListCell<Document> {
                 AlertUtils.showError("Erreur", "Impossible de supprimer le document : " + e.getMessage());
             }
         }
+        */
     }
 }
-

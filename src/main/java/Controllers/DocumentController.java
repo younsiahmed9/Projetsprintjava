@@ -9,14 +9,17 @@ import Services.ServiceDocument;
 import utils.ValidationUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.sql.SQLException;
 
 public class DocumentController {
-    @FXML private ListView<Document> listDocuments;
+    @FXML private VBox containerDocuments;
     @FXML private TextField tfTitre;
     @FXML private TextArea taDesc;
     @FXML private TextField tfPath;
@@ -30,9 +33,6 @@ public class DocumentController {
 
     @FXML
     public void initialize() {
-        listDocuments.setCellFactory(param -> new DocumentListCell());
-        listDocuments.setOnMouseClicked(event -> onListClick());
-
         // Charger les dossiers
         try {
             cbDossier.setItems(FXCollections.observableArrayList(dossierService.findAll()));
@@ -51,8 +51,83 @@ public class DocumentController {
         tfTitre.textProperty().addListener((obs, oldVal, newVal) -> validateTitreField());
         tfPath.textProperty().addListener((obs, oldVal, newVal) -> validatePathField());
         cbDossier.valueProperty().addListener((obs, oldVal, newVal) -> validateDossierField());
+        cbCategorie.valueProperty().addListener((obs, oldVal, newVal) -> validateCategorieField());
 
         refresh();
+    }
+
+    /**
+     * Crée une card personnalisée pour un document
+     */
+    private VBox createDocumentCard(Document doc) {
+        VBox card = new VBox(5);
+        card.setStyle("-fx-padding: 12; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
+
+        Label lblTitle = new Label("📄 " + doc.getTitre());
+        lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13; -fx-text-fill: #1d4ed8;");
+
+        Label lblDesc = new Label(doc.getDescription() != null && !doc.getDescription().isEmpty()
+                ? doc.getDescription() : "(Pas de description)");
+        lblDesc.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
+        lblDesc.setWrapText(true);
+
+        HBox hboxMeta = new HBox(12);
+        Label lblDossier = new Label("📁 " + (doc.getDossier() != null ? doc.getDossier().getNom() : "N/A"));
+        lblDossier.setStyle("-fx-font-size: 9; -fx-text-fill: #999;");
+
+        Label lblCategorie = new Label("🏷️ " + (doc.getCategorie() != null ? doc.getCategorie().getNom() : "N/A"));
+        lblCategorie.setStyle("-fx-font-size: 9; -fx-text-fill: #999;");
+
+        hboxMeta.getChildren().addAll(lblDossier, lblCategorie);
+
+        HBox btnBox = new HBox(8);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+        Button btnEdit = new Button("Modifier");
+        btnEdit.getStyleClass().add("btn-modify");
+        btnEdit.setStyle("-fx-font-size: 10; -fx-min-width: 70;");
+        btnEdit.setOnAction(e -> selectDocument(doc));
+
+        Button btnDelete = new Button("Supprimer");
+        btnDelete.getStyleClass().add("btn-delete");
+        btnDelete.setStyle("-fx-font-size: 10; -fx-min-width: 70;");
+        btnDelete.setOnAction(e -> deleteDocumentCard(doc));
+
+        btnBox.getChildren().addAll(btnEdit, btnDelete);
+
+        card.getChildren().addAll(lblTitle, lblDesc, hboxMeta, btnBox);
+        return card;
+    }
+
+    /**
+     * Sélectionne un document et le charge dans le formulaire
+     */
+    private void selectDocument(Document doc) {
+        selected = doc;
+        tfTitre.setText(doc.getTitre());
+        taDesc.setText(doc.getDescription());
+        tfPath.setText(doc.getFilePath());
+        cbDossier.setValue(doc.getDossier());
+        cbCategorie.setValue(doc.getCategorie());
+    }
+
+    /**
+     * Supprime un document avec confirmation (depuis la carte)
+     */
+    private void deleteDocumentCard(Document doc) {
+        if (!AlertUtils.showConfirmation("Confirmation",
+                "Êtes-vous sûr de vouloir supprimer le document \"" + doc.getTitre() + "\" ?")) {
+            return;
+        }
+
+        try {
+            docService.delete(doc.getId());
+            AlertUtils.showSuccess("Succès", "Document supprimé avec succès !");
+            refresh();
+            onClear();
+        } catch (Exception e) {
+            AlertUtils.showError("Erreur lors de la suppression", e.getMessage());
+        }
     }
 
     /**
@@ -96,15 +171,14 @@ public class DocumentController {
         }
     }
 
-    private void onListClick() {
-        selected = listDocuments.getSelectionModel().getSelectedItem();
-        if (selected == null) return;
-        tfTitre.setText(selected.getTitre());
-        taDesc.setText(selected.getDescription());
-        tfPath.setText(selected.getFilePath());
-        cbDossier.getSelectionModel().select(selected.getDossier());
-        cbCategorie.getSelectionModel().select(selected.getCategorie());
+    private void validateCategorieField() {
+        if (cbCategorie.getValue() != null) {
+            cbCategorie.setStyle("-fx-border-color: #22c55e; -fx-border-width: 2;");
+        } else {
+            cbCategorie.setStyle("-fx-border-color: transparent;");
+        }
     }
+
 
     @FXML
     private void onBrowse() {
@@ -182,9 +256,10 @@ public class DocumentController {
         cbDossier.getSelectionModel().clearSelection();
         cbCategorie.getSelectionModel().clearSelection();
         tfTitre.setStyle("-fx-border-color: transparent;");
+        taDesc.setStyle("-fx-border-color: transparent;");
         tfPath.setStyle("-fx-border-color: transparent;");
         cbDossier.setStyle("-fx-border-color: transparent;");
-        listDocuments.getSelectionModel().clearSelection();
+        cbCategorie.setStyle("-fx-border-color: transparent;");
     }
 
     @FXML
@@ -194,7 +269,10 @@ public class DocumentController {
 
     private void refresh() {
         try {
-            listDocuments.setItems(FXCollections.observableArrayList(docService.findAll()));
+            containerDocuments.getChildren().clear();
+            for (Document doc : docService.findAll()) {
+                containerDocuments.getChildren().add(createDocumentCard(doc));
+            }
         } catch (SQLException e) {
             AlertUtils.showError("Erreur Base de Données", e.getMessage());
         }
@@ -205,7 +283,9 @@ public class DocumentController {
      */
     private boolean validateForm() {
         String titre = tfTitre.getText();
+        String desc = taDesc.getText();
         Dossier dossier = cbDossier.getValue();
+        Categorie categorie = cbCategorie.getValue();
         String path = tfPath.getText();
 
         // Validation du titre
@@ -215,10 +295,24 @@ public class DocumentController {
             return false;
         }
 
+        // Validation de la description (optionnelle)
+        if (!ValidationUtils.isValidDescription(desc)) {
+            AlertUtils.showError("Champ invalide", ValidationUtils.getErrorDescription());
+            taDesc.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");
+            return false;
+        }
+
         // Validation du dossier
         if (!ValidationUtils.isValidDossier(dossier)) {
             AlertUtils.showError("Champ invalide", ValidationUtils.getErrorDossier());
             cbDossier.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");
+            return false;
+        }
+
+        // Validation de la catégorie
+        if (!ValidationUtils.isValidCategorie(categorie)) {
+            AlertUtils.showError("Champ invalide", ValidationUtils.getErrorCategorie());
+            cbCategorie.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");
             return false;
         }
 

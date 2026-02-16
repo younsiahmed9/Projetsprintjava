@@ -72,8 +72,18 @@ public class ServiceCategorie implements Iservice<Categorie> {
         }
     }
 
+    public int countCategories() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM categorie";
+        try (Statement st = MyDatabase.getInstance().getConnection().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        }
+        return 0;
+    }
+
     private Categorie mapRow(ResultSet rs) throws SQLException {
         return new Categorie(rs.getInt("id"), rs.getString("nom"), rs.getString("description"));
     }
 }
-

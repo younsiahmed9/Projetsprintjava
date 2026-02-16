@@ -69,5 +69,16 @@ public class ServiceDossier implements Iservice<Dossier> {
         }
         return list;
     }
+
+    public int countDossiers() throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM dossier";
+        try (Statement st = MyDatabase.getInstance().getConnection().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        }
+        return 0;
+    }
 }
 

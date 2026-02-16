@@ -122,7 +122,6 @@ public class CategorieController {
         tfNom.clear();
         taDesc.clear();
         tfNom.setStyle("-fx-border-color: transparent;");
-        listCategories.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -143,6 +142,7 @@ public class CategorieController {
      */
     private boolean validateForm() {
         String nom = tfNom.getText();
+        String desc = taDesc.getText();
 
         // Validation du nom
         if (!ValidationUtils.isValidTitre(nom)) {
@@ -151,7 +151,13 @@ public class CategorieController {
             return false;
         }
 
+        // Validation de la description (optionnelle)
+        if (!ValidationUtils.isValidDescription(desc)) {
+            AlertUtils.showError("Champ invalide", ValidationUtils.getErrorDescription());
+            taDesc.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");
+            return false;
+        }
+
         return true;
     }
 }
-

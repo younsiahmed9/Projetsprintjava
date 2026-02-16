@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import utils.UiStyles;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,19 +27,21 @@ public class CategoryManagerDialog {
      */
     public void showCategoryManager() {
         Dialog<Void> dialog = new Dialog<>();
+        UiStyles.applyDialogStyles(dialog.getDialogPane());
         dialog.setTitle("Gestion des Catégories");
         dialog.setHeaderText("Créer, modifier ou supprimer des catégories");
         dialog.setWidth(800);
         dialog.setHeight(600);
 
         ListView<Categorie> categoryList = new ListView<>();
+        categoryList.getStyleClass().add("documents-list");
         categoryList.setPrefHeight(300);
         refreshCategoryList(categoryList);
         categoryList.setCellFactory(param -> new CategoryListCell());
 
         // Boutons d'action
         Button btnEdit = new Button("✎ Modifier");
-        btnEdit.setStyle("-fx-padding: 10 20; -fx-font-size: 12; -fx-background-color: #1d4ed8; -fx-text-fill: white; -fx-border-radius: 6;");
+        btnEdit.getStyleClass().add("btn-action-light-blue");
         btnEdit.setPrefWidth(120);
         btnEdit.setOnAction(e -> {
             Categorie selected = categoryList.getSelectionModel().getSelectedItem();
@@ -58,7 +61,7 @@ public class CategoryManagerDialog {
         });
 
         Button btnDelete = new Button("🗑️ Supprimer");
-        btnDelete.setStyle("-fx-padding: 10 20; -fx-font-size: 12; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-border-radius: 6;");
+        btnDelete.getStyleClass().add("btn-danger");
         btnDelete.setPrefWidth(120);
         btnDelete.setOnMouseEntered(e -> btnDelete.setStyle("-fx-padding: 10 20; -fx-font-size: 12; -fx-background-color: #b91c1c; -fx-text-fill: white; -fx-border-radius: 6;"));
         btnDelete.setOnMouseExited(e -> btnDelete.setStyle("-fx-padding: 10 20; -fx-font-size: 12; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-border-radius: 6;"));
@@ -80,7 +83,7 @@ public class CategoryManagerDialog {
         });
 
         Button btnAddCategory = new Button("+ Ajouter une catégorie");
-        btnAddCategory.setStyle("-fx-padding: 10 20; -fx-font-size: 12; -fx-background-color: #f9b233; -fx-text-fill: white; -fx-border-radius: 6; -fx-font-weight: bold;");
+        btnAddCategory.getStyleClass().add("btn-primary");
         btnAddCategory.setPrefWidth(200);
         btnAddCategory.setOnAction(e -> {
             dialogManager.showCategoryDialog(null, false).ifPresent(category -> {
@@ -96,10 +99,12 @@ public class CategoryManagerDialog {
 
         // HBox pour les boutons d'action
         javafx.scene.layout.HBox btnBox = new javafx.scene.layout.HBox(10);
+        btnBox.getStyleClass().add("card");
         btnBox.setStyle("-fx-padding: 10;");
         btnBox.getChildren().addAll(btnEdit, btnDelete);
 
         VBox content = new VBox(15);
+        content.getStyleClass().add("card");
         content.setStyle("-fx-padding: 20;");
         content.getChildren().addAll(
             new Label("Liste des catégories :"),
