@@ -965,3 +965,20 @@
     -fx-border-color: rgba(24, 45, 136, 0.18);
     -fx-border-width: 2;
 }
+
+/* Dialog (Add/Edit user) harmonisé avec overlay-card */
+.dialog-pane {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane > .content {
+    -fx-background-color: transparent;
+}
+
+.dialog-pane .button-bar .button {
+    /* si pas de classe ajoutée, fallback raisonnable */
+    -fx-background-radius: 10;
+    -fx-padding: 10 14 10 14;
+    -fx-font-weight: 700;
+}
+

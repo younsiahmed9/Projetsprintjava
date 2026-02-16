@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
+
+<StackPane prefHeight="600.0" prefWidth="800.0" stylesheets="@/css/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.ui.AdminDashboardController">
+    <!-- Contenu principal -->
+    <HBox>
+        <!-- Sidebar -->
+        <VBox prefWidth="220.0" spacing="10" style="-fx-padding: 15;" styleClass="sidebar">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <ImageView fitHeight="107.0" fitWidth="173.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png" />
+                    </image>
+                </ImageView>
+                <VBox spacing="2" />
+            </HBox>
+            <!-- Section Navigation -->
+            <VBox spacing="8" style="-fx-padding: 10 0 10 0;">
+                <Label style="-fx-text-fill: #999; -fx-font-size: 11px; -fx-font-weight: bold;" text="NAVIGATION" />
+                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="🏠 Accueil" />
+                <Button onMouseClicked="#onHeaderAvatarClick" style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="👤 Mon Profil" />
+            </VBox>
+            <!-- Section Admin (visible uniquement pour les admins) -->
+            <VBox fx:id="adminMenuSection" spacing="8" style="-fx-padding: 10 0 10 0;">
+                <Separator />
+                <Label style="-fx-text-fill: #999; -fx-font-size: 11px; -fx-font-weight: bold;" text="ADMINISTRATION" />
+                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="📊 Dashboard" />
+                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="👥 Utilisateurs" />
+                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="💳 Transactions" />
+                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="📈 Statistiques" />
+                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="⚙️ Paramètres" />
+            </VBox>
+            <Region VBox.vgrow="ALWAYS" />
+            <!-- Section Thème et Déconnexion -->
+            <VBox spacing="8">
+                <Separator />
+            </VBox>
+        </VBox>
+        <!-- Zone principale scrollable -->
+        <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <VBox spacing="16" style="-fx-padding: 20;">
+                <!-- En-tête avec avatar cliquable -->
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <ImageView fx:id="headerAvatarView" fitHeight="50" fitWidth="50" onMouseClicked="#onHeaderAvatarClick" preserveRatio="true" styleClass="avatar" style="-fx-cursor: hand;" />
+                    <Label fx:id="welcomeLabel" styleClass="title" text="Bienvenue" textFill="#002a5e" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button onAction="#onToggleTheme" styleClass="btn-primary" text="🎨 Changer thème" />
+                    <Button onAction="#onLogout" styleClass="btn-secondary" text="🚪 Déconnexion" />
+                </HBox>
+                <!-- Section Admin Dashboard (visible si ADMIN) -->
+                <VBox fx:id="adminDashboardBox" spacing="12">
+                    <Label styleClass="title" text="📊 Dashboard Admin" />
+                    <HBox spacing="12">
+                        <VBox prefWidth="220" spacing="6" styleClass="card">
+                            <Label styleClass="subtitle" text="Admins" />
+                            <Label fx:id="adminCountLabel" styleClass="title" text="0" />
+                        </VBox>
+                        <VBox prefWidth="220" spacing="6" styleClass="card">
+                            <Label styleClass="subtitle" text="Clients" />
+                            <Label fx:id="clientCountLabel" styleClass="title" text="0" />
+                        </VBox>
+                    </HBox>
+                    <HBox spacing="12">
+                        <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label styleClass="subtitle" text="Utilisateurs inscrits (7 derniers jours)" />
+                                <Pane HBox.hgrow="ALWAYS" />
+                            </HBox>
+                            <BarChart fx:id="usersCreatedChart" legendVisible="false" prefHeight="180">
+                                <xAxis>
+                                    <CategoryAxis />
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis />
+                                </yAxis>
+                            </BarChart>
+                        </VBox>
+                        <VBox prefWidth="240" spacing="10" styleClass="card">
+                            <Label styleClass="subtitle" text="Répartition des rôles" />
+                            <PieChart fx:id="rolesPieChart" legendVisible="true" prefHeight="180" />
+                        </VBox>
+                    </HBox>
+                    <VBox spacing="10" styleClass="card" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label styleClass="subtitle" text="🧑‍💼 Tous les utilisateurs" />
+                            <Pane HBox.hgrow="ALWAYS" />
+                            <Button onAction="#onAdminAddUser" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-min-width: 36; -fx-min-height: 36; -fx-background-radius: 8; -fx-cursor: hand;" styleClass="btn-add-user" text="+" />
+                            <Button onAction="#onAdminRefresh" styleClass="btn-link" text="Rafraîchir" />
+                        </HBox>
+                        <TableView fx:id="usersTable" prefHeight="300">
+                            <columns>
+                                <TableColumn fx:id="idCol" prefWidth="60" text="ID" />
+                                <TableColumn fx:id="fullNameCol" prefWidth="180" text="Nom" />
+                                <TableColumn fx:id="emailCol" prefWidth="220" text="Email" />
+                                <TableColumn fx:id="roleCol" prefWidth="90" text="Rôle" />
+                                <TableColumn fx:id="activeCol" prefWidth="60" text="Actif" />
+                            </columns>
+                        </TableView>
+                        <Label fx:id="adminStatusLabel" styleClass="status" wrapText="true" />
+                    </VBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </HBox>
+
+    <!-- AJOUT: Overlay Edit Profile (caché par défaut) -->
+    <StackPane fx:id="editProfileBackdrop"
+               managed="false"
+               visible="false"
+               onMouseClicked="#onCloseEditProfileBackdrop"
+               styleClass="overlay-backdrop">
+        <ScrollPane fx:id="editProfileScroll"
+                    fitToHeight="true"
+                    fitToWidth="true"
+                    style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox fx:id="editProfileCard"
+                  maxWidth="500"
+                  spacing="12"
+                  onMouseClicked="#onEditProfileCardClick"
+                  styleClass="overlay-card">
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="title" text="✏️ Modifier mon profil"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Button onAction="#onCloseEditProfile" styleClass="btn-link" text="✕"/>
+                </HBox>
+
+                <Separator/>
+
+                <VBox alignment="CENTER" spacing="8">
+                    <ImageView fx:id="profileAvatarView" fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="avatar-large"/>
+                    <Button onAction="#onChangeProfilePhoto" styleClass="btn-secondary" text="📷 Changer la photo"/>
+                    <Label fx:id="profilePhotoHintLabel" styleClass="hint" text=""/>
+                </VBox>
+
+                <Separator/>
+
+                <Label styleClass="subtitle" text="Nom complet"/>
+                <TextField fx:id="profileFullNameField" promptText="Nom complet"/>
+
+                <Label styleClass="subtitle" text="Email"/>
+                <TextField fx:id="profileEmailField" promptText="Email"/>
+
+                <Label styleClass="subtitle" text="Nouveau mot de passe (optionnel)"/>
+                <PasswordField fx:id="profileNewPasswordField" promptText="Nouveau mot de passe"/>
+
+                <Label styleClass="subtitle" text="Confirmer le mot de passe"/>
+                <PasswordField fx:id="profileConfirmPasswordField" promptText="Confirmer"/>
+
+                <HBox spacing="10">
+                    <Button onAction="#onSaveProfile" styleClass="btn-primary" text="💾 Enregistrer" HBox.hgrow="ALWAYS"/>
+                    <Button onAction="#onCloseEditProfile" styleClass="btn-secondary" text="Annuler"/>
+                </HBox>
+
+                <Label fx:id="profileStatusLabel" styleClass="status" wrapText="true"/>
+            </VBox>
+        </ScrollPane>
+    </StackPane>
+
+    <!-- AJOUT: Overlay Admin Edit User (même style que home.fxml) -->
+    <StackPane fx:id="adminEditUserBackdrop"
+               alignment="CENTER"
+               managed="false"
+               visible="false"
+               onMouseClicked="#onAdminEditUserBackdropClick"
+               styleClass="overlay-backdrop">
+        <VBox fx:id="adminEditUserCard"
+              alignment="TOP_LEFT"
+              maxWidth="500"
+              spacing="12"
+              onMouseClicked="#consumeEvent"
+              styleClass="overlay-card">
+            <HBox alignment="CENTER_LEFT">
+                <Label styleClass="title" text="✏️ Modifier utilisateur" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button onAction="#onCloseAdminEditUser" styleClass="btn-link" text="✕" />
+            </HBox>
+
+            <Separator />
+
+            <Label styleClass="field-label" text="ID" />
+            <Label fx:id="adminEditUserIdLabel" text="-" />
+
+            <Label styleClass="field-label" text="Nom complet" />
+            <TextField fx:id="adminEditUserFullNameField" promptText="Nom complet" styleClass="enhanced-focus" />
+
+            <Label styleClass="field-label" text="Email" />
+            <TextField fx:id="adminEditUserEmailField" promptText="Email" styleClass="enhanced-focus" />
+
+            <Label styleClass="field-label" text="Rôle" />
+            <ComboBox fx:id="adminEditUserRoleBox" prefWidth="200" styleClass="enhanced-focus" />
+
+            <CheckBox fx:id="adminEditUserActiveCheck" text="Compte actif" />
+
+            <HBox spacing="10">
+                <Button onAction="#onAdminSaveUser" styleClass="btn-primary" text="💾 Enregistrer" HBox.hgrow="ALWAYS" />
+                <Button onAction="#onAdminDeleteUser" styleClass="btn-danger" text="🗑️ Supprimer" />
+                <Button onAction="#onCloseAdminEditUser" styleClass="btn-secondary" text="Annuler" />
+            </HBox>
+
+            <Label fx:id="adminEditUserStatusLabel" styleClass="status" wrapText="true" />
+        </VBox>
+    </StackPane>
+
+    <!-- AJOUT: Overlay Admin Add User -->
+    <StackPane fx:id="adminAddUserBackdrop"
+               alignment="CENTER"
+               managed="false"
+               visible="false"
+               onMouseClicked="#onCloseAdminAddUser"
+               styleClass="overlay-backdrop">
+        <!-- CHANGÉ: Ajout d'un ScrollPane pour la cohérence -->
+        <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox fx:id="adminAddUserCard"
+                  alignment="TOP_LEFT"
+                  maxWidth="500"
+                  spacing="12"
+                  onMouseClicked="#consumeEvent"
+                  styleClass="overlay-card">
+                <HBox alignment="CENTER_LEFT">
+                    <Label styleClass="title" text="➕ Ajouter un utilisateur" />
+                    <Pane HBox.hgrow="ALWAYS" />
+                    <Button onAction="#onCloseAdminAddUser" styleClass="btn-link" text="✕" />
+                </HBox>
+
+                <Separator />
+
+                <Label styleClass="field-label" text="Nom complet" />
+                <TextField fx:id="adminAddUserFullNameField" promptText="Nom complet" styleClass="enhanced-focus" />
+
+                <Label styleClass="field-label" text="Email" />
+                <TextField fx:id="adminAddUserEmailField" promptText="Email" styleClass="enhanced-focus" />
+
+                <Label styleClass="field-label" text="Mot de passe" />
+                <PasswordField fx:id="adminAddUserPasswordField" promptText="Mot de passe (min 6 caractères)" styleClass="enhanced-focus" />
+
+                <Label styleClass="field-label" text="Rôle" />
+                <ComboBox fx:id="adminAddUserRoleBox" prefWidth="200" styleClass="enhanced-focus" />
+
+                <CheckBox fx:id="adminAddUserActiveCheck" text="Compte actif" selected="true" />
+
+                <HBox spacing="10">
+                    <Button onAction="#onAdminSaveNewUser" styleClass="btn-primary" text="💾 Créer l'utilisateur" HBox.hgrow="ALWAYS" />
+                    <Button onAction="#onCloseAdminAddUser" styleClass="btn-secondary" text="Annuler" />
+                </HBox>
+
+                <Label fx:id="adminAddUserStatusLabel" styleClass="status" wrapText="true" />
+            </VBox>
+        </ScrollPane>
+    </StackPane>
+
+</StackPane>
+

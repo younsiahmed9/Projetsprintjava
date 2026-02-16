@@ -78,7 +78,7 @@ public class LoginController implements Initializable {
 
             AppState.setCurrentUser(u);
             if (u.getRole() != null && u.getRole() == tn.esprit.domain.Role.ADMIN) {
-                SceneNavigator.goHomeAdmin();
+                SceneNavigator.goAdminDashboard();
             } else {
                 SceneNavigator.goHome();
             }

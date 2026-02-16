@@ -1,6 +1,6 @@
 @echo off
 rem ------------------------------------------------------------------------------
-rem Maven Wrapper startup batch script (Windows)
+rem Maven Wrapper startup batch script, version 3.3.2
 rem ------------------------------------------------------------------------------
 setlocal
 
@@ -10,7 +10,9 @@ if "%MAVEN_PROJECTBASEDIR%"=="" set "MAVEN_PROJECTBASEDIR=."
 set "WRAPPER_JAR=%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar"
 
 if not exist "%WRAPPER_JAR%" (
+  echo.
   echo Maven wrapper jar not found at "%WRAPPER_JAR%".
+  echo Please check your project is correct.
   exit /b 1
 )
 
@@ -25,4 +27,6 @@ if not exist "%JAVA_EXE%" (
   exit /b 1
 )
 
-"%JAVA_EXE%" "-Dmaven.multiModuleProjectDirectory=%MAVEN_PROJECTBASEDIR%" -classpath "%WRAPPER_JAR%" org.apache.maven.wrapper.MavenWrapperMain %*
+set "MAVEN_OPTS=-Dmaven.multiModuleProjectDirectory=%MAVEN_PROJECTBASEDIR%"
+
+"%JAVA_EXE%" %MAVEN_OPTS% -classpath "%WRAPPER_JAR%" org.apache.maven.wrapper.MavenWrapperMain %*
