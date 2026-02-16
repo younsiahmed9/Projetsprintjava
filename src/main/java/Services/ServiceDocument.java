@@ -109,9 +109,6 @@ public class ServiceDocument implements Iservice<Document> {
         return doc;
     }
 
-    /**
-     * Compte le nombre total de documents
-     */
     public int countDocuments() throws SQLException {
         String sql = "SELECT COUNT(*) AS total FROM document";
         try (Statement st = MyDatabase.getInstance().getConnection().createStatement();
@@ -123,9 +120,6 @@ public class ServiceDocument implements Iservice<Document> {
         return 0;
     }
 
-    /**
-     * Compte le nombre de documents ajoutés ce mois
-     */
     public int countDocumentsThisMonth() throws SQLException {
         String sql = "SELECT COUNT(*) AS total FROM document WHERE MONTH(uploaded_at) = MONTH(CURRENT_DATE()) AND YEAR(uploaded_at) = YEAR(CURRENT_DATE())";
         try (Statement st = MyDatabase.getInstance().getConnection().createStatement();
@@ -137,9 +131,6 @@ public class ServiceDocument implements Iservice<Document> {
         return 0;
     }
 
-    /**
-     * Récupère les N documents les plus récents
-     */
     public List<Document> getRecentDocuments(int limit) throws SQLException {
         List<Document> list = new ArrayList<>();
         String sql = "SELECT d.id,d.titre,d.description,d.file_path,d.uploaded_at,d.montant, " +
@@ -156,9 +147,6 @@ public class ServiceDocument implements Iservice<Document> {
         return list;
     }
 
-    /**
-     * Récupère les statistiques de documents par catégorie
-     */
     public java.util.Map<String, Integer> getStatsDocsByCategorie() throws SQLException {
         java.util.Map<String, Integer> stats = new java.util.LinkedHashMap<>();
         String sql = "SELECT COALESCE(c.nom, 'Non catégorisé') AS categorie_nom, COUNT(d.id) AS total " +
@@ -173,9 +161,6 @@ public class ServiceDocument implements Iservice<Document> {
         return stats;
     }
 
-    /**
-     * Récupère les statistiques de documents par dossier
-     */
     public java.util.Map<String, Integer> getStatsDocsByDossier() throws SQLException {
         java.util.Map<String, Integer> stats = new java.util.LinkedHashMap<>();
         String sql = "SELECT ds.nom AS dossier_nom, COUNT(d.id) AS total " +

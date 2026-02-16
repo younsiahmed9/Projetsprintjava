@@ -2,7 +2,6 @@ package Controllers;
 
 import Models.Categorie;
 import Services.ServiceCategorie;
-// import Controllers.Dialogs.DeleteConfirmationDialog;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -82,22 +81,6 @@ public class CategorieListCell extends ListCell<Categorie> {
     }
 
     private void deleteCategory(Categorie categorie) {
-        // Utilisé seulement par l'ancien système ListView - désactivé
-        /*
-        if (DeleteConfirmationDialog.showAndWait(
-            "Catégorie",
-            categorie.getNom(),
-            "Les documents perdront leur classification.")) {
-
-            try {
-                categorieService.delete(categorie.getId());
-                AlertUtils.showSuccess("Succès", "Catégorie supprimée avec succès !");
-                getListView().getItems().remove(getItem());
-            } catch (SQLException e) {
-                AlertUtils.showError("Erreur", "Impossible de supprimer : " + e.getMessage());
-            }
-        }
-        */
     }
 }
 

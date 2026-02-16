@@ -39,7 +39,6 @@ public class CategoryManagerDialog {
         refreshCategoryList(categoryList);
         categoryList.setCellFactory(param -> new CategoryListCell());
 
-        // Boutons d'action
         Button btnEdit = new Button("✎ Modifier");
         btnEdit.getStyleClass().add("btn-action-light-blue");
         btnEdit.setPrefWidth(120);
@@ -97,7 +96,6 @@ public class CategoryManagerDialog {
             });
         });
 
-        // HBox pour les boutons d'action
         javafx.scene.layout.HBox btnBox = new javafx.scene.layout.HBox(10);
         btnBox.getStyleClass().add("card");
         btnBox.setStyle("-fx-padding: 10;");
@@ -133,9 +131,6 @@ public class CategoryManagerDialog {
         }
     }
 
-    /**
-     * ListCell personnalisée pour les catégories
-     */
     public static class CategoryListCell extends ListCell<Categorie> {
         @Override
         protected void updateItem(Categorie category, boolean empty) {

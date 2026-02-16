@@ -35,7 +35,7 @@ public class DocumentDetailController {
     private ServiceDocument docService = new ServiceDocument();
     private CrudDialogManager dialogManager = new CrudDialogManager();
     private Stage currentStage;
-    private Runnable onDocumentUpdated; // Callback pour notifier les changements
+    private Runnable onDocumentUpdated;
 
     @FXML
     public void initialize() {
@@ -72,7 +72,6 @@ public class DocumentDetailController {
                 currentDocument.getDossier().getNom() : "Inconnu";
             lblFolder.setText(folderName);
 
-            // Formater LocalDateTime correctement
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             String dateStr = currentDocument.getUploadedAt().format(dtf);
             lblCreatedDate.setText(dateStr);
@@ -112,9 +111,6 @@ public class DocumentDetailController {
         }
     }
 
-    /**
-     * Édite le document courant
-     */
     private void editDocument() {
         try {
             dialogManager.showDocumentDialog(currentDocument, true).ifPresent(updatedDoc -> {
@@ -125,7 +121,6 @@ public class DocumentDetailController {
                     AlertUtils.showSuccess("Succès", "Document modifié avec succès !");
                     updateStatus("Document mis à jour");
 
-                    // Notifier le document vue si callback défini
                     if (onDocumentUpdated != null) {
                         onDocumentUpdated.run();
                     }

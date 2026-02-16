@@ -9,9 +9,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import utils.UiStyles;
 
-/**
- * Dialog professionnel et personnalisé pour la suppression d'entités
- */
 public class DeleteConfirmationDialog extends Dialog<ButtonType> {
 
     public DeleteConfirmationDialog(String entityType, String entityName, String additionalInfo) {

@@ -22,17 +22,10 @@ import utils.UiStyles;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Contrôleur principal pour la vue des documents
- * Gère le CRUD complet (Create, Read, Update, Delete) pour :
- * - Documents
- * - Dossiers
- * - Catégories
- */
 public class DocumentViewController {
 
-    // ===== ÉLÉMENTS FXML =====
     @FXML private Button btnAddDocument;
     @FXML private Button btnManageFolders;
     @FXML private Button btnAddFolder;
@@ -50,13 +43,11 @@ public class DocumentViewController {
     @FXML private Label lblStatus;
     @FXML private Label lblFilterInfo;
 
-    // ===== SERVICES =====
     private final ServiceDocument docService = new ServiceDocument();
     private final ServiceDossier dossierService = new ServiceDossier();
     private final ServiceCategorie categorieService = new ServiceCategorie();
     private final CrudDialogManager dialogManager = new CrudDialogManager();
 
-    // ===== ÉTAT =====
     private Dossier selectedFolder;
     private List<Document> allDocuments;
 
@@ -67,8 +58,6 @@ public class DocumentViewController {
         updateDocumentCount();
         setupEmptyState();
     }
-
-    // ===== SETUP =====
 
 
     private void setupEventHandlers() {
@@ -83,11 +72,6 @@ public class DocumentViewController {
         cbCategory.valueProperty().addListener((obs, oldVal, newVal) -> filterDocuments());
     }
 
-    // ===== CRÉATION DES CARTES =====
-
-    /**
-     * Crée une card personnalisée pour un dossier
-     */
     private VBox createFolderCard(Dossier dossier) {
         VBox card = new VBox(6);
         card.setStyle("-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
@@ -113,9 +97,6 @@ public class DocumentViewController {
         return card;
     }
 
-    /**
-     * Crée une card personnalisée pour un document
-     */
     private VBox createDocumentCard(Document doc) {
         VBox card = new VBox(5);
         card.setStyle("-fx-padding: 12; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
@@ -162,7 +143,6 @@ public class DocumentViewController {
         return card;
     }
 
-    // ===== CHARGEMENT DONNÉES =====
 
     private void loadAllData() {
         loadFolders();
@@ -203,7 +183,6 @@ public class DocumentViewController {
         }
     }
 
-    // ===== FILTRAGE =====
 
     private void updateDocumentList() {
         List<Document> filteredDocs = allDocuments;
@@ -211,7 +190,7 @@ public class DocumentViewController {
         if (selectedFolder != null) {
             filteredDocs = filteredDocs.stream()
                     .filter(d -> d.getDossier().getId() == selectedFolder.getId())
-                    .toList();
+                    .collect(Collectors.toList());
         }
 
         String searchText = tfSearch.getText().toLowerCase();
@@ -219,14 +198,14 @@ public class DocumentViewController {
             filteredDocs = filteredDocs.stream()
                     .filter(d -> d.getTitre().toLowerCase().contains(searchText) ||
                                  (d.getDescription() != null && d.getDescription().toLowerCase().contains(searchText)))
-                    .toList();
+                    .collect(Collectors.toList());
         }
 
         Categorie selectedCategory = cbCategory.getValue();
         if (selectedCategory != null) {
             filteredDocs = filteredDocs.stream()
                     .filter(d -> d.getCategorie() != null && d.getCategorie().getId() == selectedCategory.getId())
-                    .toList();
+                    .collect(Collectors.toList());
         }
 
         containerDocuments.getChildren().clear();
@@ -241,7 +220,6 @@ public class DocumentViewController {
         updateDocumentList();
     }
 
-    // ===== CRUD DOCUMENTS =====
 
     private void createDocument() {
         dialogManager.showDocumentDialog(null, false).ifPresent(doc -> {
@@ -282,8 +260,6 @@ public class DocumentViewController {
         }
     }
 
-
-    // ===== CRUD DOSSIERS =====
 
     private void createFolder() {
         dialogManager.showFolderDialog(null, false).ifPresent(folder -> {
@@ -327,15 +303,18 @@ public class DocumentViewController {
         }
     }
 
-    private void onFolderSelected() {
-        // Cette méthode n'est plus utilisée - remplacée par le listener dans setupEventHandlers
-    }
 
     private void manageCategories() {
         CategoryManagerDialog manager = new CategoryManagerDialog();
         manager.showCategoryManager();
-        // Rafraîchir les catégories après gestion
         loadCategories();
+    }
+
+    private void showAllDocuments() {
+        selectedFolder = null;
+        updateDocumentList();
+        updateFilterInfo();
+        updateStatus("Tous les documents");
     }
 
     private void updateFilterInfo() {
@@ -363,7 +342,6 @@ public class DocumentViewController {
             AlertUtils.showError("Erreur", "Impossible de charger les dossiers");
         }
 
-        // Menu contextuel
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editItem = new MenuItem("✎ Modifier");
         editItem.setOnAction(e -> {
@@ -429,15 +407,6 @@ public class DocumentViewController {
         });
     }
 
-    // ===== AUTRES =====
-
-    private void showAllDocuments() {
-        selectedFolder = null;
-        updateDocumentList();
-        updateFilterInfo();
-        updateStatus("Tous les documents");
-    }
-
     @FXML
     private void refresh() {
         loadAllData();
@@ -458,15 +427,10 @@ public class DocumentViewController {
     }
 
     private void setupEmptyState() {
-        // Pas nécessaire avec les cartes VBox
     }
 
-    /**
-     * Affiche la fenêtre de détail d'un document
-     */
     private void showDocumentDetail(Document document) {
         try {
-            // Vérifier que la ressource existe
             var resource = getClass().getResource("/fxml/document_detail_simple.fxml");
             if (resource == null) {
                 AlertUtils.showError("Erreur",

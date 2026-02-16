@@ -56,9 +56,6 @@ public class DocumentController {
         refresh();
     }
 
-    /**
-     * Crée une card personnalisée pour un document
-     */
     private VBox createDocumentCard(Document doc) {
         VBox card = new VBox(5);
         card.setStyle("-fx-padding: 12; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
@@ -156,13 +153,10 @@ public class DocumentController {
         } else if (ValidationUtils.isFileExists(path)) {
             tfPath.setStyle("-fx-border-color: #22c55e; -fx-border-width: 2;");
         } else {
-            tfPath.setStyle("-fx-border-color: #f59e0b; -fx-border-width: 2;"); // Orange pour fichier inexistant
+            tfPath.setStyle("-fx-border-color: #f59e0b; -fx-border-width: 2;");
         }
     }
 
-    /**
-     * Valide le champ Dossier en temps réel
-     */
     private void validateDossierField() {
         if (cbDossier.getValue() != null) {
             cbDossier.setStyle("-fx-border-color: #22c55e; -fx-border-width: 2;");

@@ -5,14 +5,8 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import utils.UiStyles;
 
-/**
- * Classe utilitaire pour gérer les alertes et messages
- */
 public class AlertUtils {
 
-    /**
-     * Affiche une alerte d'erreur
-     */
     public static void showError(String title, String message) {
         Alert alert = new Alert(AlertType.ERROR);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -22,9 +16,6 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    /**
-     * Affiche une alerte d'information
-     */
     public static void showInfo(String title, String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -34,9 +25,6 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    /**
-     * Affiche une alerte d'avertissement
-     */
     public static void showWarning(String title, String message) {
         Alert alert = new Alert(AlertType.WARNING);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -46,9 +34,6 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    /**
-     * Affiche une alerte de confirmation
-     */
     public static boolean showConfirmation(String title, String message) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -58,9 +43,6 @@ public class AlertUtils {
         return alert.showAndWait().orElse(null) == javafx.scene.control.ButtonType.OK;
     }
 
-    /**
-     * Affiche une alerte avec détails d'erreur
-     */
     public static void showErrorWithDetails(String title, String message, String details) {
         Alert alert = new Alert(AlertType.ERROR);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -70,9 +52,6 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    /**
-     * Affiche une alerte de succès (en utilisant INFORMATION)
-     */
     public static void showSuccess(String title, String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -82,9 +61,6 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    /**
-     * Affiche une notification de suppression réussie
-     */
     public static void showDeleteSuccess(String entityType, String entityName) {
         Alert alert = new Alert(AlertType.INFORMATION);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -94,9 +70,6 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    /**
-     * Affiche une notification de création réussie
-     */
     public static void showCreateSuccess(String entityType, String entityName) {
         Alert alert = new Alert(AlertType.INFORMATION);
         UiStyles.applyDialogStyles(alert.getDialogPane());
@@ -106,9 +79,6 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    /**
-     * Affiche une notification de modification réussie
-     */
     public static void showUpdateSuccess(String entityType, String entityName) {
         Alert alert = new Alert(AlertType.INFORMATION);
         UiStyles.applyDialogStyles(alert.getDialogPane());

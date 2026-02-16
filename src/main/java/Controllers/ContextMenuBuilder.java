@@ -49,9 +49,6 @@ public class ContextMenuBuilder {
         return contextMenu;
     }
 
-    /**
-     * Crée un menu contextuel avec 3 actions : Éditer, Dupliquer, Supprimer
-     */
     public static ContextMenu createFullCrudMenu(
             String entityName,
             Runnable onEdit,
@@ -76,9 +73,6 @@ public class ContextMenuBuilder {
         return contextMenu;
     }
 
-    /**
-     * Crée un menu contextuel avec actions personnalisées
-     */
     public static class Builder {
         private final ContextMenu menu = new ContextMenu();
 

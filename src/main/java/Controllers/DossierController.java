@@ -22,15 +22,11 @@ public class DossierController {
         listDossiers.setCellFactory(param -> new DossierListCell());
         listDossiers.setOnMouseClicked(event -> onListClick());
 
-        // Ajouter validation en temps réel
         tfNom.textProperty().addListener((obs, oldVal, newVal) -> validateNomField());
 
         refresh();
     }
 
-    /**
-     * Valide le champ Nom en temps réel
-     */
     private void validateNomField() {
         String nom = tfNom.getText();
         if (nom.isEmpty()) {
@@ -141,7 +137,6 @@ public class DossierController {
             return false;
         }
 
-        // Validation de la description (optionnelle)
         if (!ValidationUtils.isValidDescription(desc)) {
             AlertUtils.showError("Champ invalide", ValidationUtils.getErrorDescription());
             taDesc.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");

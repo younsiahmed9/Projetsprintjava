@@ -428,11 +428,8 @@ public class CrudDialogManager {
         grid.setVgap(15);
         grid.setPadding(new Insets(20));
 
-        // Styles
         grid.getStylesheets().add("styles.css");
 
-        // Colonne 0 : Labels (30%)
-        // Colonne 1 : Inputs (70%)
         return grid;
     }
 }

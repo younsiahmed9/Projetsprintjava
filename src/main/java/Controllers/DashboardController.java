@@ -95,9 +95,6 @@ public class DashboardController {
         return card;
     }
 
-    /**
-     * Crée une card personnalisée pour un document top (par montant)
-     */
     private VBox createTopDocumentCard(Document doc) {
         VBox card = new VBox(8);
         card.setStyle("-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");

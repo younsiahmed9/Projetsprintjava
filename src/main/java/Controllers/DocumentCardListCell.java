@@ -118,21 +118,5 @@ public class DocumentCardListCell extends ListCell<Document> {
     }
 
     private void deleteDocument(Document document) {
-        // Utilisé seulement par l'ancien système ListView - désactivé
-        /*
-        if (DeleteConfirmationDialog.showAndWait(
-            "Document",
-            document.getTitre(),
-            "Le fichier \"" + document.getFilePath() + "\" sera supprimé.")) {
-
-            try {
-                docService.delete(document.getId());
-                AlertUtils.showSuccess("Succès", "Document supprimé avec succès !");
-                getListView().getItems().remove(getItem());
-            } catch (SQLException e) {
-                AlertUtils.showError("Erreur", "Impossible de supprimer le document : " + e.getMessage());
-            }
-        }
-        */
     }
 }

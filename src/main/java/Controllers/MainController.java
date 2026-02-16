@@ -35,9 +35,6 @@ public class MainController {
         setActiveButton(btnDocuments);
     }
 
-    /**
-     * Méthode générique pour charger une vue
-     */
     private void loadView(String fxmlPath) {
         try {
             Node view = FXMLLoader.load(getClass().getResource(fxmlPath));
@@ -48,15 +45,10 @@ public class MainController {
         }
     }
 
-    /**
-     * Définit le bouton actif dans la sidebar
-     */
     private void setActiveButton(Button activeBtn) {
-        // Réinitialiser tous les boutons
         if (btnDashboard != null) btnDashboard.getStyleClass().removeAll("active-menu", "nav-btn-active");
         if (btnDocuments != null) btnDocuments.getStyleClass().removeAll("active-menu", "nav-btn-active");
 
-        // Activer le bouton sélectionné
         if (activeBtn != null && !activeBtn.getStyleClass().contains("active-menu")) {
             activeBtn.getStyleClass().add("active-menu");
         }

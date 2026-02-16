@@ -2,7 +2,6 @@ package Controllers;
 
 import Models.Dossier;
 import Services.ServiceDossier;
-// import Controllers.Dialogs.DeleteConfirmationDialog;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

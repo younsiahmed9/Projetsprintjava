@@ -151,7 +151,6 @@ public class CategorieController {
             return false;
         }
 
-        // Validation de la description (optionnelle)
         if (!ValidationUtils.isValidDescription(desc)) {
             AlertUtils.showError("Champ invalide", ValidationUtils.getErrorDescription());
             taDesc.setStyle("-fx-border-color: #ef4444; -fx-border-width: 2;");
