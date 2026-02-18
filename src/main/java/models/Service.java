@@ -1,7 +1,7 @@
 package models;
 
-import java.time.LocalDate;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class Service {
     private int idService;
@@ -12,7 +12,7 @@ public class Service {
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private StatutService statut;
-    private Integer idProduit;
+    private Integer idProduit;  // AJOUTEZ CETTE LIGNE
 
     public enum TypeService {
         abonnement, facture
@@ -26,9 +26,10 @@ public class Service {
         actif, suspendu, expire
     }
 
-    // Constructeurs
+    // Constructeur vide
     public Service() {}
 
+    // Constructeur complet avec idProduit
     public Service(int idService, String nomService, TypeService typeService,
                    BigDecimal tarif, Frequence frequence, LocalDate dateDebut,
                    LocalDate dateFin, StatutService statut, Integer idProduit) {
@@ -40,84 +41,47 @@ public class Service {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.statut = statut;
-        this.idProduit = idProduit;
+        this.idProduit = idProduit;  // AJOUTEZ CETTE LIGNE
+    }
+
+    // Constructeur sans idProduit
+    public Service(int idService, String nomService, TypeService typeService,
+                   BigDecimal tarif, Frequence frequence, LocalDate dateDebut,
+                   LocalDate dateFin, StatutService statut) {
+        this(idService, nomService, typeService, tarif, frequence, dateDebut, dateFin, statut, null);
     }
 
     // Getters et Setters
-    public int getIdService() {
-        return idService;
-    }
+    public int getIdService() { return idService; }
+    public void setIdService(int idService) { this.idService = idService; }
 
-    public void setIdService(int idService) {
-        this.idService = idService;
-    }
+    public String getNomService() { return nomService; }
+    public void setNomService(String nomService) { this.nomService = nomService; }
 
-    public String getNomService() {
-        return nomService;
-    }
+    public TypeService getTypeService() { return typeService; }
+    public void setTypeService(TypeService typeService) { this.typeService = typeService; }
 
-    public void setNomService(String nomService) {
-        this.nomService = nomService;
-    }
+    public BigDecimal getTarif() { return tarif; }
+    public void setTarif(BigDecimal tarif) { this.tarif = tarif; }
 
-    public TypeService getTypeService() {
-        return typeService;
-    }
+    public Frequence getFrequence() { return frequence; }
+    public void setFrequence(Frequence frequence) { this.frequence = frequence; }
 
-    public void setTypeService(TypeService typeService) {
-        this.typeService = typeService;
-    }
+    public LocalDate getDateDebut() { return dateDebut; }
+    public void setDateDebut(LocalDate dateDebut) { this.dateDebut = dateDebut; }
 
-    public BigDecimal getTarif() {
-        return tarif;
-    }
+    public LocalDate getDateFin() { return dateFin; }
+    public void setDateFin(LocalDate dateFin) { this.dateFin = dateFin; }
 
-    public void setTarif(BigDecimal tarif) {
-        this.tarif = tarif;
-    }
+    public StatutService getStatut() { return statut; }
+    public void setStatut(StatutService statut) { this.statut = statut; }
 
-    public Frequence getFrequence() {
-        return frequence;
-    }
-
-    public void setFrequence(Frequence frequence) {
-        this.frequence = frequence;
-    }
-
-    public LocalDate getDateDebut() {
-        return dateDebut;
-    }
-
-    public void setDateDebut(LocalDate dateDebut) {
-        this.dateDebut = dateDebut;
-    }
-
-    public LocalDate getDateFin() {
-        return dateFin;
-    }
-
-    public void setDateFin(LocalDate dateFin) {
-        this.dateFin = dateFin;
-    }
-
-    public StatutService getStatut() {
-        return statut;
-    }
-
-    public void setStatut(StatutService statut) {
-        this.statut = statut;
-    }
-
-    public Integer getIdProduit() {
-        return idProduit;
-    }
-
-    public void setIdProduit(Integer idProduit) {
-        this.idProduit = idProduit;
-    }
+    // AJOUTEZ CES DEUX MÉTHODES
+    public Integer getIdProduit() { return idProduit; }
+    public void setIdProduit(Integer idProduit) { this.idProduit = idProduit; }
 
     @Override
     public String toString() {
-        return nomService + " (" + typeService + ")";
+        return "Service{" + "id=" + idService + ", nom='" + nomService + "', type=" + typeService + "}";
     }
 }

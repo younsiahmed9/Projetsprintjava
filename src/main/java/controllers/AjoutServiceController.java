@@ -1,11 +1,16 @@
-package interfaces;
+package controllers;
 
 import models.Service;
+import models.Produit;
+import services.ServiceProduit;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class AjoutServiceController {
@@ -17,7 +22,7 @@ public class AjoutServiceController {
     @FXML private DatePicker dateDebut;
     @FXML private DatePicker dateFin;
     @FXML private ComboBox<Service.StatutService> statutCombo;
-    @FXML private ComboBox<models.Produit> produitCombo;
+    @FXML private ComboBox<Produit> produitCombo;  // ComboBox de type Produit
 
     @FXML private Label nomError;
     @FXML private Label typeError;
@@ -25,17 +30,27 @@ public class AjoutServiceController {
     @FXML private Label frequenceError;
     @FXML private Label dateError;
     @FXML private Label statutError;
+    @FXML private Label dateFinError;  // Ajouté pour éviter l'erreur
 
+    private ServiceProduit serviceProduit;
     private Service service;
     private boolean isEditMode = false;
 
     @FXML
     public void initialize() {
+        serviceProduit = new ServiceProduit();
+
         // Initialiser les combobox
         typeCombo.setItems(FXCollections.observableArrayList(Service.TypeService.values()));
         frequenceCombo.setItems(FXCollections.observableArrayList(Service.Frequence.values()));
         statutCombo.setItems(FXCollections.observableArrayList(Service.StatutService.values()));
         statutCombo.setValue(Service.StatutService.actif);
+
+        // Charger les produits disponibles
+        chargerProduits();
+
+        // Configuration de l'affichage des produits dans la ComboBox
+        setupProduitCombo();
 
         // Désactiver la fréquence par défaut
         frequenceCombo.setDisable(true);
@@ -57,6 +72,56 @@ public class AjoutServiceController {
 
         // Validation en temps réel
         setupRealTimeValidation();
+    }
+
+    private void chargerProduits() {
+        try {
+            // Charger tous les produits disponibles
+            ObservableList<Produit> produits = FXCollections.observableArrayList(
+                    serviceProduit.getProduitsDisponibles()
+            );
+
+            // Ajouter null en première position (option "Aucun produit")
+            produits.add(0, null);
+
+            produitCombo.setItems(produits);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger les produits: " + e.getMessage());
+        }
+    }
+
+    private void setupProduitCombo() {
+        // Configuration de l'affichage dans la ComboBox (quand un élément est sélectionné)
+        produitCombo.setConverter(new StringConverter<Produit>() {
+            @Override
+            public String toString(Produit produit) {
+                if (produit == null) return "Aucun produit";
+                // Afficher "Nom - Code" dans le champ
+                return produit.getNomProduit() + " - " + produit.getCodeUnique();
+            }
+
+            @Override
+            public Produit fromString(String string) {
+                return null; // Non utilisé
+            }
+        });
+
+        // Personnaliser l'affichage de chaque élément dans la liste déroulante
+        produitCombo.setCellFactory(lv -> new ListCell<Produit>() {
+            @Override
+            protected void updateItem(Produit item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText("Aucun produit");
+                } else {
+                    // Afficher avec plus de détails : "Nom - Code (Montant TND)"
+                    setText(item.getNomProduit() + " - " + item.getCodeUnique() +
+                            " (" + item.getMontant() + " TND)");
+                }
+            }
+        });
     }
 
     private void setupRealTimeValidation() {
@@ -162,6 +227,7 @@ public class AjoutServiceController {
             }
         } else {
             dateError.setText("");
+            if (dateFinError != null) dateFinError.setText("");
         }
     }
 
@@ -254,8 +320,12 @@ public class AjoutServiceController {
             s.setDateFin(dateFin.getValue());
             s.setStatut(statutCombo.getValue());
 
-            if (produitCombo != null && produitCombo.getValue() != null) {
-                s.setIdProduit(((models.Produit) produitCombo.getValue()).getIdProduit());
+            // Récupérer l'ID du produit sélectionné (peut être null)
+            Produit selectedProduit = produitCombo.getValue();
+            if (selectedProduit != null) {
+                s.setIdProduit(selectedProduit.getIdProduit());
+            } else {
+                s.setIdProduit(null);
             }
 
             return s;
@@ -277,6 +347,24 @@ public class AjoutServiceController {
             dateDebut.setValue(service.getDateDebut());
             dateFin.setValue(service.getDateFin());
             statutCombo.setValue(service.getStatut());
+
+            // ✅ CORRIGÉ : Utilisation de equals() au lieu de ==
+            Integer idProduit = service.getIdProduit();
+            if (idProduit != null) {
+                try {
+                    // Chercher le produit dans la liste
+                    for (Produit p : produitCombo.getItems()) {
+                        if (p != null && idProduit.equals(p.getIdProduit())) {
+                            produitCombo.setValue(p);
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                produitCombo.setValue(null); // Sélectionner "Aucun produit"
+            }
         }
     }
 

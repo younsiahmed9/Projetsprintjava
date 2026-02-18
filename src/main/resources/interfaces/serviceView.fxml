@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane style="-fx-background-color: #d2e7fe;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaces.ServiceController">
+<BorderPane style="-fx-background-color: #d2e7fe;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServiceController">
 
     <!-- LEFT: Navbar -->
     <left>
@@ -89,8 +89,9 @@
 
                 <MenuButton style="-fx-background-color: #f49b36; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20;" text="Nouveau">
                     <items>
-                        <MenuItem onAction="#openAjoutServiceDialog" text="Ajouter un Service" />
-                        <MenuItem onAction="#openAjoutProduitDialog" text="Ajouter un Produit" />
+                        <!-- ✅ CORRECTION ICI : les noms des méthodes doivent correspondre à celles du contrôleur -->
+                        <MenuItem onAction="#handleAjouterService" text="Ajouter un Service" />
+                        <MenuItem onAction="#handleAjouterProduit" text="Ajouter un Produit" />
                     </items>
                     <padding><Insets bottom="8" left="20" right="20" top="8" /></padding>
                 </MenuButton>

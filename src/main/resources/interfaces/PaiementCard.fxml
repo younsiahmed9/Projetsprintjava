@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15; -fx-pref-width: 300;"
+      xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+
+    <!-- En-tête avec référence -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Circle radius="8" fill="#182d88" />
+        <Text fx:id="referenceText" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: #182d88;" />
+    </HBox>
+
+    <!-- Montant -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Text text="💰" style="-fx-font-size: 16px;" />
+        <Text fx:id="montantText" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #182d88;" />
+    </HBox>
+
+    <!-- Détails -->
+    <GridPane hgap="10" vgap="5">
+        <Text text="Date:" style="-fx-font-size: 12px; -fx-fill: #182d88;" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Text fx:id="dateText" style="-fx-font-size: 12px; -fx-fill: #182d88; -fx-opacity: 0.7;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+        <Text text="Mode:" style="-fx-font-size: 12px; -fx-fill: #182d88;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Text fx:id="modeText" style="-fx-font-size: 12px; -fx-fill: #182d88; -fx-opacity: 0.7;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    </GridPane>
+
+    <!-- Service/Produit associé -->
+    <VBox spacing="5" style="-fx-background-color: #d2e7fe; -fx-background-radius: 10; -fx-padding: 10;">
+        <Text fx:id="associationText" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-fill: #182d88;" />
+        <Text fx:id="associationDetail" style="-fx-font-size: 11px; -fx-fill: #182d88; -fx-opacity: 0.7;" />
+    </VBox>
+
+    <!-- Statut -->
+    <HBox alignment="CENTER_LEFT" spacing="5">
+        <Circle fx:id="statutDot" radius="5" />
+        <Text fx:id="statutText" style="-fx-font-size: 12px; -fx-font-weight: bold;" />
+    </HBox>
+</VBox>

@@ -1,4 +1,4 @@
-package interfaces;
+package controllers;
 
 import models.Produit;
 import javafx.fxml.FXML;

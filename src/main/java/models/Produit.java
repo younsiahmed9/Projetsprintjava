@@ -20,9 +20,10 @@ public class Produit {
         disponible, vendu, expire
     }
 
-    // Constructeurs
+    // Constructeur vide
     public Produit() {}
 
+    // Constructeur complet
     public Produit(int idProduit, String nomProduit, TypeProduit typeProduit,
                    BigDecimal montant, String codeUnique, StatutProduit statut,
                    LocalDate dateCreation) {
@@ -35,62 +36,38 @@ public class Produit {
         this.dateCreation = dateCreation;
     }
 
-    // Getters et Setters
-    public int getIdProduit() {
-        return idProduit;
-    }
-
-    public void setIdProduit(int idProduit) {
-        this.idProduit = idProduit;
-    }
-
-    public String getNomProduit() {
-        return nomProduit;
-    }
-
-    public void setNomProduit(String nomProduit) {
+    // Constructeur simplifié
+    public Produit(String nomProduit, TypeProduit typeProduit, double montant,
+                   String codeUnique, StatutProduit statut) {
         this.nomProduit = nomProduit;
-    }
-
-    public TypeProduit getTypeProduit() {
-        return typeProduit;
-    }
-
-    public void setTypeProduit(TypeProduit typeProduit) {
         this.typeProduit = typeProduit;
-    }
-
-    public BigDecimal getMontant() {
-        return montant;
-    }
-
-    public void setMontant(BigDecimal montant) {
-        this.montant = montant;
-    }
-
-    public String getCodeUnique() {
-        return codeUnique;
-    }
-
-    public void setCodeUnique(String codeUnique) {
+        this.montant = BigDecimal.valueOf(montant);
         this.codeUnique = codeUnique;
-    }
-
-    public StatutProduit getStatut() {
-        return statut;
-    }
-
-    public void setStatut(StatutProduit statut) {
         this.statut = statut;
+        this.dateCreation = LocalDate.now();
     }
 
-    public LocalDate getDateCreation() {
-        return dateCreation;
-    }
+    // Getters et Setters
+    public int getIdProduit() { return idProduit; }
+    public void setIdProduit(int idProduit) { this.idProduit = idProduit; }
 
-    public void setDateCreation(LocalDate dateCreation) {
-        this.dateCreation = dateCreation;
-    }
+    public String getNomProduit() { return nomProduit; }
+    public void setNomProduit(String nomProduit) { this.nomProduit = nomProduit; }
+
+    public TypeProduit getTypeProduit() { return typeProduit; }
+    public void setTypeProduit(TypeProduit typeProduit) { this.typeProduit = typeProduit; }
+
+    public BigDecimal getMontant() { return montant; }
+    public void setMontant(BigDecimal montant) { this.montant = montant; }
+
+    public String getCodeUnique() { return codeUnique; }
+    public void setCodeUnique(String codeUnique) { this.codeUnique = codeUnique; }
+
+    public StatutProduit getStatut() { return statut; }
+    public void setStatut(StatutProduit statut) { this.statut = statut; }
+
+    public LocalDate getDateCreation() { return dateCreation; }
+    public void setDateCreation(LocalDate dateCreation) { this.dateCreation = dateCreation; }
 
     @Override
     public String toString() {
