@@ -1,2 +1,0 @@
-# Projetsprintjava
-Java

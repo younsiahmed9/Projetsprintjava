@@ -1,4 +1,4 @@
-param(
+﻿param(
   [Parameter(ValueFromRemainingArguments=$true)]
   [string[]]$Args
 )
@@ -8,9 +8,8 @@ $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $projectRoot
 
 if (-not $env:JAVA_HOME) {
-  throw "JAVA_HOME n'est pas défini. Exemple: `$env:JAVA_HOME='C:\\Users\\HP\\Downloads\\jdk-21_windows-x64_bin\\jdk-21.0.10'"
+  throw "JAVA_HOME n'est pas dأ©fini."
 }
-
 $java = Join-Path $env:JAVA_HOME 'bin\java.exe'
 if (-not (Test-Path $java)) {
   throw "java.exe introuvable sous JAVA_HOME: $java"

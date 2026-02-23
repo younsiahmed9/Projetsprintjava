@@ -1,11 +1,11 @@
 package tn.esprit;
 
-import tn.esprit.db.Db;
-import tn.esprit.domain.Client;
-import tn.esprit.domain.Role;
-import tn.esprit.domain.User;
-import tn.esprit.repository.JdbcClientDao;
-import tn.esprit.repository.JdbcUserDao;
+import utils.Db;
+import Models.Client;
+import Models.User;
+import Models.Role;
+import Services.JdbcClientDao;
+import Services.JdbcUserDao;
 
 import java.sql.Connection;
 

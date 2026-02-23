@@ -1,21 +1,431 @@
-/* Thème ORANGE (par défaut) */
+/* ═══════════════════════════════════════════════════════════════════
+   🎨 THÈME MIX ORANGE + KAKI/OLIVE - Mat & Élégant
+   ═══════════════════════════════════════════════════════════════════ */
+
 .root {
-    /* Palette orange */
-    -fx-orange-500: #f78f34;
-    -fx-orange-600: #ff4500;
-    -fx-cream-50: #fff7ed;
+    /* ═══ PALETTE ORANGE (couleurs principales login & accents) ═══ */
+    -fx-orange-50: #fff7ed;
+    -fx-orange-100: #ffedd5;
+    -fx-orange-200: #fed7aa;
+    -fx-orange-300: #fdba74;
+    -fx-orange-400: #fb923c;
+    -fx-orange-500: #f97316;
+    -fx-orange-600: #ea580c;
+    -fx-orange-700: #c2410c;
+    -fx-orange-800: #9a3412;
+    -fx-orange-900: #7c2d12;
 
-    /* Accents */
-    -fx-accent-blue: -fx-orange-500; /* réutilisé comme accent principal */
-    -fx-accent-blue-hover: -fx-orange-600;
-    -fx-accent-green: -fx-orange-500; /* boutons secondaires aussi orange */
-    -fx-accent-green-hover: -fx-orange-600;
+    /* ═══ PALETTE KAKI / OLIVE (couleurs secondaires dashboard) ═══ */
+    -fx-olive-50: #f6f6f0;
+    -fx-olive-100: #e8e8d8;
+    -fx-olive-200: #d1d1b8;
+    -fx-olive-300: #b4b490;
+    -fx-olive-400: #8b8b65;
+    -fx-olive-500: #6b6b47;
+    -fx-olive-600: #565638;
+    -fx-olive-700: #464632;
+    -fx-olive-800: #3a3a2a;
+    -fx-olive-900: #2e2e20;
 
-    /* Neutres */
-    -fx-muted-text: #6b7280;
-    -fx-title-text: #111827;
-    -fx-border-soft: rgba(247, 143, 52, 0.28);
+    /* ═══ PALETTE TERRE / SABLE (tons chauds neutres) ═══ */
+    -fx-sand-50: #faf8f3;
+    -fx-sand-100: #f0ebe0;
+    -fx-sand-200: #e0d5c0;
+    -fx-sand-300: #c9b99a;
+    -fx-sand-400: #a89570;
+    -fx-sand-500: #8a7858;
 
-    /* Fond */
-    -fx-background-color: -fx-cream-50;
+    /* ═══ PALETTE VERT SAUGE (accent frais) ═══ */
+    -fx-sage-300: #9fb89f;
+    -fx-sage-400: #7a9b7a;
+    -fx-sage-500: #5e7e5e;
+    -fx-sage-600: #4a634a;
+
+    /* ═══ NEUTRES (gris chauds) ═══ */
+    -fx-warm-gray-50: #fafaf9;
+    -fx-warm-gray-100: #f5f5f4;
+    -fx-warm-gray-200: #e7e5e4;
+    -fx-warm-gray-300: #d6d3d1;
+    -fx-warm-gray-400: #a8a29e;
+    -fx-warm-gray-600: #57534e;
+    -fx-warm-gray-700: #44403c;
+    -fx-warm-gray-800: #292524;
+    -fx-warm-gray-900: #1c1917;
+
+    /* ═══ ACCENTS PRINCIPAUX ═══ */
+    -fx-accent-orange: -fx-orange-600;
+    -fx-accent-olive: -fx-olive-600;
+    -fx-accent-blue-hover: -fx-olive-700;
+    -fx-accent-green: -fx-sage-500;
+    -fx-accent-green-hover: -fx-sage-600;
+
+    /* ═══ TEXTE ═══ */
+    -fx-muted-text: -fx-warm-gray-600;
+    -fx-title-text: -fx-warm-gray-900;
+    -fx-subtitle-text: -fx-warm-gray-700;
+
+    /* ═══ BORDURES ═══ */
+    -fx-border-soft: -fx-warm-gray-200;
+    -fx-border-medium: -fx-warm-gray-300;
+    -fx-border-strong: -fx-olive-300;
+
+    /* ═══ FOND ═══ */
+    -fx-background-color: -fx-warm-gray-50;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   🎨 STYLES PERSONNALISÉS - Mix Orange (Login) + Kaki (Dashboard)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+    -fx-background-color: -fx-warm-gray-100;
+    -fx-border-color: -fx-warm-gray-200;
+    -fx-border-width: 0 1 0 0;
+}
+
+/* ═══ LOGIN LAYOUT (comme la capture) ═══ */
+.left-panel {
+    -fx-background-color: white;
+}
+
+.right-panel {
+    -fx-background-color: -fx-warm-gray-100;
+}
+
+/* Carte plus douce (sans effet brillant) */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 14px;
+    -fx-border-color: -fx-warm-gray-200;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 18, 0.12, 0, 5);
+}
+
+/* Champs comme la capture (gris clair, coins arrondis) */
+.text-field, .password-field {
+    -fx-background-color: -fx-warm-gray-100;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 12;
+    -fx-text-fill: -fx-warm-gray-900;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: -fx-orange-400;
+    -fx-border-width: 1.5px;
+}
+
+/* Bouton principal orange mat */
+.btn-primary {
+    -fx-background-color: -fx-orange-400;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 18;
+    -fx-cursor: hand;
+    -fx-font-weight: 700;
+}
+
+.btn-primary:hover { -fx-background-color: -fx-orange-500; }
+.btn-primary:pressed { -fx-background-color: -fx-orange-600; }
+
+/* Bouton secondaire encadré orange (signup) */
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-orange-500;
+    -fx-border-color: -fx-orange-300;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 18;
+    -fx-cursor: hand;
+    -fx-font-weight: 700;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -fx-orange-50;
+    -fx-border-color: -fx-orange-400;
+}
+
+/* Separator plus discret */
+.separator .line {
+    -fx-border-color: -fx-warm-gray-300;
+}
+
+/* Petite cohérence des titres */
+.title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -fx-warm-gray-900;
+}
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-warm-gray-700;
+}
+
+/* ═══ BOUTONS SECONDAIRES ═══ */
+/* (supprimé: ancienne variante olive qui écrasait le style login) */
+
+/* ═══ LABELS ═══ */
+/* (supprimé: doublons de .title et .field-label qui remettaient une taille différente) */
+
+/* ═══ SEPARATOR ═══ */
+/* (supprimé: doublon) */
+
+/* ═══ BOUTON AJOUTER (ORANGE) ═══ */
+.btn-add-user {
+    -fx-background-color: #f97316;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.btn-add-user:hover {
+    -fx-background-color: #ea580c;
+}
+
+/* ═══ BOUTON DANGER ═══ */
+.btn-danger {
+    -fx-background-color: #b45454;
+    -fx-text-fill: white;
+    -fx-background-radius: 6px;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: 600;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #9a4040;
+}
+
+/* ═══ BOUTONS LIENS ═══ */
+.btn-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-warm-gray-700;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+}
+
+.btn-link:hover {
+    -fx-background-color: -fx-olive-50;
+    -fx-text-fill: -fx-olive-700;
+}
+
+/* ═══ AVATAR (bordure ORANGE) ═══ */
+.avatar {
+    -fx-background-radius: 50%;
+    -fx-border-color: -fx-orange-400;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+}
+
+.avatar:hover {
+    -fx-border-color: -fx-orange-600;
+}
+
+.avatar-large {
+    -fx-background-radius: 50%;
+    -fx-border-color: -fx-orange-300;
+    -fx-border-width: 3px;
+    -fx-border-radius: 50%;
+}
+
+/* ═══ OVERLAY ═══ */
+.overlay-backdrop {
+    -fx-background-color: rgba(28, 25, 23, 0.6);
+}
+
+.overlay-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 30;
+    -fx-border-color: -fx-warm-gray-200;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+}
+
+/* ═══ TABLEVIEW ═══ */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: -fx-warm-gray-200;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.table-view .column-header {
+    -fx-background-color: -fx-sand-100;
+    -fx-text-fill: -fx-warm-gray-800;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: -fx-olive-50;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -fx-sand-200;
+    -fx-text-fill: -fx-warm-gray-900;
+}
+
+/* ═══ SCROLLBAR ═══ */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: -fx-warm-gray-400;
+    -fx-background-radius: 8px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: -fx-olive-500;
+}
+
+.scroll-bar .track {
+    -fx-background-color: -fx-warm-gray-100;
+}
+
+/* ═══ SCROLLPANE ═══ */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ═══ CHARTS ═══ */
+.chart {
+    -fx-background-color: white;
+    -fx-border-color: -fx-warm-gray-200;
+    -fx-border-radius: 6px;
+}
+
+.chart-pie-label {
+    -fx-fill: -fx-warm-gray-800;
+    -fx-font-weight: 600;
+}
+
+/* ═══ CHARTS: Couleurs adaptées au thème ORANGE/KAKI (remplace le bleu de app.css) ═══ */
+.default-color0.chart-bar { -fx-bar-fill: -fx-orange-500; }
+.default-color1.chart-bar { -fx-bar-fill: -fx-olive-500; }
+.default-color2.chart-bar { -fx-bar-fill: -fx-orange-700; }
+.default-color3.chart-bar { -fx-bar-fill: -fx-sage-500; }
+
+.default-color0.chart-pie { -fx-pie-color: -fx-orange-500; }
+.default-color1.chart-pie { -fx-pie-color: -fx-olive-500; }
+.default-color2.chart-pie { -fx-pie-color: -fx-orange-700; }
+.default-color3.chart-pie { -fx-pie-color: -fx-sage-500; }
+
+/* ═══ CHECKBOX ═══ */
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: -fx-olive-400;
+    -fx-border-radius: 3px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -fx-olive-600;
+    -fx-border-color: -fx-olive-700;
+}
+
+.check-box .mark {
+    -fx-background-color: white;
+}
+
+.check-box .text {
+    -fx-fill: -fx-warm-gray-800;
+}
+
+/* ═══ COMBOBOX ═══ */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: -fx-warm-gray-300;
+    -fx-border-radius: 6px;
+}
+
+.combo-box:focused {
+    -fx-border-color: -fx-olive-500;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: -fx-warm-gray-900;
+}
+
+/* ═══ FOCUS ENHANCED ═══ */
+.enhanced-focus:focused {
+    -fx-border-color: -fx-sage-500;
+    -fx-border-width: 2px;
+}
+
+/* ═══ SIDEBAR MENU (look image 1) ═══ */
+.side-item {
+    -fx-padding: 10 12;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+}
+
+.side-item:hover {
+    -fx-background-color: -fx-warm-gray-100;
+}
+
+.side-item-active {
+    -fx-background-color: #dbeafe; /* bleu clair */
+}
+
+.side-icon {
+    -fx-text-fill: #94a3b8; /* gris */
+    -fx-font-size: 14px;
+}
+
+.side-text {
+    -fx-text-fill: #64748b; /* gris */
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+.side-item-active .side-text {
+    -fx-text-fill: #2563eb; /* bleu */
+}
+
+/* ═══ SIDEBAR BUTTONS (comme image 1) ═══ */
+.side-nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(100, 116, 139, 0.55); /* gris très clair (image 1) */
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 12;
+    -fx-min-height: 38px;
+    -fx-pref-height: 38px;
+    -fx-background-radius: 10px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.side-nav-button:hover {
+    -fx-background-color: rgba(148, 163, 184, 0.10); /* hover très discret */
+}
+
+.side-nav-button:focused {
+    -fx-background-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.side-nav-button-active {
+    -fx-background-color: #eaf2ff; /* bleu très pâle */
+    -fx-text-fill: #3b82f6;        /* bleu (image 1) */
 }

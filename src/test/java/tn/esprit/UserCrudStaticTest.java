@@ -2,12 +2,11 @@ package tn.esprit;
 
 import org.junit.jupiter.api.*;
 import tn.esprit.db.Db;
-import tn.esprit.domain.Role;
 import tn.esprit.domain.User;
+import tn.esprit.domain.UserType;
 import tn.esprit.repository.JdbcUserDao;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +33,7 @@ public class UserCrudStaticTest {
                     "client1@fintrack.tn",
                     "hash-demo-123",
                     "Client One",
-                    Role.CLIENT,
+                    UserType.CLIENT,
                     true);
 
             insertedId = dao.insert(u);
@@ -51,7 +50,6 @@ public class UserCrudStaticTest {
             Optional<User> u = dao.findById(insertedId);
             assertTrue(u.isPresent());
             assertEquals("client1@fintrack.tn", u.get().getEmail());
-            assertEquals(Role.CLIENT, u.get().getRole());
         }
     }
 

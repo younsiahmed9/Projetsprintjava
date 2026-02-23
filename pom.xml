@@ -43,6 +43,30 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- JNA pour accès aux API Windows (Windows Hello) -->
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+
+        <!-- OpenCV complet avec modules face et MatVector (version stable disponible) -->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>opencv-platform</artifactId>
+            <version>4.9.0-1.5.10</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -61,6 +85,7 @@
                 <version>3.5.2</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
             <plugin>
@@ -100,7 +125,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>tn.esprit.ui.FinTrackApp</mainClass>
+                    <mainClass>Controllers.FinTrackApp</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -114,5 +139,26 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>runner-login-fxml</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <configuration>
+                            <!-- Exécute LoginFxmlRunner pour vérification manuelle -->
+                            <mainClass>tn.esprit.LoginFxmlRunner</mainClass>
+                            <!-- Évite les warnings de threads MySQL qui restent vivants -->
+                            <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

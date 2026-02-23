@@ -4,10 +4,10 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox spacing="0" stylesheets="@/css/app.css,@/css/theme-orange.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.ui.RegisterController">
+<HBox spacing="0" stylesheets="@/css/app.css,@/css/theme-orange.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegisterController">
 
     <!-- Colonne gauche -->
-    <VBox minWidth="420" maxWidth="560" prefWidth="480" styleClass="left-panel">
+    <VBox maxWidth="560" minWidth="420" prefWidth="480" styleClass="left-panel">
         <VBox spacing="16" styleClass="card" VBox.vgrow="ALWAYS">
 
             <HBox alignment="CENTER_LEFT" spacing="12">
@@ -20,21 +20,27 @@
 
             <Label styleClass="title" text="Create your account" style="-fx-font-size: 20px;" />
 
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+            <!-- Bouton Face ID visible en haut pour debug / access rapide -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Button fx:id="faceTopBtn" onAction="#onCaptureFace" styleClass="btn-primary" text="👤 Face ID (enregistrer)" />
+                <Label text="" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
                 <GridPane hgap="12" vgap="12">
                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" minWidth="110" maxWidth="140" />
+                        <ColumnConstraints halignment="RIGHT" maxWidth="140" minWidth="110" />
                         <ColumnConstraints hgrow="ALWAYS" />
                     </columnConstraints>
 
-                    <Label styleClass="field-label" text="Rôle:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Label styleClass="field-label" text="R" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                     <ComboBox fx:id="roleCombo" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                     <Label styleClass="field-label" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <TextField fx:id="emailField" promptText="ex: abdou@fintrack.tn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                     <Label styleClass="field-label" text="Mot de passe:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <PasswordField fx:id="passwordField" promptText="min 6 caractères" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <PasswordField fx:id="passwordField" promptText="min 6 caractأ¨res" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                     <Label styleClass="field-label" text="Nom complet:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                     <TextField fx:id="fullNameField" promptText="ex: abdou" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -47,7 +53,20 @@
 
                     <Label fx:id="phoneLabel" styleClass="field-label" text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                     <TextField fx:id="phoneField" promptText="+216 20 000 000" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                    <Label styleClass="field-label" text="Empreinte:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                    <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                        <Button fx:id="faceBtn" onAction="#onCaptureFace" styleClass="btn-primary" text="📷 Enregistrer visage" maxWidth="Infinity" />
+                        <Label fx:id="faceStatusLabel" wrapText="true" style="-fx-font-size: 11px;" />
+
+                        <!-- DEBUG: label visible pour vérifier la présence du bloc Face ID -->
+                        <Label text="⚠️ DEBUG: FACE BUTTON BLOCK" style="-fx-text-fill: #e53935; -fx-font-weight: 800; -fx-padding: 6 0 0 0;" />
+
+                        <Button fx:id="fingerprintBtn" onAction="#onCaptureFingerprint" styleClass="btn-secondary" text="📱 Enregistrer empreinte" maxWidth="Infinity" />
+                        <Label fx:id="fingerprintStatusLabel" wrapText="true" style="-fx-font-size: 11px;" />
+                    </VBox>
                 <rowConstraints>
+                   <RowConstraints />
                    <RowConstraints />
                    <RowConstraints />
                    <RowConstraints />
@@ -60,7 +79,7 @@
             </ScrollPane>
 
             <HBox spacing="12">
-                <Button onAction="#onCreateAccount" styleClass="btn-primary" text="Créer le compte" />
+                <Button onAction="#onCreateAccount" styleClass="btn-primary" text="Crأ©er le compte" />
                 <Button onAction="#onGoLogin" styleClass="btn-secondary" text="Retour login" />
                 <Pane HBox.hgrow="ALWAYS" />
                 <Button onAction="#onClear" styleClass="btn-link" text="Vider" />
@@ -72,7 +91,7 @@
     </VBox>
 
     <!-- Colonne droite -->
-    <StackPane styleClass="right-panel" HBox.hgrow="ALWAYS" minWidth="400">
+    <StackPane minWidth="400" styleClass="right-panel" HBox.hgrow="ALWAYS">
         <ImageView fitWidth="620" preserveRatio="true" smooth="true">
             <image>
                 <Image url="@/assets/illustration.png" />

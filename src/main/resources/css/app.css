@@ -382,6 +382,8 @@
     -fx-border-color: #eef2f7;
     -fx-border-radius: 12;
     -fx-background-radius: 12;
+    /* AJOUT: Définir une taille de cellule fixe */
+    -fx-fixed-cell-size: 45px;
 }
 
 .table-view .column-header-background {
@@ -982,3 +984,75 @@
     -fx-font-weight: 700;
 }
 
+/* ===== STYLES BIOMÉTRIQUES ===== */
+
+/* Bouton d'empreinte digitale */
+.btn-fingerprint {
+    -fx-background-color: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-padding: 12 16 12 16;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 8, 0.3, 0, 2);
+}
+
+.btn-fingerprint:hover {
+    -fx-background-color: linear-gradient(to bottom, #5568d3 0%, #63398d 100%);
+    -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.5), 12, 0.4, 0, 4);
+}
+
+.btn-fingerprint:disabled {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #9ca3af;
+    -fx-opacity: 0.6;
+    -fx-cursor: default;
+    -fx-effect: none;
+}
+
+/* Label de statut biométrique */
+.biometric-status-success {
+    -fx-text-fill: #22c55e;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+}
+
+.biometric-status-error {
+    -fx-text-fill: #ef4444;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+}
+
+.biometric-status-warning {
+    -fx-text-fill: #f59e0b;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+}
+
+.biometric-status-info {
+    -fx-text-fill: #3b82f6;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+}
+
+/* Section biométrique dans les formulaires */
+.biometric-section {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+/* Animation pour le scan d'empreinte */
+@keyframes pulse {
+    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+}
+
+.scanning {
+    -fx-animation: pulse 1.5s ease-in-out infinite;
+}
