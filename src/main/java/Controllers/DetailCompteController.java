@@ -22,12 +22,11 @@ public class DetailCompteController {
 
     @FXML private Label lblNumero, lblType, lblSolde, lblEtat, lblSpecifiqueTitre, lblSpecifiqueValeur;
     @FXML private HBox rowSpecifique;
-    @FXML private Button btnCredits; // <--- CETTE LIGNE EST INDISPENSABLE
+    @FXML private Button btnCredits;
 
     private Compte compteActuel;
     private ServiceCompte service = new ServiceCompte();
 
-    // Cette méthode sera appelée depuis AfficherCompteController
     public void setCompteId(int id) {
         try {
             this.compteActuel = service.recupererParId(id);
@@ -43,7 +42,6 @@ public class DetailCompteController {
             lblType.setText("COMPTE " + compteActuel.getTypeCompte().toUpperCase());
             lblSolde.setText(String.format("%.2f DT", compteActuel.getSolde()));
 
-            // Style du badge d'état
             lblEtat.setText(compteActuel.getEtat().toUpperCase());
             lblEtat.getStyleClass().removeAll("badge-actif", "badge-bloque");
             if(compteActuel.getEtat().equalsIgnoreCase("ACTIF")) {
@@ -52,19 +50,16 @@ public class DetailCompteController {
                 lblEtat.getStyleClass().add("badge-bloque");
             }
 
-            // Gestion de l'affichage dynamique (Taux vs Plafond)
             if ("EPARGNE".equalsIgnoreCase(compteActuel.getTypeCompte())) {
                 lblSpecifiqueTitre.setText("TAUX D'INTÉRÊT ANNUEL");
                 lblSpecifiqueValeur.setText(compteActuel.getTauxInteret() + " %");
 
-                // --- LOGIQUE CRÉDITS ---
                 btnCredits.setVisible(false);
-                btnCredits.setManaged(false); // Retire l'espace du bouton
+                btnCredits.setManaged(false);
             } else {
                 lblSpecifiqueTitre.setText("PLAFOND DE DÉCOUVERT");
                 lblSpecifiqueValeur.setText(compteActuel.getPlafondDecouvert() + " DT");
 
-                // --- LOGIQUE CRÉDITS ---
                 btnCredits.setVisible(true);
                 btnCredits.setManaged(true);
             }
@@ -74,14 +69,14 @@ public class DetailCompteController {
     @FXML
     private void handleModifier() {
         VBox root = (VBox) lblNumero.getScene().getRoot();
-        root.setOpacity(0.5); // Fond grisé
+        root.setOpacity(0.5);
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ModifierCompte.fxml"));
             Parent editRoot = loader.load();
 
             ModifierCompteController controller = loader.getController();
-            controller.setCompte(compteActuel); // On passe l'objet compte
+            controller.setCompte(compteActuel);
 
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -91,7 +86,6 @@ public class DetailCompteController {
             stage.setScene(scene);
             stage.showAndWait();
 
-            // Si modification enregistrée, on rafraîchit les labels
             if (controller.isModificationReussie()) {
                 lblNumero.setText(compteActuel.getNumeroCompte());
                 lblSolde.setText(compteActuel.getSolde() + " DT");
@@ -107,16 +101,14 @@ public class DetailCompteController {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            root.setOpacity(1.0); // Retour à la normale
+            root.setOpacity(1.0);
         }
     }
     @FXML
     private void handleSupprimer() {
-        // 1. On récupère la racine de l'interface de détails (ta VBox)
-        // On utilise n'importe quel élément injecté (ex: lblNumero) pour remonter à la racine
+
         VBox root = (VBox) lblNumero.getScene().getRoot();
 
-        // 2. On applique l'effet gris (opacité réduite)
         root.setOpacity(0.4);
 
         try {
@@ -131,33 +123,28 @@ public class DetailCompteController {
             stage.initStyle(StageStyle.TRANSPARENT);
 
             Scene scene = new Scene(popupRoot);
-            scene.setFill(null); // Pour la transparence des coins arrondis
+            scene.setFill(null);
             stage.setScene(scene);
 
             stage.showAndWait();
 
-            // 3. Après fermeture de la popup, si supprimé, on ferme les détails
             if (controller.isSuppressionConfirmee()) {
                 handleFermer();
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            // 4. TRÈS IMPORTANT : On remet l'opacité à 100% quoi qu'il arrive
             root.setOpacity(1.0);
         }
     }
     @FXML
     private void handleConsulterCredits() {
         try {
-            // 1. Assure-toi de charger le fichier de la LISTE (AfficherCredit)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AfficherCredit.fxml"));
             Parent root = loader.load();
 
-            // 2. Récupère le BON contrôleur (celui de l'affichage)
             AfficherCreditController controller = loader.getController();
 
-            // 3. Passe les données à la liste
             controller.setCompteData(compteActuel.getIdCompte(), compteActuel.getNumeroCompte());
 
             Stage stage = new Stage();

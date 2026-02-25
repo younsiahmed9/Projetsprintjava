@@ -31,7 +31,6 @@ public class SupprimerCreditController {
     private void handleSupprimer() {
         if (creditASupprimer != null) {
             try {
-                // On passe l'objet complet 'creditASupprimer' comme requis par ton service
                 service.supprimer(creditASupprimer);
                 fermerEtRafraichir();
             } catch (java.sql.SQLDataException e) {
@@ -49,7 +48,7 @@ public class SupprimerCreditController {
         if (parentStack != null) {
             parentStack.getChildren().removeAll(overlay, mainContainer);
             if (onRefresh != null) {
-                onRefresh.run(); // Relance chargerDonnees() dans AfficherCredit
+                onRefresh.run();
             }
         }
     }

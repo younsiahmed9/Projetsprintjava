@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<StackPane fx:id="mainStackPane" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.DashboardController">
+
+    <ScrollPane fitToWidth="true" styleClass="dashboard-scroll">
+        <VBox spacing="25" styleClass="dashboard-container">
+            <Label text="Mon Dashboard" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #182d88; -fx-padding: 0 0 10 0;"/>
+
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button onAction="#handleRetour" styleClass="btn-back" text="←"/>
+                <VBox>
+                    <Label text="Analyse de Confiance" styleClass="header-title-main" style="-fx-text-fill: #182d88; -fx-font-weight: bold;"/>
+                    <Label text="Vue détaillée de la solvabilité de vos comptes" styleClass="header-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="25">
+                <VBox spacing="25" HBox.hgrow="ALWAYS">
+                    <HBox spacing="20">
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Score Global" styleClass="stat-label"/>
+                            <Label fx:id="lblScoreGlobal" text="85%" styleClass="stat-value-green"/>
+                        </VBox>
+                        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                            <Label text="Solde Total" styleClass="stat-label"/>
+                            <Label fx:id="lblTotalAvoirs" text="12,850 DT" styleClass="stat-value-blue"/>
+                        </VBox>
+                    </HBox>
+                    <VBox styleClass="glass-card" spacing="15" VBox.vgrow="ALWAYS">
+                        <Label text="Scores de Confiance par Compte" styleClass="card-title" style="-fx-text-fill: #182d88;"/>
+                        <VBox fx:id="containerScores" spacing="20" />
+                    </VBox>
+                </VBox>
+
+                <VBox spacing="25" prefWidth="350">
+                    <VBox styleClass="glass-card" spacing="15">
+                        <Label text="Statistiques de Risque" styleClass="card-title" style="-fx-text-fill: #182d88;"/>
+                        <VBox spacing="10">
+                            <Label text="Utilisation Crédit" styleClass="mini-label"/>
+                            <ProgressBar fx:id="progressUsage" progress="0.52" maxWidth="Infinity" styleClass="custom-progress-orange"/>
+                            <HBox><Region HBox.hgrow="ALWAYS"/><Label fx:id="lblUsagePercent" text="52%" styleClass="percent-label"/></HBox>
+                        </VBox>
+                        <VBox spacing="10">
+                            <Label text="Fiabilité Paiement" styleClass="mini-label"/>
+                            <ProgressBar fx:id="progressFiabilite" progress="0.88" maxWidth="Infinity" styleClass="custom-progress-blue"/>
+                            <HBox><Region HBox.hgrow="ALWAYS"/><Label fx:id="lblFiabilitePercent" text="88%" styleClass="percent-label"/></HBox>
+                        </VBox>
+                    </VBox>
+
+                    <VBox styleClass="promo-card" spacing="15">
+                        <Label text="Besoin d'un prêt ?" styleClass="promo-title" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 18;"/>
+                        <VBox spacing="5">
+                            <Label text="Votre score actuel vous permet d'emprunter jusqu'à" wrapText="true" styleClass="promo-text" style="-fx-text-fill: white;"/>
+                            <Label fx:id="lblMaxPret" text="calcul en cours..." style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 20;"/>
+                        </VBox>
+                        <Button fx:id="btnSimuler" onAction="#handleSimulerPret" text="Simuler maintenant >" styleClass="btn-promo" style="-fx-background-color: white; -fx-text-fill: #ff7e5f; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                    </VBox>
+
+                    <VBox styleClass="glass-card" spacing="10" alignment="CENTER">
+                        <Label text="Répartition des Comptes" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+                        <PieChart fx:id="chartComptes" prefHeight="230" legendSide="BOTTOM" labelsVisible="true"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+
+    <VBox fx:id="popupOverlay" alignment="CENTER" visible="false" style="-fx-background-color: rgba(0, 0, 0, 0.4); -fx-background-radius: 20;">
+        <VBox fx:id="popupContent" alignment="CENTER" fillWidth="false" />
+    </VBox>
+
+</StackPane>

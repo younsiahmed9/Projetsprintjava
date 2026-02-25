@@ -133,7 +133,6 @@ public class ServiceCompte implements Iservice<Compte> {
         return compteList;
     }
     public Compte recupererParId(int id) throws SQLDataException {
-        // Vérifie bien que les noms (numero_compte, etc.) sont identiques à ta table SQL
         String sql = "SELECT * FROM compte WHERE id_compte = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -160,7 +159,6 @@ public class ServiceCompte implements Iservice<Compte> {
         return null;
     }
     public String getEtatParId(int idCompte) {
-        // REMPLACE 'id' PAR LE VRAI NOM (id_compte)
         String sql = "SELECT etat FROM compte WHERE id_compte = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -174,5 +172,35 @@ public class ServiceCompte implements Iservice<Compte> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Compte getCompteById(int id) {
+        Compte compte = null;
+        String sql = "SELECT * FROM compte WHERE id_compte = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                compte = new Compte();
+                compte.setIdCompte(rs.getInt("id_compte"));
+                compte.setNumeroCompte(rs.getString("numero_compte"));
+                compte.setSolde(rs.getDouble("solde"));
+                compte.setEtat(rs.getString("etat"));
+                compte.setTypeCompte(rs.getString("type_compte"));
+                // Ajoute d'autres setters selon tes colonnes (date_creation, etc.)
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur getCompteById : " + e.getMessage());
+        }
+        return compte;
+    }
+    // Dans ServiceCompte.java
+    public double calculerScoreSolvabilite(Compte c) {
+        // Algorithme simple : Score basé sur le solde et l'état
+        double scoreBase = (c.getSolde() > 5000) ? 90.0 : 70.0;
+        if (c.getEtat().equalsIgnoreCase("INACTIF")) {
+            scoreBase -= 30.0;
+        }
+        return Math.max(0, Math.min(100, scoreBase)); // Toujours entre 0 et 100
     }
 }

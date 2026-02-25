@@ -4,19 +4,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<VBox spacing="25" alignment="TOP_CENTER" styleClass="popup-container"
+<VBox spacing="20" alignment="TOP_CENTER" styleClass="popup-container"
       stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Controllers.AjouterCreditController"
-      prefWidth="500" maxWidth="500" maxHeight="-Infinity" minHeight="-Infinity">
+      prefWidth="500" maxWidth="500">
 
     <padding>
-        <Insets top="35" right="45" bottom="35" left="45"/>
+        <Insets top="30" right="40" bottom="30" left="40"/>
     </padding>
 
-    <VBox alignment="CENTER" spacing="10">
-        <Label text="Nouvelle Demande" styleClass="header-title-blue" style="-fx-font-size: 26;"/>
-        <Label text="Calculez votre mensualité en quelques secondes."
+    <VBox alignment="CENTER" spacing="8">
+        <Label text="Nouvelle Demande" styleClass="header-title-blue" style="-fx-font-size: 24;"/>
+        <Label text="Analyse de solvabilité et calcul de mensualité en temps réel."
                wrapText="true" style="-fx-text-fill: #999; -fx-text-alignment: center; -fx-font-size: 13;"/>
     </VBox>
 
@@ -39,9 +39,17 @@
             </VBox>
         </HBox>
 
-        <VBox spacing="5" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 12; -fx-border-color: #eee; -fx-border-radius: 12;">
+        <VBox spacing="5" style="-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 10; -fx-border-color: #eee;">
             <Label text="MENSUALITÉ ESTIMÉE" styleClass="card-type-header" style="-fx-text-fill: #666; -fx-font-size: 9;"/>
-            <Label fx:id="lblMensualite" text="0.00 DT" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #3e893e;"/>
+            <Label fx:id="lblMensualite" text="0.00 DT" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #3e893e;"/>
+        </VBox>
+
+        <VBox spacing="8" style="-fx-padding: 5 0 0 0;">
+            <Label text="INDICE DE CONFIANCE (SOLVABILITÉ)" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <ProgressBar fx:id="progressScore" progress="0.0" prefWidth="280.0" styleClass="score-bar" />
+                <Label fx:id="lblScore" text="Analyse..." style="-fx-font-weight: bold; -fx-font-size: 12; -fx-text-fill: #7f8c8d;"/>
+            </HBox>
         </VBox>
     </VBox>
 

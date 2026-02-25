@@ -10,16 +10,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Charger le FXML
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/AfficherCompte.fxml"));
 
-        // Créer la scène
         Scene scene = new Scene(root);
 
-        // Ajouter ton CSS
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
-        // Configurer la fenêtre
         primaryStage.setTitle("Gestion des Comptes");
         primaryStage.setScene(scene);
         primaryStage.setWidth(900);

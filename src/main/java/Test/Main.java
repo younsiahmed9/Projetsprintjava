@@ -17,7 +17,6 @@ public class Main {
         try {
             System.out.println("===== TEST AJOUT COMPTE =====");
 
-            // ✅ Compte EPARGNE
             Compte epargne = new Compte(
                     "ACC001",
                     5000,
@@ -28,7 +27,6 @@ public class Main {
                     "ACTIF"
             );
 
-            // ✅ Compte COURANT
             Compte courant = new Compte(
                     "ACC002",
                     10000,
@@ -47,7 +45,6 @@ public class Main {
 
             System.out.println("===== TEST MODIFICATION =====");
 
-            // ⚠ Mets un id existant dans ta base
             Compte modif = new Compte(
                     4, // ← change selon ton id réel
                     "ACC002-UPDATED",
@@ -72,20 +69,16 @@ public class Main {
 
         ServiceCredit serviceCredit = new ServiceCredit();
        try {
-            // Ajouter des crédits
             Credit credit1 = new Credit(2000, 5.5, 12, 200, LocalDate.now(), "EN_COURS", 17);
             Credit credit2 = new Credit(5000, 4.5, 24, 220, LocalDate.now(), "EN_COURS", 11);
 
             serviceCredit.ajouter(credit1);
             serviceCredit.ajouter(credit2);
 
-            // Modifier un crédit (id = 1)
             serviceCredit.modifier(new Credit(2500, 5.5, 12, 210, LocalDate.now(), "EN_COURS", 12, 1));
 
-            // Afficher tous les crédits
             System.out.println(serviceCredit.recuperer());
 
-            // Supprimer un crédit (id = 2)
             serviceCredit.supprimer(new Credit(2));
 
         } catch (SQLDataException e) {

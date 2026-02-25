@@ -26,7 +26,6 @@ public class ModifierCreditController {
     public void initialize() {
         comboStatut.setItems(FXCollections.observableArrayList("EN_COURS", "TERMINE", "REFUSE"));
 
-        // Calcul automatique lors de la saisie
         txtTaux.textProperty().addListener((obs, old, val) -> calculerMensualite());
         txtDuree.textProperty().addListener((obs, old, val) -> calculerMensualite());
     }
@@ -37,7 +36,6 @@ public class ModifierCreditController {
         this.overlay = ov;
         this.onRefresh = refreshCallback;
 
-        // Remplissage des champs
         txtMontantReadOnly.setText(String.format("%.2f DT", c.getMontant()));
         txtTaux.setText(String.valueOf(c.getTauxInteret()));
         txtDuree.setText(String.valueOf(c.getDureeMois()));

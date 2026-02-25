@@ -43,7 +43,6 @@ public class SupprimerCompteController {
     }
 
     private void closeStage() {
-        // Sécurité : on vérifie que btnAnnuler est bien lié au FXML
         if (btnAnnuler != null && btnAnnuler.getScene() != null) {
             Stage stage = (Stage) btnAnnuler.getScene().getWindow();
             stage.close();

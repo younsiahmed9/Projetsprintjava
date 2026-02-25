@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -23,16 +24,26 @@ public class AfficherCompteController {
 
     @FXML private FlowPane containerCartes;
     @FXML private Button btnTous, btnCourant, btnEpargne;
-    @FXML private TextField txtRecherche; // Ajouté pour la recherche
+    @FXML private TextField txtRecherche;
+
+    // AJOUT INDISPENSABLE : Pour pouvoir changer la vue centrale
+    @FXML private BorderPane mainContent;
 
     private ServiceCompte service = new ServiceCompte();
     private List<Compte> listeComplete;
+
+    // Pour sauvegarder la vue des cartes et y revenir plus tard
+    private Node vueCartesInitiale;
 
     @FXML
     public void initialize() {
         refreshData();
 
-        // Ajout de la logique de recherche en temps réel
+        // On sauvegarde le contenu actuel (le ScrollPane avec les cartes)
+        if (mainContent != null) {
+            vueCartesInitiale = mainContent.getCenter();
+        }
+
         if (txtRecherche != null) {
             txtRecherche.textProperty().addListener((observable, oldValue, newValue) -> {
                 handleRecherche(newValue);
@@ -58,10 +69,9 @@ public class AfficherCompteController {
         }
     }
 
-    // --- Logique de Recherche ---
     private void handleRecherche(String query) {
         if (query == null || query.trim().isEmpty()) {
-            displayComptes(listeComplete); // On affiche tout si le champ est vide
+            displayComptes(listeComplete);
         } else {
             String lowerCaseQuery = query.toLowerCase();
             List<Compte> resultats = listeComplete.stream()
@@ -101,11 +111,10 @@ public class AfficherCompteController {
         return card;
     }
 
-    // --- Logique de Filtrage ---
     @FXML
     void filterTous() {
         updateFilterStyle(btnTous);
-        handleRecherche(txtRecherche.getText()); // Garde la recherche active lors du changement de filtre
+        handleRecherche(txtRecherche.getText());
     }
 
     @FXML
@@ -196,6 +205,34 @@ public class AfficherCompteController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // --- NOUVELLES MÉTHODES AJOUTÉES ---
+
+    @FXML
+    private void handleDashboard() {
+        try {
+            // Assure-toi que le chemin correspond à ton dossier de ressources
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+            Parent dashboard = loader.load();
+
+            // On remplace le centre du BorderPane par le Dashboard
+            if (mainContent != null) {
+                mainContent.setCenter(dashboard);
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur chargement Dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void showComptes() {
+        // Cette méthode permet de revenir à la vue des cartes
+        if (mainContent != null && vueCartesInitiale != null) {
+            mainContent.setCenter(vueCartesInitiale);
+            refreshData();
         }
     }
 }

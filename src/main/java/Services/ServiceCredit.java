@@ -28,11 +28,10 @@ public class ServiceCredit implements Iservice<Credit> {
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
-                System.out.println("⚠️ Aucune ligne ajoutée, vérifiez vos contraintes DB.");
+                System.out.println("Aucune ligne ajoutée, vérifiez vos contraintes DB.");
             }
         } catch (SQLException e) {
-            // TRÈS IMPORTANT : Afficher l'erreur complète pour savoir si c'est un nom de colonne faux
-            System.err.println("❌ Erreur SQL détaillée : " + e.getSQLState() + " - " + e.getMessage());
+            System.err.println("Erreur SQL détaillée : " + e.getSQLState() + " - " + e.getMessage());
             throw new SQLDataException(e.getMessage());
         }
     }
@@ -100,7 +99,6 @@ public class ServiceCredit implements Iservice<Credit> {
         return creditList;
     }
 
-    // Méthode utilitaire interne pour éviter la répétition de code
     private Credit mapResultSetToCredit(ResultSet rs) throws SQLException {
         Credit c = new Credit();
         c.setIdCredit(rs.getInt("id_credit"));
@@ -112,5 +110,33 @@ public class ServiceCredit implements Iservice<Credit> {
         c.setStatut(rs.getString("statut"));
         c.setCompte(rs.getInt("id_compte")); // On assigne directement l'int
         return c;
+    }
+
+    public boolean aDesCreditsEnCours(int idCompte) {
+        String sql = "SELECT COUNT(*) FROM credit WHERE id_compte = ? AND statut = 'EN_COURS'";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, idCompte);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Retourne vrai s'il y a au moins 1 crédit actif
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur aDesCreditsEnCours : " + e.getMessage());
+        }
+        return false;
+    }
+    public int getNombreCreditsActifs() {
+        int nombre = 0;
+        String sql = "SELECT COUNT(*) FROM credit WHERE statut = 'EN_COURS'";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                nombre = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur getNombreCreditsActifs : " + e.getMessage());
+        }
+        return nombre;
     }
 }

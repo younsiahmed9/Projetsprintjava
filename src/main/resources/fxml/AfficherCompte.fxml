@@ -63,7 +63,11 @@
                             <Label text="Gérez vos avoirs et visualisez vos soldes en temps réel." style="-fx-text-fill: #999; -fx-font-size: 14;"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button onAction="#handleAjouter" styleClass="btn-add-circle" text="+"/>
+
+                        <HBox spacing="15" alignment="CENTER">
+                            <Button onAction="#handleDashboard" styleClass="btn-dashboard-circle" text="📊"/>
+                            <Button onAction="#handleAjouter" styleClass="btn-add-circle" text="+"/>
+                        </HBox>
                     </HBox>
 
                     <HBox spacing="25" alignment="CENTER_LEFT" style="-fx-padding: 10 0;">

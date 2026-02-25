@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" maxWidth="480.0" maxHeight="500.0" spacing="25"
+      style="-fx-background-color: white; -fx-background-radius: 25; -fx-padding: 35; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 20, 0, 0, 10);"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.SimulateurPretController">
+
+    <VBox spacing="5" alignment="CENTER">
+        <Label text="Simulateur de Crédit" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+
+        <Region prefWidth="60" prefHeight="4" maxWidth="60"
+                style="-fx-background-color: #fecf47; -fx-background-radius: 5;"/>
+
+        <Label text="Ajustez les curseurs pour simuler vos mensualités"
+               style="-fx-text-fill: #718096; -fx-font-size: 13; -fx-padding: 5 0 0 0;"/>
+    </VBox>
+
+    <VBox spacing="20" style="-fx-background-color: #fcfcfc; -fx-padding: 20; -fx-background-radius: 15; -fx-border-color: #f1f1f1; -fx-border-radius: 15;">
+        <VBox spacing="10">
+            <HBox>
+                <Label text="Montant du prêt" style="-fx-font-weight: bold; -fx-text-fill: #4A5568;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblMontant" text="10 000 DT" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            </HBox>
+            <Slider fx:id="sliderMontant" min="1000" max="100000" value="10000" styleClass="custom-slider"/>
+        </VBox>
+
+        <VBox spacing="10">
+            <HBox>
+                <Label text="Durée (mois)" style="-fx-font-weight: bold; -fx-text-fill: #4A5568;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblDuree" text="24 mois" style="-fx-font-weight: bold; -fx-text-fill: #182d88;"/>
+            </HBox>
+            <Slider fx:id="sliderDuree" min="6" max="120" value="24" styleClass="custom-slider"/>
+        </VBox>
+
+        <Separator style="-fx-padding: 5 0 5 0;"/>
+
+        <VBox alignment="CENTER" spacing="8"
+              style="-fx-background-color: rgba(141, 188, 113, 0.15); -fx-padding: 20; -fx-background-radius: 15; -fx-border-color: #8dbc71; -fx-border-width: 1; -fx-border-radius: 15;">
+            <Label text="Mensualité estimée" style="-fx-text-fill: #5a8a3e; -fx-font-weight: bold; -fx-font-size: 14;"/>
+            <Label fx:id="lblMensualite" text="452,27 DT" style="-fx-font-size: 34; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+        </VBox>
+    </VBox>
+
+    <HBox alignment="CENTER">
+        <Button text="Fermer la simulation" onAction="#handleFermer"
+                prefHeight="55.0" prefWidth="240.0"
+                style="-fx-background-color: #f78f34;
+                   -fx-text-fill: #ffffff;
+                   -fx-background-radius: 12;
+                   -fx-font-weight: bold;
+                   -fx-font-size: 15;
+                   -fx-cursor: hand;
+                   -fx-padding: 10 20 10 20;"
+                styleClass="btn-fermer-simu"/>
+    </HBox>
+</VBox>

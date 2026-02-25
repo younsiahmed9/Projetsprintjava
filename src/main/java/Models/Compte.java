@@ -7,11 +7,11 @@ public class Compte {
     protected int idCompte;
     protected String numeroCompte;
     protected double solde;
-    protected String typeCompte; // EPARGNE ou COURANT
-    protected Double tauxInteret; // utilisé si EPARGNE
-    protected Double plafondDecouvert; // utilisé si COURANT
+    protected String typeCompte;
+    protected Double tauxInteret;
+    protected Double plafondDecouvert;
     protected LocalDate dateCreation;
-    protected String etat; // ACTIF ou BLOQUE
+    protected String etat;
 
     public Compte() {
     }
@@ -40,7 +40,6 @@ public class Compte {
     public Compte(int idCompte){
         this.idCompte=idCompte;
     }
-    // ================= GETTERS & SETTERS =================
 
     public int getIdCompte() {
         return idCompte;
