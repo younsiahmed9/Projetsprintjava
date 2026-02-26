@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="rootStackPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.CarteListController" stylesheets="@../css/styles.css">
+
+    <BorderPane fx:id="mainContent" styleClass="main-container">
+        <top>
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 25 35;">
+                <Button onAction="#handleRetour" styleClass="btn-back" text="←"/>
+                <VBox spacing="2">
+                    <Label text="Mes Cartes" styleClass="header-title-blue"/>
+                    <Label fx:id="lblInfosPortefeuille" text="Portefeuille" style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleAjouterCarte" styleClass="btn-add-circle" text="+"/>
+            </HBox>
+        </top>
+
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="30" style="-fx-padding: 0 35 35 35;">
+
+                    <HBox spacing="30">
+                        <VBox spacing="20" prefWidth="280">
+                            <VBox styleClass="kpi-card">
+                                <Label text="Nombre de cartes" styleClass="field-label"/>
+                                <Label fx:id="lblNbCartes" text="0" styleClass="kpi-value-blue"/>
+                            </VBox>
+                            <VBox styleClass="kpi-card">
+                                <Label text="Solde total" styleClass="field-label"/>
+                                <Label fx:id="lblSoldeTotal" text="0.00 DT" styleClass="kpi-value-green"/>
+                            </VBox>
+                            <VBox styleClass="kpi-card">
+                                <Label text="Plafond total" styleClass="field-label"/>
+                                <Label fx:id="lblPlafondTotal" text="0.00 DT" styleClass="kpi-value-dark"/>
+                            </VBox>
+                        </VBox>
+
+                        <VBox HBox.hgrow="ALWAYS" styleClass="chart-container">
+                            <Label text="Répartition par type" styleClass="card-title-internal" style="-fx-padding: 0 0 15 0;"/>
+                            <BarChart fx:id="barChartTypes" legendVisible="false" prefHeight="280">
+                                <xAxis><CategoryAxis side="BOTTOM" /></xAxis>
+                                <yAxis><NumberAxis side="LEFT" /></yAxis>
+                            </BarChart>
+                        </VBox>
+                    </HBox>
+
+                    <VBox styleClass="table-card-container" VBox.vgrow="ALWAYS">
+                        <Label text="Mes Cartes" styleClass="card-title-internal" style="-fx-padding: 0 0 20 0;"/>
+
+                        <FlowPane fx:id="cartesFlow" hgap="30" vgap="30" alignment="CENTER_LEFT" prefWrapLength="1100" />
+
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</StackPane>

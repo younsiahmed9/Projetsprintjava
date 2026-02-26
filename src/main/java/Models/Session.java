@@ -21,11 +21,11 @@ public class Session {
         return utilisateurConnecte != null;
     }
 
-    public static Integer getSelectedPortefeuilleId() {
-        return selectedPortefeuilleId;
+    public static void setSelectedPortefeuilleId(Integer portefeuilleId) {
+        selectedPortefeuilleId = portefeuilleId;
     }
 
-    public static void setSelectedPortefeuilleId(Integer id) {
-        selectedPortefeuilleId = id;
+    public static Integer getSelectedPortefeuilleId() {
+        return selectedPortefeuilleId;
     }
 }

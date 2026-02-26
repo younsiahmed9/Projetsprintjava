@@ -8,32 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PortefeuilleService {
-    private Connection connection;
 
-    public PortefeuilleService() {
-        connection = MyDataBase.getInstance().getConnection();
-    }
+    // Plus de champ connection global – chaque méthode ouvre sa propre connexion
 
-    // CREATE (legacy)
+    // CREATE (sans utilisateur – pour tests)
     public void ajouter(Portefeuille p) {
         String req = "INSERT INTO portefeuille (nom, solde_total, devise_principale) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
             ps.setString(1, p.getNom());
             ps.setDouble(2, p.getSoldeTotal());
             ps.setString(3, p.getDevisePrincipale());
             ps.executeUpdate();
-            System.out.println("✅ Portefeuille ajouté");
+            System.out.println("✅ Portefeuille ajouté (sans utilisateur)");
         } catch (SQLException e) {
-            System.err.println("❌ Erreur: " + e.getMessage());
+            System.err.println("❌ Erreur ajout: " + e.getMessage());
         }
     }
 
-    /**
-     * CREATE portefeuille rattaché à un utilisateur (Option A).
-     */
+    // CREATE avec utilisateur_id
     public void ajouterPourUtilisateur(Portefeuille p, int utilisateurId) {
         String req = "INSERT INTO portefeuille (nom, solde_total, devise_principale, utilisateur_id) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
             ps.setString(1, p.getNom());
             ps.setDouble(2, p.getSoldeTotal());
             ps.setString(3, p.getDevisePrincipale());
@@ -41,7 +38,7 @@ public class PortefeuilleService {
             ps.executeUpdate();
             System.out.println("✅ Portefeuille ajouté (user_id=" + utilisateurId + ")");
         } catch (SQLException e) {
-            System.err.println("❌ Erreur: " + e.getMessage());
+            System.err.println("❌ Erreur ajout pour utilisateur: " + e.getMessage());
         }
     }
 
@@ -49,20 +46,16 @@ public class PortefeuilleService {
     public List<Portefeuille> afficherTous() {
         List<Portefeuille> list = new ArrayList<>();
         String req = "SELECT * FROM portefeuille";
-        try (Statement st = connection.createStatement();
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(req)) {
             while (rs.next()) {
-                Portefeuille p = new Portefeuille();
-                p.setId(rs.getInt("id"));
-                p.setNom(rs.getString("nom"));
-                p.setSoldeTotal(rs.getDouble("solde_total"));
-                p.setDevisePrincipale(rs.getString("devise_principale"));
-                try { p.setUtilisateurId(rs.getObject("utilisateur_id", Integer.class)); } catch (SQLException ignored) { }
+                Portefeuille p = mapResultSetToPortefeuille(rs);
                 list.add(p);
                 System.out.println("   " + p);
             }
         } catch (SQLException e) {
-            System.err.println("❌ Erreur: " + e.getMessage());
+            System.err.println("❌ Erreur affichage: " + e.getMessage());
         }
         return list;
     }
@@ -70,29 +63,45 @@ public class PortefeuilleService {
     // READ BY ID
     public Portefeuille afficherParId(int id) {
         String req = "SELECT * FROM portefeuille WHERE id=?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Portefeuille p = new Portefeuille();
-                p.setId(rs.getInt("id"));
-                p.setNom(rs.getString("nom"));
-                p.setSoldeTotal(rs.getDouble("solde_total"));
-                p.setDevisePrincipale(rs.getString("devise_principale"));
-                try { p.setUtilisateurId(rs.getObject("utilisateur_id", Integer.class)); } catch (SQLException ignored) { }
-                System.out.println("🔍 " + p);
-                return p;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Portefeuille p = mapResultSetToPortefeuille(rs);
+                    System.out.println("🔍 " + p);
+                    return p;
+                }
             }
         } catch (SQLException e) {
-            System.err.println("❌ Erreur: " + e.getMessage());
+            System.err.println("❌ Erreur recherche: " + e.getMessage());
         }
         return null;
+    }
+
+    // READ BY UTILISATEUR
+    public List<Portefeuille> getPortefeuillesByUtilisateur(int utilisateurId) {
+        List<Portefeuille> list = new ArrayList<>();
+        String req = "SELECT * FROM portefeuille WHERE utilisateur_id=?";
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
+            ps.setInt(1, utilisateurId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToPortefeuille(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur getPortefeuillesByUtilisateur: " + e.getMessage());
+        }
+        return list;
     }
 
     // UPDATE
     public void modifier(Portefeuille p) {
         String req = "UPDATE portefeuille SET nom=?, solde_total=?, devise_principale=? WHERE id=?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
             ps.setString(1, p.getNom());
             ps.setDouble(2, p.getSoldeTotal());
             ps.setString(3, p.getDevisePrincipale());
@@ -100,33 +109,33 @@ public class PortefeuilleService {
             ps.executeUpdate();
             System.out.println("✅ Portefeuille modifié");
         } catch (SQLException e) {
-            System.err.println("❌ Erreur: " + e.getMessage());
+            System.err.println("❌ Erreur modification: " + e.getMessage());
         }
     }
 
     // DELETE
     public void supprimer(int id) {
         String req = "DELETE FROM portefeuille WHERE id=?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
             ps.setInt(1, id);
-            ps.executeUpdate();
-            System.out.println("✅ Portefeuille supprimé");
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("✅ Portefeuille supprimé (ID: " + id + ")");
+            } else {
+                System.out.println("❌ Aucun portefeuille avec l'ID: " + id);
+            }
         } catch (SQLException e) {
-            System.err.println("❌ Erreur: " + e.getMessage());
+            System.err.println("❌ Erreur suppression: " + e.getMessage());
         }
     }
 
-    /**
-     * Recalcule le solde_total d'un portefeuille à partir de la somme des soldes
-     * des cartes qui lui appartiennent, puis le persist en base.
-     *
-     * @return le nouveau solde_total calculé
-     */
+    // Recalculer et mettre à jour le solde total d'un portefeuille
     public double recomputeAndUpdateSoldeTotal(int portefeuilleId) {
         double total = 0;
-
         String sumReq = "SELECT COALESCE(SUM(solde), 0) AS total FROM carte_virtuelle WHERE portefeuille_id=?";
-        try (PreparedStatement ps = connection.prepareStatement(sumReq)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sumReq)) {
             ps.setInt(1, portefeuilleId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -134,29 +143,28 @@ public class PortefeuilleService {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ Erreur calcul solde_total portefeuille: " + e.getMessage());
+            System.err.println("❌ Erreur calcul solde_total: " + e.getMessage());
             return total;
         }
 
         String updateReq = "UPDATE portefeuille SET solde_total=? WHERE id=?";
-        try (PreparedStatement ps = connection.prepareStatement(updateReq)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(updateReq)) {
             ps.setDouble(1, total);
             ps.setInt(2, portefeuilleId);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("❌ Erreur update solde_total portefeuille: " + e.getMessage());
+            System.err.println("❌ Erreur update solde_total: " + e.getMessage());
         }
 
         return total;
     }
 
-    /**
-     * Ajuste le solde_total en ajoutant un delta (ex: +montant lors d'une recharge).
-     * Plus rapide que le recalcul complet, mais nécessite que la base soit cohérente.
-     */
+    // Incrémenter le solde total (utile pour les recharges)
     public void incrementSoldeTotal(int portefeuilleId, double delta) {
         String req = "UPDATE portefeuille SET solde_total = COALESCE(solde_total, 0) + ? WHERE id=?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
             ps.setDouble(1, delta);
             ps.setInt(2, portefeuilleId);
             ps.executeUpdate();
@@ -165,30 +173,24 @@ public class PortefeuilleService {
         }
     }
 
-    /**
-     * Retourne les portefeuilles d'un utilisateur.
-     * Nécessite une colonne portefeuille.utilisateur_id. Si la colonne n'existe pas,
-     * cette méthode retournera une liste vide et loguera l'erreur SQL.
-     */
-    public List<Portefeuille> afficherParUtilisateur(int utilisateurId) {
-        List<Portefeuille> list = new ArrayList<>();
-        String req = "SELECT * FROM portefeuille WHERE utilisateur_id=?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
-            ps.setInt(1, utilisateurId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Portefeuille p = new Portefeuille();
-                    p.setId(rs.getInt("id"));
-                    p.setNom(rs.getString("nom"));
-                    p.setSoldeTotal(rs.getDouble("solde_total"));
-                    p.setDevisePrincipale(rs.getString("devise_principale"));
-                    try { p.setUtilisateurId(rs.getObject("utilisateur_id", Integer.class)); } catch (SQLException ignored) { }
-                    list.add(p);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("❌ Erreur afficherParUtilisateur: " + e.getMessage());
+    // Méthode privée pour mapper un ResultSet à un objet Portefeuille
+    private Portefeuille mapResultSetToPortefeuille(ResultSet rs) throws SQLException {
+        Portefeuille p = new Portefeuille();
+        p.setId(rs.getInt("id"));
+        p.setNom(rs.getString("nom"));
+        p.setSoldeTotal(rs.getDouble("solde_total"));
+        p.setDevisePrincipale(rs.getString("devise_principale"));
+        // Gestion de utilisateur_id (peut être NULL)
+        int utilisateurId = rs.getInt("utilisateur_id");
+        if (!rs.wasNull()) {
+            p.setUtilisateurId(utilisateurId);
         }
-        return list;
+        // On ignore les dates pour l'instant, mais on pourrait les ajouter si besoin
+        return p;
+    }
+
+    // Pour compatibilité avec l'ancien nom (si vous voulez conserver les deux)
+    public List<Portefeuille> afficherParUtilisateur(int utilisateurId) {
+        return getPortefeuillesByUtilisateur(utilisateurId);
     }
 }

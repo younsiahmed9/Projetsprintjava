@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="25" alignment="TOP_CENTER" styleClass="popup-container"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.ScheduledTransferFormController"
+      prefWidth="500" maxWidth="500">
+
+    <padding>
+        <Insets top="35" right="45" bottom="35" left="45"/>
+    </padding>
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Programmer un transfert" styleClass="header-title-blue" style="-fx-font-size: 26;"/>
+        <Label text="Planifiez un transfert futur entre vos cartes."
+               wrapText="true" style="-fx-text-fill: #999; -fx-text-alignment: center; -fx-font-size: 13;"/>
+    </VBox>
+
+    <Separator style="-fx-opacity: 0.3;"/>
+
+    <VBox spacing="15">
+        <VBox spacing="5">
+            <Label text="CARTE SOURCE" styleClass="card-type-header"/>
+            <ComboBox fx:id="comboSource" promptText="Choisir la carte source" maxWidth="Infinity" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="CARTE DESTINATION" styleClass="card-type-header"/>
+            <ComboBox fx:id="comboDestination" promptText="Choisir la carte destination" maxWidth="Infinity" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="MONTANT" styleClass="card-type-header"/>
+            <TextField fx:id="txtMontant" promptText="0.00" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="DATE D'EXÉCUTION" styleClass="card-type-header"/>
+            <DatePicker fx:id="datePicker" promptText="jj/mm/aaaa" maxWidth="Infinity" styleClass="modern-input"/>
+        </VBox>
+
+        <!-- Time selection (no generic type in FXML) -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="HEURE" styleClass="card-type-header"/>
+                <ComboBox fx:id="hourCombo" maxWidth="Infinity" styleClass="modern-input" promptText="Heure"/>
+            </VBox>
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="MINUTE" styleClass="card-type-header"/>
+                <ComboBox fx:id="minuteCombo" maxWidth="Infinity" styleClass="modern-input" promptText="Minute"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+        <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel" prefWidth="120" prefHeight="40"/>
+        <Button text="Programmer" onAction="#handleProgrammer" styleClass="btn-details-orange" prefWidth="200" prefHeight="40"/>
+    </HBox>
+
+</VBox>

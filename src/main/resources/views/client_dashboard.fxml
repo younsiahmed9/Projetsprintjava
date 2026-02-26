@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.ClientDashboardController"
+           stylesheets="@../css/styles.css">
+
+    <BorderPane fx:id="mainContent" styleClass="main-container">
+
+        <left>
+            <VBox fx:id="sidebar" spacing="40" styleClass="sidebar">
+                <ImageView fitHeight="160" fitWidth="160" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Button text="Mes Portefeuilles" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💼" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Mes Cartes" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💳" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transferts" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💸" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transferts programmés" onAction="#handleScheduledTransfer" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="⏰" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+                    <Button text="Transactions" onAction="#handleTransactions" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📊" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+
+                    <Button text="Déconnexion" onAction="#handleLogout" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="🚪" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </VBox>
+        </left>
+
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="30" style="-fx-padding: 35;">
+
+                    <!-- En-tête -->
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="5">
+                            <Label text="Mes Portefeuilles" styleClass="header-title-blue"/>
+                            <Label fx:id="welcomeLabel" text="Bienvenue" style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleAjouterPortefeuille" styleClass="btn-add-circle" text="+"/>
+                    </HBox>
+
+                    <!-- Filtres -->
+                    <HBox spacing="25" alignment="CENTER_LEFT" style="-fx-padding: 10 0;">
+                        <Button fx:id="btnTous" text="Tous" onAction="#filterTous" styleClass="filter-link, filter-active"/>
+                        <Button fx:id="btnDT" text="DT" onAction="#filterDT" styleClass="filter-link"/>
+                        <Button fx:id="btnUSD" text="USD" onAction="#filterUSD" styleClass="filter-link"/>
+                        <Button fx:id="btnEUR" text="EUR" onAction="#filterEUR" styleClass="filter-link"/>
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="search-box">
+                            <Label text="🔍" style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                            <TextField fx:id="txtRecherche" promptText="Rechercher un portefeuille..." styleClass="search-field" prefWidth="200"/>
+                        </HBox>
+                    </HBox>
+
+                    <!-- Liste des portefeuilles (cartes) -->
+                    <FlowPane fx:id="containerPortefeuilles" hgap="30" vgap="30" prefWrapLength="1100">
+                    </FlowPane>
+
+                    <!-- Section des transferts programmés (NOUVEAU) -->
+                    <VBox spacing="15" styleClass="table-card-container" style="-fx-margin-top: 30;">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="Transferts programmés" styleClass="card-title-internal"/>
+                            <Pane HBox.hgrow="ALWAYS"/>
+                            <Button onAction="#handleRefreshScheduled" styleClass="btn-link" text="🔄 Rafraîchir"/>
+                        </HBox>
+
+                        <TableView fx:id="scheduledTable" prefHeight="200">
+                            <columns>
+                                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                                <TableColumn fx:id="colFromCard" text="Carte source" prefWidth="150"/>
+                                <TableColumn fx:id="colToCard" text="Carte destination" prefWidth="150"/>
+                                <TableColumn fx:id="colAmount" text="Montant" prefWidth="100"/>
+                                <TableColumn fx:id="colDate" text="Date d'exécution" prefWidth="150"/>
+                                <TableColumn fx:id="colStatus" text="Statut" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</StackPane>

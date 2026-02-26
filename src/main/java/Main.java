@@ -4,12 +4,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.MyDataBase;
-
+import Services.ScheduledTransferExecutor;
+import javafx.application.Application;
+import javafx.stage.Stage;
 /**
  * Point d'entrée principal de l'application FinTrack.
  * Lance l'interface de connexion (login.fxml).
  */
 public class Main extends Application {
+    private ScheduledTransferExecutor executor;
+
+
+    @Override
+    public void init() {
+        executor = new ScheduledTransferExecutor();
+        executor.start();  // starts the background thread
+        System.out.println("🚀 Scheduled transfer executor started.");
+    }
 
     @Override
     public void start(Stage primaryStage) {

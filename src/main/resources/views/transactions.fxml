@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.TransactionsController"
+           stylesheets="@../css/styles.css">
+
+    <BorderPane fx:id="mainContent" styleClass="main-container">
+
+        <left>
+            <VBox fx:id="sidebar" spacing="40" styleClass="sidebar">
+                <ImageView fitHeight="160" fitWidth="160" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Button text="Mes Portefeuilles" onAction="#handlePortefeuilles" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💼" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Mes Cartes" onAction="#handleCartes" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💳" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transactions" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📊" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transferts" onAction="#handleTransferts" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💸" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transferts programmés" onAction="#handleScheduledTransfer" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="⏰" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Déconnexion" onAction="#handleLogout" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="🚪" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </VBox>
+        </left>
+
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="30" style="-fx-padding: 35;">
+
+                    <!-- En-tête -->
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="5">
+                            <Label text="Historique des transactions" styleClass="header-title-blue"/>
+                            <Label fx:id="welcomeLabel" text="Bienvenue" style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <!-- Filtres rapides -->
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button onAction="#handleAllTransactions" styleClass="filter-link, filter-active" text="Toutes"/>
+                            <Button onAction="#handleDepotTransactions" styleClass="filter-link" text="Dépôts"/>
+                            <Button onAction="#handleRetraitTransactions" styleClass="filter-link" text="Retraits"/>
+                            <Button onAction="#handleTransfertTransactions" styleClass="filter-link" text="Transferts"/>
+                        </HBox>
+                    </HBox>
+
+                    <!-- Statistiques des transactions -->
+                    <HBox spacing="30">
+                        <VBox spacing="20" prefWidth="200">
+                            <VBox styleClass="kpi-card">
+                                <Label text="Total transactions" styleClass="field-label"/>
+                                <Label fx:id="lblTotalTransactions" text="0" styleClass="kpi-value-blue"/>
+                            </VBox>
+                        </VBox>
+                        <VBox spacing="20" prefWidth="200">
+                            <VBox styleClass="kpi-card">
+                                <Label text="Montant total" styleClass="field-label"/>
+                                <Label fx:id="lblMontantTotal" text="0.00 DT" styleClass="kpi-value-green"/>
+                            </VBox>
+                        </VBox>
+                        <VBox spacing="20" prefWidth="200">
+                            <VBox styleClass="kpi-card">
+                                <Label text="Réussies" styleClass="field-label"/>
+                                <Label fx:id="lblReussies" text="0" styleClass="kpi-value-dark"/>
+                            </VBox>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                    </HBox>
+
+                    <!-- Tableau des transactions -->
+                    <VBox styleClass="table-card-container" VBox.vgrow="ALWAYS">
+                        <Label text="Liste des transactions" styleClass="card-title-internal" style="-fx-padding: 0 0 20 0;"/>
+
+                        <!-- En-tête du tableau -->
+                        <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 12 25; -fx-background-color: #f8f9fa; -fx-background-radius: 10;">
+                            <Label text="ID" minWidth="60" prefWidth="60" styleClass="column-header-custom" />
+                            <Label text="DATE" minWidth="150" prefWidth="150" styleClass="column-header-custom" />
+                            <Label text="TYPE" minWidth="100" prefWidth="100" styleClass="column-header-custom" />
+                            <Label text="MONTANT" minWidth="120" prefWidth="120" styleClass="column-header-custom" />
+                            <Label text="DEVISE" minWidth="80" prefWidth="80" styleClass="column-header-custom" />
+                            <Label text="STATUT" minWidth="100" prefWidth="100" styleClass="column-header-custom" />
+                            <Label text="SOURCE" minWidth="100" prefWidth="100" styleClass="column-header-custom" />
+                            <Label text="DESTINATION" minWidth="100" prefWidth="100" styleClass="column-header-custom" />
+                            <Label text="DESCRIPTION" minWidth="200" prefWidth="200" styleClass="column-header-custom" />
+                        </HBox>
+
+                        <!-- Conteneur des transactions (rempli dynamiquement) -->
+                        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" vbarPolicy="NEVER">
+                            <VBox fx:id="containerTransactions" spacing="0" style="-fx-padding: 5 0 0 0;" />
+                        </ScrollPane>
+                    </VBox>
+
+                    <!-- Message si aucune transaction -->
+                    <Label fx:id="messageLabel" styleClass="status" wrapText="true" alignment="CENTER" maxWidth="Infinity"/>
+
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</StackPane>

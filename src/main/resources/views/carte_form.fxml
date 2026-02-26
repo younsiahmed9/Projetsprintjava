@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="25" alignment="TOP_CENTER" styleClass="popup-container"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.CarteFormController"
+      prefWidth="500" maxWidth="500" maxHeight="500" minHeight="500">
+
+    <padding>
+        <Insets top="35" right="45" bottom="35" left="45"/>
+    </padding>
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label fx:id="titleLabel" text="Nouvelle Carte" styleClass="header-title-blue" style="-fx-font-size: 26;"/>
+        <Label text="Créez une carte virtuelle pour votre portefeuille."
+               wrapText="true" style="-fx-text-fill: #999; -fx-text-alignment: center; -fx-font-size: 13;"/>
+    </VBox>
+
+    <Separator style="-fx-opacity: 0.3;"/>
+
+    <VBox spacing="15">
+        <VBox spacing="5">
+            <Label text="TYPE DE CARTE" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+            <ComboBox fx:id="comboType" promptText="Choisir le type" maxWidth="Infinity" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="DEVISE" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+            <ComboBox fx:id="comboDevise" promptText="Choisir la devise" maxWidth="Infinity" styleClass="modern-input"/>
+        </VBox>
+
+        <HBox spacing="15">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="SOLDE INITIAL" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+                <TextField fx:id="txtSolde" promptText="0.00" styleClass="modern-input"/>
+            </VBox>
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="PLAFOND" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+                <TextField fx:id="txtPlafond" promptText="1000" styleClass="modern-input"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+        <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel" prefWidth="120" prefHeight="40"/>
+        <Button text="Enregistrer" onAction="#handleEnregistrer" styleClass="btn-details-orange" prefWidth="200" prefHeight="40"/>
+    </HBox>
+
+</VBox>

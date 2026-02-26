@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.TransferController"
+           stylesheets="@../css/styles.css">
+
+    <BorderPane fx:id="mainContent" styleClass="main-container">
+
+        <!-- Left Sidebar - Same as client dashboard -->
+        <left>
+            <VBox fx:id="sidebar" spacing="40" styleClass="sidebar">
+                <ImageView fitHeight="160" fitWidth="160" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Button text="Mes Portefeuilles" onAction="#handlePortefeuilles" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💼" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Mes Cartes" onAction="#handleCartes" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💳" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transferts" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💸" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transferts programmés" onAction="#handleScheduledTransfer" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="⏰" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transactions" onAction="#handleTransactions" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📊" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Déconnexion" onAction="#handleLogout" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="🚪" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </VBox>
+        </left>
+
+        <!-- Center Content - Transfer Form -->
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="30" style="-fx-padding: 35;" alignment="TOP_CENTER">
+
+                    <!-- En-tête -->
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="5">
+                            <Label text="Transfert entre cartes" styleClass="header-title-blue"/>
+                            <Label text="Effectuez un transfert d'une carte à une autre (même utilisateur ou autre)."
+                                   style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                    </HBox>
+
+                    <Separator style="-fx-opacity: 0.3;" maxWidth="800"/>
+
+                    <!-- Transfer Form -->
+                    <VBox spacing="20" maxWidth="600" alignment="CENTER">
+
+                        <!-- Mes cartes (source) -->
+                        <VBox spacing="5">
+                            <Label text="MES CARTES (SOURCE)" styleClass="card-type-header" style="-fx-text-fill: #182d88;"/>
+                            <ComboBox fx:id="comboMesCartes" promptText="Choisir votre carte source" maxWidth="Infinity" styleClass="modern-input"/>
+                        </VBox>
+
+                        <!-- Recherche de carte destination -->
+                        <VBox spacing="5">
+                            <Label text="RECHERCHER UNE CARTE DESTINATION" styleClass="card-type-header"/>
+                            <HBox spacing="10">
+                                <TextField fx:id="txtSearchCard" promptText="ID, numéro de carte, email ou nom" HBox.hgrow="ALWAYS" styleClass="modern-input"/>
+                                <Button onAction="#handleSearchCard" styleClass="btn-primary" text="Rechercher" prefWidth="100"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Résultats de recherche -->
+                        <VBox fx:id="searchResultsContainer" spacing="5" managed="false" visible="false">
+                            <Label text="CARTES TROUVÉES" styleClass="card-type-header"/>
+                            <ListView fx:id="searchResultsList" prefHeight="120" styleClass="modern-list"/>
+                        </VBox>
+
+                        <!-- Carte destination sélectionnée -->
+                        <VBox fx:id="selectedDestContainer" spacing="5" managed="false" visible="false">
+                            <Label text="CARTE DESTINATION SÉLECTIONNÉE" styleClass="card-type-header" style="-fx-text-fill: #3e893e;"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #f0f8f0; -fx-padding: 10; -fx-background-radius: 8;">
+                                <Label fx:id="lblSelectedCard" style="-fx-font-weight: bold;"/>
+                                <Button onAction="#handleClearSelection" styleClass="btn-link" text="✕" textFill="red"/>
+                            </HBox>
+                        </VBox>
+
+                        <VBox spacing="5">
+                            <Label text="MONTANT" styleClass="card-type-header"/>
+                            <TextField fx:id="txtMontant" promptText="0.00" styleClass="modern-input"/>
+                        </VBox>
+
+                        <!-- Aperçu du transfert -->
+                        <VBox spacing="5" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 12;">
+                            <Label text="APERÇU DU TRANSFERT" styleClass="card-type-header" style="-fx-text-fill: #666;"/>
+                            <Label fx:id="lblSourceInfo" text="Source: -"/>
+                            <Label fx:id="lblDestInfo" text="Destination: -"/>
+                            <Label fx:id="lblMontantInfo" text="Montant: -"/>
+                            <Label fx:id="lblConversionInfo" text="Taux: 1 USD = 3.1 DT | 1 EUR = 3.4 DT"/>
+                        </VBox>
+
+                        <!-- Boutons d'action -->
+                        <HBox spacing="15" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+                            <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel" prefWidth="120" prefHeight="40"/>
+                            <Button text="Transférer" onAction="#handleTransferer" styleClass="btn-details-orange" prefWidth="200" prefHeight="40"/>
+                        </HBox>
+
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</StackPane>

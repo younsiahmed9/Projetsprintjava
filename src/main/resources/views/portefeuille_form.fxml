@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="25" alignment="TOP_CENTER" styleClass="popup-container"
+      stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.PortefeuilleFormController"
+      prefWidth="550" prefHeight="500">
+
+    <padding>
+        <Insets top="40" right="50" bottom="40" left="50"/>
+    </padding>
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label fx:id="titleLabel" text="Nouveau Portefeuille" styleClass="header-title-blue" style="-fx-font-size: 30;"/>
+        <Label text="Remplissez les informations pour créer un nouveau portefeuille."
+               wrapText="true" style="-fx-text-fill: #999; -fx-text-alignment: center; -fx-font-size: 14;"/>
+    </VBox>
+
+    <Separator style="-fx-opacity: 0.5;"/>
+
+    <VBox spacing="18" VBox.vgrow="ALWAYS">
+
+        <VBox spacing="8">
+            <Label text="NOM DU PORTEFEUILLE" styleClass="card-type-header"/>
+            <TextField fx:id="txtNom" promptText="Ex: Épargne" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="SOLDE INITIAL (DT)" styleClass="card-type-header"/>
+            <TextField fx:id="txtSolde" promptText="0.00" styleClass="modern-input"/>
+        </VBox>
+
+        <VBox spacing="8">
+            <Label text="DEVISE PRINCIPALE" styleClass="card-type-header"/>
+            <ComboBox fx:id="comboDevise" promptText="Sélectionnez la devise" maxWidth="Infinity" styleClass="modern-input"/>
+        </VBox>
+
+    </VBox>
+
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel" prefWidth="150" prefHeight="45"/>
+        <Button text="Enregistrer" onAction="#handleEnregistrer" styleClass="btn-details-orange" prefWidth="250" prefHeight="45" style="-fx-font-size: 16;"/>
+    </HBox>
+
+</VBox>

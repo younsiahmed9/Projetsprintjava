@@ -89,7 +89,7 @@ public class PortefeuilleController {
             // select this
             selectedCardNode = card;
             card.setStyle("-fx-border-color: #2563EB; -fx-border-width: 2; -fx-background-color: #F8FAFF;");
-            Session.setSelectedPortefeuilleId(p.getId());
+            Session.setSelectedPortefeuilleId(p.getId());  // This line is important
             messageLabel.setText("Portefeuille sélectionné: " + p.getNom());
         });
 
@@ -210,17 +210,29 @@ public class PortefeuilleController {
 
     private void openCartesView(int portefeuilleId) {
         try {
-            var resource = getClass().getResource("/views/carte_dashboard.fxml");
-            if (resource == null) { messageLabel.setText("carte_dashboard.fxml introuvable"); return; }
+            // Use the correct FXML file name from your project
+            var resource = getClass().getResource("/views/carte_list.fxml");
+            if (resource == null) {
+                messageLabel.setText("carte_list.fxml introuvable");
+                return;
+            }
             Parent root = FXMLLoader.load(resource);
             Stage stage = (Stage) portefeuillesFlow.getScene().getWindow();
             Scene scene = new Scene(root, 1280, 800);
-            scene.getStylesheets().add(getClass().getResource("/styles/colors.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
+
+            // Add CSS if they exist
+            try {
+                scene.getStylesheets().add(getClass().getResource("/styles/colors.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
+            } catch (Exception e) {
+                // CSS files might not exist, ignore
+            }
+
             stage.setScene(scene);
             stage.setTitle("FinTrack - Cartes");
         } catch (IOException e) {
             messageLabel.setText("Erreur navigation: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

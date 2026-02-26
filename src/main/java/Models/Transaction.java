@@ -10,7 +10,6 @@ public class Transaction {
     private TypeTransaction type;
     private StatutTransaction statut;
     private String description;
-
     private Integer carteSourceId;
     private Integer carteDestId;
     private CarteVirtuelle carteSource;
@@ -33,7 +32,7 @@ public class Transaction {
         this.statut = StatutTransaction.SUCCESS;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

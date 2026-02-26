@@ -7,17 +7,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * Contrôleur pour l'écran de connexion.
- * Gère l'authentification et la redirection selon le rôle (admin/user).
- */
 public class LoginController {
 
     @FXML private TextField emailField;
@@ -31,13 +25,10 @@ public class LoginController {
         messageLabel.setText("");
     }
 
-    /**
-     * Gère le clic sur le bouton "Se connecter".
-     */
     @FXML
     private void handleLogin() {
-        String email = emailField.getText() != null ? emailField.getText().trim() : "";
-        String password = passwordField.getText() != null ? passwordField.getText() : "";
+        String email = emailField.getText().trim();
+        String password = passwordField.getText().trim();
 
         if (email.isEmpty()) {
             showError("Veuillez entrer votre email.");
@@ -49,17 +40,10 @@ public class LoginController {
         }
 
         try {
-            // Try normal login (email + password)
             Utilisateur utilisateur = utilisateurService.login(email, password);
 
             if (utilisateur == null) {
-                // Try email-only to see if the account exists -> differentiate messages
-                Utilisateur byEmail = utilisateurService.login(email);
-                if (byEmail != null) {
-                    showError("Mot de passe incorrect.");
-                } else {
-                    showError("Email non trouvé.");
-                }
+                showError("Email ou mot de passe incorrect.");
                 return;
             }
 
@@ -67,7 +51,6 @@ public class LoginController {
             System.out.println("[Login] Utilisateur connecté: " + utilisateur);
             showSuccess("Connexion réussie! Bienvenue " + utilisateur.getPrenom());
 
-            // Redirection selon le rôle
             if (utilisateur.isAdmin()) {
                 ouvrirAdminDashboard();
             } else {
@@ -82,16 +65,11 @@ public class LoginController {
 
     private void ouvrirAdminDashboard() {
         try {
-            var resource = getClass().getResource("/views/admin_dashboard.fxml");
-            if (resource == null) {
-                showError("Fichier admin_dashboard.fxml non trouvé");
-                return;
-            }
-            Parent root = FXMLLoader.load(resource);
+            Parent root = FXMLLoader.load(getClass().getResource("/views/admin_dashboard.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
             Scene scene = new Scene(root, 1400, 900);
-            scene.getStylesheets().add(getClass().getResource("/styles/colors.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
+            var css = getClass().getResource("/css/styles.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
             stage.setScene(scene);
             stage.setTitle("FinTrack - Administration");
             stage.centerOnScreen();
@@ -103,28 +81,11 @@ public class LoginController {
 
     private void ouvrirUserDashboard() {
         try {
-            // Prefer user_dashboard.fxml if exists (some views name variant)
-            String[] candidates = {"/views/user_dashboard.fxml", "/views/portefeuille_dashboard.fxml"};
-            java.net.URL resource = null;
-            for (String path : candidates) {
-                resource = getClass().getResource(path);
-                if (resource != null) {
-                    System.out.println("[Login] Using user view: " + path);
-                    break;
-                }
-            }
-            if (resource == null) {
-                showError("Aucune vue utilisateur trouvée (user_dashboard.fxml ou portefeuille_dashboard.fxml manquante)");
-                return;
-            }
-
-            Parent root = FXMLLoader.load(resource);
+            Parent root = FXMLLoader.load(getClass().getResource("/views/client_dashboard.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
             Scene scene = new Scene(root, 1280, 800);
-            var css1 = getClass().getResource("/styles/colors.css");
-            var css2 = getClass().getResource("/styles/dashboard.css");
-            if (css1 != null) scene.getStylesheets().add(css1.toExternalForm());
-            if (css2 != null) scene.getStylesheets().add(css2.toExternalForm());
+            var css = getClass().getResource("/css/styles.css");
+            if (css != null) scene.getStylesheets().add(css.toExternalForm());
             stage.setScene(scene);
             stage.setTitle("FinTrack - Mes Portefeuilles");
             stage.centerOnScreen();

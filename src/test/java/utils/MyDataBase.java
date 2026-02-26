@@ -8,7 +8,7 @@ public class MyDataBase {
     private static MyDataBase instance;
     private Connection connection;
 
-    private final String URL = "jdbc:mysql://localhost:3306/fintrackdb";
+    private final String URL = "jdbc:mysql://localhost:3306/workshopdb";
     private final String USER = "root";
     private final String PASSWORD = ""; // XAMPP default is empty
 

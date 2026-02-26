@@ -15,11 +15,22 @@ public class Utilisateur {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    // Full address fields (matching your database)
+    private String addressLine1;
+    private String addressLine2;
+    private String city;
+    private String postalCode;
+    private String country;
+    private boolean addressVerified;
+    private int addressConfidenceScore;
+
     private List<Portefeuille> portefeuilles = new ArrayList<>();
 
     // Constructeurs
     public Utilisateur() {
-        this.role = "user"; // Par défaut
+        this.role = "user";
+        this.addressVerified = false;
+        this.addressConfidenceScore = 0;
     }
 
     public Utilisateur(String email, String nom, String prenom, String password, String role, double solde) {
@@ -29,14 +40,15 @@ public class Utilisateur {
         this.password = password;
         this.role = role != null ? role : "user";
         this.solde = solde;
+        this.addressVerified = false;
+        this.addressConfidenceScore = 0;
     }
 
-    // Backward-compatible constructor
+    // Backward-compatible constructors
     public Utilisateur(String email, String nom, String prenom, String password, double solde) {
         this(email, nom, prenom, password, "user", solde);
     }
 
-    // Backward-compatible constructor
     public Utilisateur(String email, String nom, String prenom, double solde) {
         this(email, nom, prenom, null, "user", solde);
     }
@@ -46,7 +58,7 @@ public class Utilisateur {
         return "admin".equalsIgnoreCase(this.role);
     }
 
-    // Getters et Setters
+    // Getters et Setters pour tous les champs
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -74,8 +86,41 @@ public class Utilisateur {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
+    // Address fields getters/setters
+    public String getAddressLine1() { return addressLine1; }
+    public void setAddressLine1(String addressLine1) { this.addressLine1 = addressLine1; }
+
+    public String getAddressLine2() { return addressLine2; }
+    public void setAddressLine2(String addressLine2) { this.addressLine2 = addressLine2; }
+
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+
+    public String getPostalCode() { return postalCode; }
+    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country; }
+
+    public boolean isAddressVerified() { return addressVerified; }
+    public void setAddressVerified(boolean addressVerified) { this.addressVerified = addressVerified; }
+
+    public int getAddressConfidenceScore() { return addressConfidenceScore; }
+    public void setAddressConfidenceScore(int addressConfidenceScore) { this.addressConfidenceScore = addressConfidenceScore; }
+
     public List<Portefeuille> getPortefeuilles() { return portefeuilles; }
     public void setPortefeuilles(List<Portefeuille> portefeuilles) { this.portefeuilles = portefeuilles; }
+
+    // Helper method to get full address
+    public String getFullAddress() {
+        StringBuilder sb = new StringBuilder();
+        if (addressLine1 != null) sb.append(addressLine1);
+        if (addressLine2 != null) sb.append(", ").append(addressLine2);
+        if (city != null) sb.append(", ").append(city);
+        if (postalCode != null) sb.append(" ").append(postalCode);
+        if (country != null) sb.append(", ").append(country);
+        return sb.toString();
+    }
 
     @Override
     public String toString() {
@@ -86,6 +131,8 @@ public class Utilisateur {
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
                 ", solde=" + solde +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
                 '}';
     }
 }
