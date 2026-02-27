@@ -174,6 +174,26 @@ public class AdminDashboardController {
     }
 
     @FXML
+    public void onOpenChat(ActionEvent e) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/fxml/chat_window.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Chat FInTrack");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setOnCloseRequest(event -> {
+                ChatController controller = loader.getController();
+                if (controller != null)
+                    controller.stopPolling();
+            });
+            stage.show();
+        } catch (java.io.IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
     public void onToggleTheme(ActionEvent e) {
         // Bouton de changement de thème neutralisé - ne fait rien
     }

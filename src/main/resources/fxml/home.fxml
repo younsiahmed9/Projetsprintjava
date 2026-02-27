@@ -17,6 +17,7 @@
             </ImageView>
             <Label fx:id="welcomeLabel" styleClass="title" text="Bienvenue" />
             <Pane HBox.hgrow="ALWAYS" />
+            <Button onAction="#onOpenChat" styleClass="btn-secondary" text="💬 Chat" />
             <Button onAction="#onToggleTheme" styleClass="btn-secondary" text="🎨 Thème" />
             <Button onAction="#onLogout" styleClass="btn-primary" text="🚪 Déconnexion" />
         </HBox>
