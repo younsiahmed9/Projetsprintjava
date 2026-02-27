@@ -6,16 +6,21 @@
     -fx-background-color: #d2e7fe;
 
     /* Palette (comme la photo) */
-    -fx-blue-900: #182d88; /* bleu logo */
-    -fx-blue-100: #d2e7fe; /* bleu très clair */
-    -fx-green-700: #3e893e; /* vert foncé */
-    -fx-green-400: #8dbc71; /* vert clair */
+    -fx-blue-900: #182d88;
+    /* bleu logo */
+    -fx-blue-100: #d2e7fe;
+    /* bleu très clair */
+    -fx-green-700: #3e893e;
+    /* vert foncé */
+    -fx-green-400: #8dbc71;
+    /* vert clair */
     -fx-yellow-400: #fecf47;
     -fx-orange-500: #f78f34;
 
     /* Accents utilisés par l'UI */
     -fx-accent-blue: -fx-blue-900;
-    -fx-accent-blue-hover: #13246f; /* légèrement plus foncé */
+    -fx-accent-blue-hover: #13246f;
+    /* légèrement plus foncé */
     -fx-accent-green: -fx-green-700;
     -fx-accent-green-hover: #2f6f2f;
 
@@ -30,14 +35,14 @@
 .card {
     -fx-background-color: white;
     /* Responsive padding et radius */
-    -fx-padding: 2vw;
-    -fx-background-radius: 1vw;
-    -fx-border-radius: 1vw;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0.15, 0, 4);
+    -fx-padding: 1.5em;
+    -fx-background-radius: 1em;
+    -fx-border-radius: 1em;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 20, 0.15, 0, 4);
 }
 
 .card:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 24, 0.18, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 24, 0.18, 0, 6);
 }
 
 /* Style spécifique pour les formulaires modaux (overlay) */
@@ -49,7 +54,7 @@
     -fx-min-width: 400;
     -fx-pref-width: 400;
     /* Ombre portée douce */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0.1, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0.1, 0, 4);
     /* Petite bordure subtile */
     -fx-border-color: rgba(24, 45, 136, 0.1);
     -fx-border-width: 1;
@@ -78,7 +83,9 @@
     -fx-font-size: 0.95em;
 }
 
-.text-field, .password-field, .combo-box {
+.text-field,
+.password-field,
+.combo-box {
     -fx-background-radius: 10;
     -fx-border-radius: 10;
     -fx-border-color: -fx-border-soft;
@@ -86,7 +93,9 @@
     -fx-padding: 10 12 10 12;
 }
 
-.text-field:focused, .password-field:focused, .combo-box:focused {
+.text-field:focused,
+.password-field:focused,
+.combo-box:focused {
     -fx-border-color: -fx-accent-blue;
     -fx-background-color: white;
 }
@@ -97,7 +106,7 @@
     -fx-text-fill: white;
     -fx-background-radius: 10;
     -fx-font-size: 1em;
-    -fx-padding: 1vw 2vw;
+    -fx-padding: 0.8em 1.5em;
     -fx-font-weight: 700;
 }
 
@@ -113,7 +122,7 @@
     -fx-background-radius: 10;
     -fx-text-fill: -fx-accent-green;
     -fx-font-size: 1em;
-    -fx-padding: 1vw 2vw;
+    -fx-padding: 0.8em 1.5em;
     -fx-font-weight: 700;
 }
 
@@ -274,7 +283,7 @@
 
 .sidebar {
     -fx-background-color: #ffffff;
-    -fx-padding: 2vw;
+    -fx-padding: 1.5em;
     -fx-font-size: 1em;
     -fx-border-color: #eef2f7;
     -fx-border-width: 0 1 0 0;
@@ -398,7 +407,8 @@
     -fx-background-radius: 12 12 0 0;
 }
 
-.table-view .column-header, .table-view .filler {
+.table-view .column-header,
+.table-view .filler {
     -fx-background-color: transparent;
 }
 
@@ -575,16 +585,38 @@
 }
 
 /* BarChart: couleurs des barres via les variables du thème */
-.default-color0.chart-bar { -fx-bar-fill: -fx-accent-blue; }
-.default-color1.chart-bar { -fx-bar-fill: -fx-accent-green; }
-.default-color2.chart-bar { -fx-bar-fill: -fx-orange-500; }
-.default-color3.chart-bar { -fx-bar-fill: -fx-yellow-400; }
+.default-color0.chart-bar {
+    -fx-bar-fill: -fx-accent-blue;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: -fx-accent-green;
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: -fx-orange-500;
+}
+
+.default-color3.chart-bar {
+    -fx-bar-fill: -fx-yellow-400;
+}
 
 /* PieChart: couleurs des parts */
-.default-color0.chart-pie { -fx-pie-color: -fx-accent-blue; }
-.default-color1.chart-pie { -fx-pie-color: -fx-accent-green; }
-.default-color2.chart-pie { -fx-pie-color: -fx-orange-500; }
-.default-color3.chart-pie { -fx-pie-color: -fx-yellow-400; }
+.default-color0.chart-pie {
+    -fx-pie-color: -fx-accent-blue;
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: -fx-accent-green;
+}
+
+.default-color2.chart-pie {
+    -fx-pie-color: -fx-orange-500;
+}
+
+.default-color3.chart-pie {
+    -fx-pie-color: -fx-yellow-400;
+}
 
 .chart-pie-label {
     -fx-fill: -fx-title-text;
@@ -609,7 +641,7 @@
     -fx-border-color: #eef2f7;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 16 24;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 4, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 4, 0, 0, 2);
 }
 
 /* =====================
@@ -695,11 +727,11 @@
     -fx-background-radius: 16;
     -fx-border-radius: 16;
     -fx-padding: 28;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 20, 0.15, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 20, 0.15, 0, 4);
 }
 
 .animated-card:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 24, 0.18, 0, 6);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 24, 0.18, 0, 6);
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
 }
@@ -723,7 +755,7 @@
     -fx-background-radius: 20;
     -fx-border-radius: 20;
     -fx-padding: 32;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 30, 0.2, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 30, 0.2, 0, 8);
     -fx-border-color: rgba(255, 255, 255, 0.8);
     -fx-border-width: 1;
 }
@@ -781,7 +813,7 @@
     -fx-border-color: #e5e7eb;
     -fx-border-radius: 12;
     -fx-border-width: 1;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 16, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 16, 0, 0, 4);
 }
 
 /* Tooltips améliorés */
@@ -791,7 +823,7 @@
     -fx-background-radius: 8;
     -fx-padding: 8 12;
     -fx-font-size: 12px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
 }
 
 /* -------- Responsive helpers (Admin dashboard / Home) -------- */
@@ -800,12 +832,13 @@
     -fx-background-color: transparent;
 }
 
-.scroll-pane > .viewport {
+.scroll-pane>.viewport {
     -fx-background-color: transparent;
 }
 
 /* Permet aux containers de s'étirer correctement */
-.hbox, .vbox {
+.hbox,
+.vbox {
     -fx-fill-height: true;
 }
 
@@ -934,14 +967,14 @@
 .avatar {
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-fit-width: 6vw;
-    -fx-fit-height: 6vw;
+    -fx-fit-width: 60px;
+    -fx-fit-height: 60px;
 }
 
 .avatar-large {
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
 }
 
 .btn-danger {
@@ -982,7 +1015,7 @@
     -fx-background-color: transparent;
 }
 
-.dialog-pane > .content {
+.dialog-pane>.content {
     -fx-background-color: transparent;
 }
 
@@ -1057,9 +1090,20 @@
 
 /* Animation pour le scan d'empreinte */
 @keyframes pulse {
-    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
-    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
-    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    0% {
+        -fx-scale-x: 1;
+        -fx-scale-y: 1;
+    }
+
+    50% {
+        -fx-scale-x: 1.05;
+        -fx-scale-y: 1.05;
+    }
+
+    100% {
+        -fx-scale-x: 1;
+        -fx-scale-y: 1;
+    }
 }
 
 .scanning {
@@ -1071,11 +1115,12 @@
     .root {
         -fx-font-size: 1em;
     }
+
     .sidebar {
         -fx-font-size: 0.95em;
     }
+
     .title {
         -fx-font-size: 1.1em;
     }
 }
-

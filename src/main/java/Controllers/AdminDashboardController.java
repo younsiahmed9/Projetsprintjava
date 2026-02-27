@@ -35,55 +35,98 @@ import java.util.prefs.Preferences;
 
 public class AdminDashboardController {
 
-    @FXML private Label welcomeLabel;
-    @FXML private ImageView headerAvatarView;
-    @FXML private VBox adminMenuSection;
-    @FXML private VBox adminDashboardBox;
-    @FXML private Label adminCountLabel;
-    @FXML private Label clientCountLabel;
-    @FXML private Label adminStatusLabel;
-    @FXML private TableView<User> usersTable;
-    @FXML private TableColumn<User, Long> idCol;
-    @FXML private TableColumn<User, String> fullNameCol;
-    @FXML private TableColumn<User, String> emailCol;
-    @FXML private TableColumn<User, Role> roleCol;
-    @FXML private TableColumn<User, Boolean> activeCol;
-    @FXML private BarChart<String, Number> usersCreatedChart;
-    @FXML private PieChart rolesPieChart;
+    @FXML
+    private Label welcomeLabel;
+    @FXML
+    private ImageView headerAvatarView;
+    @FXML
+    private VBox adminMenuSection;
+    @FXML
+    private VBox adminDashboardBox;
+    @FXML
+    private Label adminCountLabel;
+    @FXML
+    private Label clientCountLabel;
+    @FXML
+    private Label adminStatusLabel;
+    @FXML
+    private TableView<User> usersTable;
+    @FXML
+    private TableColumn<User, Long> idCol;
+    @FXML
+    private TableColumn<User, String> fullNameCol;
+    @FXML
+    private TableColumn<User, String> emailCol;
+    @FXML
+    private TableColumn<User, Role> roleCol;
+    @FXML
+    private TableColumn<User, Boolean> activeCol;
+    @FXML
+    private BarChart<String, Number> usersCreatedChart;
+    @FXML
+    private PieChart rolesPieChart;
 
     // Edit Profile Overlay
-    @FXML private StackPane editProfileBackdrop;
-    @FXML private ScrollPane editProfileScroll;
-    @FXML private VBox editProfileCard;
-    @FXML private ImageView profileAvatarView;
-    @FXML private Label profilePhotoHintLabel;
-    @FXML private javafx.scene.control.Button profileFingerprintBtn;
-    @FXML private Label profileFingerprintStatusLabel;
-    @FXML private TextField profileFullNameField;
-    @FXML private TextField profileEmailField;
-    @FXML private PasswordField profileNewPasswordField;
-    @FXML private PasswordField profileConfirmPasswordField;
-    @FXML private Label profileStatusLabel;
+    @FXML
+    private StackPane editProfileBackdrop;
+    @FXML
+    private ScrollPane editProfileScroll;
+    @FXML
+    private VBox editProfileCard;
+    @FXML
+    private ImageView profileAvatarView;
+    @FXML
+    private Label profilePhotoHintLabel;
+    @FXML
+    private javafx.scene.control.Button profileFingerprintBtn;
+    @FXML
+    private Label profileFingerprintStatusLabel;
+    @FXML
+    private TextField profileFullNameField;
+    @FXML
+    private TextField profileEmailField;
+    @FXML
+    private PasswordField profileNewPasswordField;
+    @FXML
+    private PasswordField profileConfirmPasswordField;
+    @FXML
+    private Label profileStatusLabel;
 
     // Admin Edit User Overlay
-    @FXML private StackPane adminEditUserBackdrop;
-    @FXML private VBox adminEditUserCard;
-    @FXML private Label adminEditUserIdLabel;
-    @FXML private TextField adminEditUserFullNameField;
-    @FXML private TextField adminEditUserEmailField;
-    @FXML private ComboBox<Role> adminEditUserRoleBox;
-    @FXML private CheckBox adminEditUserActiveCheck;
-    @FXML private Label adminEditUserStatusLabel;
+    @FXML
+    private StackPane adminEditUserBackdrop;
+    @FXML
+    private VBox adminEditUserCard;
+    @FXML
+    private Label adminEditUserIdLabel;
+    @FXML
+    private TextField adminEditUserFullNameField;
+    @FXML
+    private TextField adminEditUserEmailField;
+    @FXML
+    private ComboBox<Role> adminEditUserRoleBox;
+    @FXML
+    private CheckBox adminEditUserActiveCheck;
+    @FXML
+    private Label adminEditUserStatusLabel;
 
     // Admin Add User Overlay
-    @FXML private StackPane adminAddUserBackdrop;
-    @FXML private VBox adminAddUserCard;
-    @FXML private TextField adminAddUserFullNameField;
-    @FXML private TextField adminAddUserEmailField;
-    @FXML private PasswordField adminAddUserPasswordField;
-    @FXML private ComboBox<Role> adminAddUserRoleBox;
-    @FXML private CheckBox adminAddUserActiveCheck;
-    @FXML private Label adminAddUserStatusLabel;
+    @FXML
+    private StackPane adminAddUserBackdrop;
+    @FXML
+    private VBox adminAddUserCard;
+    @FXML
+    private TextField adminAddUserFullNameField;
+    @FXML
+    private TextField adminAddUserEmailField;
+    @FXML
+    private PasswordField adminAddUserPasswordField;
+    @FXML
+    private ComboBox<Role> adminAddUserRoleBox;
+    @FXML
+    private CheckBox adminAddUserActiveCheck;
+    @FXML
+    private Label adminAddUserStatusLabel;
 
     private User adminSelectedUser;
     private String profilePhotoPath;
@@ -95,16 +138,13 @@ public class AdminDashboardController {
 
     @FXML
     public void initialize() {
-        refreshHeader();
-        Platform.runLater(this::applySavedTheme);
 
+        refreshHeader();
         showEditProfileOverlay(false);
         loadProfileFormFromState();
         loadProfilePhotoFromState();
-
         setupAdminTable();
         updateAdminVisibilityAndLoad();
-
         if (adminEditUserRoleBox != null) {
             adminEditUserRoleBox.getItems().setAll(Role.ADMIN, Role.CLIENT);
         }
@@ -120,7 +160,9 @@ public class AdminDashboardController {
     private void refreshHeader() {
         User u = AppState.getCurrentUser();
         if (u != null) {
-            welcomeLabel.setText("Bienvenue " + u.getFullName() + " (" + u.getRole() + ")");
+            if (welcomeLabel != null) {
+                welcomeLabel.setText("Bienvenue " + u.getFullName() + " (" + u.getRole() + ")");
+            }
             loadProfilePhotoFromState();
         }
     }
@@ -133,29 +175,7 @@ public class AdminDashboardController {
 
     @FXML
     public void onToggleTheme(ActionEvent e) {
-        Parent root = welcomeLabel.getScene().getRoot();
-        if (root == null) return;
-        String current = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
-        String next = THEME_ORANGE.equals(current) ? THEME_LOGO : THEME_ORANGE;
-        prefs.put(PREF_THEME_KEY, next);
-        applyThemeToRoot(root, next);
-    }
-
-    private void applySavedTheme() {
-        Parent root = welcomeLabel.getScene().getRoot();
-        if (root == null) return;
-        String theme = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
-        applyThemeToRoot(root, theme);
-    }
-
-    private void applyThemeToRoot(Parent root, String themeResourcePath) {
-        URL res = getClass().getResource(themeResourcePath);
-        if (res == null) return;
-        String uri = res.toExternalForm();
-        root.getStylesheets().removeIf(s -> s.endsWith("theme-orange.css") || s.endsWith("theme-logo.css"));
-        if (!root.getStylesheets().contains(uri)) {
-            root.getStylesheets().add(uri);
-        }
+        // Bouton de changement de thème neutralisé - ne fait rien
     }
 
     // --- Profile Methods ---
@@ -166,25 +186,33 @@ public class AdminDashboardController {
     }
 
     @FXML
-    public void onCloseEditProfile(ActionEvent e) { showEditProfileOverlay(false); }
+    public void onCloseEditProfile(ActionEvent e) {
+        showEditProfileOverlay(false);
+    }
 
     @FXML
-    public void onCloseEditProfileBackdrop(MouseEvent e) { showEditProfileOverlay(false); }
+    public void onCloseEditProfileBackdrop(MouseEvent e) {
+        showEditProfileOverlay(false);
+    }
 
     @FXML
-    public void onEditProfileCardClick(MouseEvent e) { e.consume(); }
+    public void onEditProfileCardClick(MouseEvent e) {
+        e.consume();
+    }
 
     private void showEditProfileOverlay(boolean show) {
         if (editProfileBackdrop != null) {
             editProfileBackdrop.setVisible(show);
             editProfileBackdrop.setManaged(show);
-            if (show) editProfileBackdrop.toFront();
+            if (show)
+                editProfileBackdrop.toFront();
         }
     }
 
     private void loadProfileFormFromState() {
         User u = AppState.getCurrentUser();
-        if (u == null) return;
+        if (u == null)
+            return;
         profileFullNameField.setText(u.getFullName());
         profileEmailField.setText(u.getEmail());
         profileNewPasswordField.clear();
@@ -194,7 +222,8 @@ public class AdminDashboardController {
 
     private void loadProfilePhotoFromState() {
         User u = AppState.getCurrentUser();
-        if (u == null) return;
+        if (u == null)
+            return;
         profilePhotoPath = u.getProfilePhoto();
         if (profilePhotoPath == null || profilePhotoPath.isBlank()) {
             setAvatarDefault(profileAvatarView);
@@ -206,13 +235,16 @@ public class AdminDashboardController {
     }
 
     private void setAvatarDefault(ImageView avatarView) {
-        if (avatarView == null) return;
+        if (avatarView == null)
+            return;
         URL res = getClass().getResource("/assets/logo.png");
-        if (res != null) avatarView.setImage(new Image(res.toExternalForm(), true));
+        if (res != null)
+            avatarView.setImage(new Image(res.toExternalForm(), true));
     }
 
     private void setAvatarImage(ImageView avatarView, String pathOrUri) {
-        if (avatarView == null) return;
+        if (avatarView == null)
+            return;
         try {
             String uri = pathOrUri.startsWith("file:") ? pathOrUri : new File(pathOrUri).toURI().toString();
             avatarView.setImage(new Image(uri, true));
@@ -224,12 +256,14 @@ public class AdminDashboardController {
     @FXML
     public void onChangeProfilePhoto(ActionEvent e) {
         User u = AppState.getCurrentUser();
-        if (u == null) return;
+        if (u == null)
+            return;
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choisir une photo de profil");
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
         File selected = chooser.showOpenDialog(profileAvatarView.getScene().getWindow());
-        if (selected == null) return;
+        if (selected == null)
+            return;
 
         try {
             Path destDir = Path.of(System.getProperty("user.home"), ".fintrack", "profile-photos");
@@ -251,7 +285,8 @@ public class AdminDashboardController {
     @FXML
     public void onSaveProfile(ActionEvent e) {
         User current = AppState.getCurrentUser();
-        if (current == null) return;
+        if (current == null)
+            return;
 
         String fullName = safeTrim(profileFullNameField.getText());
         String email = safeTrim(profileEmailField.getText());
@@ -293,7 +328,8 @@ public class AdminDashboardController {
 
     // --- Admin User Management Methods ---
     private void setupAdminTable() {
-        if (usersTable == null) return;
+        if (usersTable == null)
+            return;
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -318,11 +354,14 @@ public class AdminDashboardController {
             adminDashboardBox.setManaged(isAdmin);
             adminDashboardBox.setVisible(isAdmin);
         }
-        if (isAdmin) reloadAdminDashboard();
+        if (isAdmin)
+            reloadAdminDashboard();
     }
 
     @FXML
-    public void onAdminRefresh(ActionEvent e) { reloadAdminDashboard(); }
+    public void onAdminRefresh(ActionEvent e) {
+        reloadAdminDashboard();
+    }
 
     private void reloadAdminDashboard() {
         try (Connection cn = Db.getConnection()) {
@@ -340,19 +379,21 @@ public class AdminDashboardController {
     }
 
     private void loadRolesPieChart(long admins, long clients) {
-        if (rolesPieChart == null) return;
+        if (rolesPieChart == null)
+            return;
         rolesPieChart.setData(FXCollections.observableArrayList(
                 new PieChart.Data("Admins", admins),
-                new PieChart.Data("Clients", clients)
-        ));
+                new PieChart.Data("Clients", clients)));
     }
 
     private void loadUsersCreatedChart(JdbcUserDao dao) throws SQLException {
-        if (usersCreatedChart == null) return;
+        if (usersCreatedChart == null)
+            return;
         var points = dao.countCreatedUsersLastDays(7);
         java.time.LocalDate start = java.time.LocalDate.now().minusDays(6);
         java.util.Map<java.time.LocalDate, Long> map = new java.util.HashMap<>();
-        for (var p : points) map.put(p.date(), p.count());
+        for (var p : points)
+            map.put(p.date(), p.count());
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         for (int i = 0; i < 7; i++) {
             java.time.LocalDate d = start.plusDays(i);
@@ -362,10 +403,14 @@ public class AdminDashboardController {
     }
 
     @FXML
-    public void onAdminAddUser(ActionEvent e) { showAdminAddUserOverlay(true); }
+    public void onAdminAddUser(ActionEvent e) {
+        showAdminAddUserOverlay(true);
+    }
 
     @FXML
-    public void onCloseAdminAddUser(ActionEvent e) { showAdminAddUserOverlay(false); }
+    public void onCloseAdminAddUser(ActionEvent e) {
+        showAdminAddUserOverlay(false);
+    }
 
     @FXML
     public void onAdminAddUserBackdropClick(MouseEvent e) {
@@ -396,7 +441,8 @@ public class AdminDashboardController {
         String fullName = safeTrim(adminAddUserFullNameField.getText());
         String email = safeTrim(adminAddUserEmailField.getText());
         String password = adminAddUserPasswordField.getText();
-        if (fullName.isBlank() || email.isBlank() || !email.contains("@") || password == null || password.length() < 6) {
+        if (fullName.isBlank() || email.isBlank() || !email.contains("@") || password == null
+                || password.length() < 6) {
             adminAddUserStatusLabel.setText("Veuillez remplir tous les champs correctement.");
             return;
         }
@@ -420,7 +466,9 @@ public class AdminDashboardController {
         }
     }
 
-    private void onAdminRowDoubleClick(User user) { showAdminEditUserOverlay(true, user); }
+    private void onAdminRowDoubleClick(User user) {
+        showAdminEditUserOverlay(true, user);
+    }
 
     private void showAdminEditUserOverlay(boolean show, User user) {
         adminSelectedUser = user;
@@ -441,14 +489,19 @@ public class AdminDashboardController {
     }
 
     @FXML
-    public void onCloseAdminEditUser(ActionEvent e) { showAdminEditUserOverlay(false, null); }
+    public void onCloseAdminEditUser(ActionEvent e) {
+        showAdminEditUserOverlay(false, null);
+    }
 
     @FXML
-    public void onAdminEditUserBackdropClick(MouseEvent e) { showAdminEditUserOverlay(false, null); }
+    public void onAdminEditUserBackdropClick(MouseEvent e) {
+        showAdminEditUserOverlay(false, null);
+    }
 
     @FXML
     public void onAdminSaveUser(ActionEvent e) {
-        if (adminSelectedUser == null) return;
+        if (adminSelectedUser == null)
+            return;
         String fullName = safeTrim(adminEditUserFullNameField.getText());
         String email = safeTrim(adminEditUserEmailField.getText());
         if (fullName.isBlank() || email.isBlank() || !email.contains("@")) {
@@ -481,7 +534,8 @@ public class AdminDashboardController {
             adminEditUserStatusLabel.setText("Suppression impossible.");
             return;
         }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer " + adminSelectedUser.getEmail() + " ?", ButtonType.OK, ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Supprimer " + adminSelectedUser.getEmail() + " ?",
+                ButtonType.OK, ButtonType.CANCEL);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 try (Connection cn = Db.getConnection()) {
@@ -496,7 +550,9 @@ public class AdminDashboardController {
     }
 
     @FXML
-    public void consumeEvent(MouseEvent e) { e.consume(); }
+    public void consumeEvent(MouseEvent e) {
+        e.consume();
+    }
 
     @FXML
     public void onProfileCaptureFingerprint(ActionEvent e) {
@@ -504,7 +560,8 @@ public class AdminDashboardController {
 
         // Vérifier si le lecteur est disponible
         if (!bioService.isAvailable()) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.ERROR);
             alert.setTitle("Lecteur d'empreintes non disponible");
             alert.setHeaderText("Impossible de capturer l'empreinte");
             alert.setContentText("Le lecteur d'empreintes n'est pas disponible.\n\n" +
@@ -522,7 +579,8 @@ public class AdminDashboardController {
         }
 
         // Afficher la popup de préparation
-        javafx.scene.control.Alert scanAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        javafx.scene.control.Alert scanAlert = new javafx.scene.control.Alert(
+                javafx.scene.control.Alert.AlertType.INFORMATION);
         scanAlert.setTitle("Scan de l'empreinte digitale");
         scanAlert.setHeaderText("📱 Préparation du scan");
         scanAlert.setContentText("Dans quelques secondes, vous devrez poser votre doigt\n" +
@@ -549,7 +607,8 @@ public class AdminDashboardController {
                         javafx.application.Platform.runLater(() -> {
                             if (profileFingerprintStatusLabel != null) {
                                 profileFingerprintStatusLabel.setText("⏳ Posez votre doigt maintenant... " + count);
-                                profileFingerprintStatusLabel.setStyle("-fx-text-fill: #FF6B35; -fx-font-weight: bold;");
+                                profileFingerprintStatusLabel
+                                        .setStyle("-fx-text-fill: #FF6B35; -fx-font-weight: bold;");
                             }
                         });
                         Thread.sleep(1000);
@@ -559,7 +618,8 @@ public class AdminDashboardController {
                     javafx.application.Platform.runLater(() -> {
                         if (profileFingerprintStatusLabel != null) {
                             profileFingerprintStatusLabel.setText("🔍 SCAN EN COURS... Maintenez votre doigt !");
-                            profileFingerprintStatusLabel.setStyle("-fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-font-size: 13px;");
+                            profileFingerprintStatusLabel
+                                    .setStyle("-fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-font-size: 13px;");
                         }
                     });
 
@@ -575,22 +635,26 @@ public class AdminDashboardController {
                             JdbcUserDao userDao = new JdbcUserDao(conn);
 
                             // ✅ VÉRIFICATION : L'empreinte est-elle déjà utilisée ?
-                            Optional<User> existingUser = userDao.findByFingerprintHash(fingerprint, currentUser.getId());
+                            Optional<User> existingUser = userDao.findByFingerprintHash(fingerprint,
+                                    currentUser.getId());
                             if (existingUser.isPresent()) {
                                 // L'empreinte est déjà associée à un autre compte !
                                 User other = existingUser.get();
                                 javafx.application.Platform.runLater(() -> {
-                                    javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                                    javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(
+                                            javafx.scene.control.Alert.AlertType.WARNING);
                                     errorAlert.setTitle("Empreinte déjà utilisée");
                                     errorAlert.setHeaderText("⚠️ Cette empreinte est déjà associée à un autre compte");
-                                    errorAlert.setContentText("Cette empreinte digitale est déjà enregistrée pour :\n\n" +
-                                            "• Email : " + other.getEmail() + "\n" +
-                                            "• Nom : " + other.getFullName() + "\n\n" +
-                                            "Veuillez utiliser un AUTRE DOIGT pour votre empreinte.");
+                                    errorAlert
+                                            .setContentText("Cette empreinte digitale est déjà enregistrée pour :\n\n" +
+                                                    "• Email : " + other.getEmail() + "\n" +
+                                                    "• Nom : " + other.getFullName() + "\n\n" +
+                                                    "Veuillez utiliser un AUTRE DOIGT pour votre empreinte.");
                                     errorAlert.showAndWait();
 
                                     if (profileFingerprintStatusLabel != null) {
-                                        profileFingerprintStatusLabel.setText("❌ Empreinte déjà associée. Changez de doigt.");
+                                        profileFingerprintStatusLabel
+                                                .setText("❌ Empreinte déjà associée. Changez de doigt.");
                                         profileFingerprintStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
                                     }
                                 });
@@ -606,7 +670,8 @@ public class AdminDashboardController {
 
                             // Succès !
                             javafx.application.Platform.runLater(() -> {
-                                javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                                javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(
+                                        javafx.scene.control.Alert.AlertType.INFORMATION);
                                 successAlert.setTitle("Succès !");
                                 successAlert.setHeaderText("✅ Empreinte enregistrée avec succès");
                                 successAlert.setContentText("Votre empreinte digitale a été enregistrée.\n\n" +
@@ -615,7 +680,8 @@ public class AdminDashboardController {
 
                                 if (profileFingerprintStatusLabel != null) {
                                     profileFingerprintStatusLabel.setText("✓ Empreinte enregistrée avec succès");
-                                    profileFingerprintStatusLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+                                    profileFingerprintStatusLabel
+                                            .setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
                                 }
                                 if (profileFingerprintBtn != null) {
                                     profileFingerprintBtn.setText("🔄 Réenregistrer empreinte");
@@ -623,7 +689,8 @@ public class AdminDashboardController {
                             });
                         } catch (SQLException ex) {
                             javafx.application.Platform.runLater(() -> {
-                                javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                                javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(
+                                        javafx.scene.control.Alert.AlertType.ERROR);
                                 errorAlert.setTitle("Erreur de sauvegarde");
                                 errorAlert.setHeaderText("❌ Impossible de sauvegarder l'empreinte");
                                 errorAlert.setContentText("Erreur de base de données : " + ex.getMessage());
@@ -640,7 +707,8 @@ public class AdminDashboardController {
                 } catch (Services.BiometricAuthService.BiometricException ex) {
                     // Erreur biométrique
                     javafx.application.Platform.runLater(() -> {
-                        javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                        javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(
+                                javafx.scene.control.Alert.AlertType.ERROR);
                         errorAlert.setTitle("Erreur de scan");
                         errorAlert.setHeaderText("❌ Impossible de capturer l'empreinte");
                         errorAlert.setContentText("Erreur : " + ex.getMessage() + "\n\n" +
@@ -669,7 +737,9 @@ public class AdminDashboardController {
         }
     }
 
-    private static String safeTrim(String s) { return s == null ? "" : s.trim(); }
+    private static String safeTrim(String s) {
+        return s == null ? "" : s.trim();
+    }
 
     private static String getExtensionLower(String fileName) {
         int dot = fileName.lastIndexOf('.');

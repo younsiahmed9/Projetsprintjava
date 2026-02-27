@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import javafx.scene.Node;
+import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
 
@@ -33,12 +35,10 @@ public class LoginController implements Initializable {
 
     @FXML private Label statusLabel;
 
+    // Code restauré à l'état d'origine, sans aucune modification responsive ni navigation
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Synchronisation bidirectionnelle
         passwordVisibleField.textProperty().bindBidirectional(passwordField.textProperty());
-
-        // Toggle show/hide
         showPasswordCheck.selectedProperty().addListener((obs, oldV, show) -> {
             passwordVisibleField.setVisible(show);
             passwordVisibleField.setManaged(show);
@@ -48,13 +48,9 @@ public class LoginController implements Initializable {
                 togglePasswordBtn.setText(show ? "🙈" : "👁");
             }
         });
-
-        // état initial
         if (togglePasswordBtn != null) {
             togglePasswordBtn.setText("👁");
         }
-
-        // Vérifier la disponibilité du lecteur d'empreintes
         BiometricAuthService bioService = BiometricAuthService.getInstance();
         if (fingerprintLoginBtn != null) {
             fingerprintLoginBtn.setDisable(!bioService.isAvailable());
@@ -63,15 +59,11 @@ public class LoginController implements Initializable {
                 fingerprintStatusLabel.setStyle("-fx-text-fill: #999;");
             }
         }
-
-        // S'assurer que le bouton Face ID est visible et géré (force l'affichage en dev)
         if (faceLoginBtn != null) {
             faceLoginBtn.setVisible(true);
             faceLoginBtn.setManaged(true);
             faceLoginBtn.setDisable(false);
-            // S'assurer que le label de statut est vide au démarrage
             if (faceStatusLabel != null) faceStatusLabel.setText("");
-            // DEBUG: forcer un style visible (rouge) pour vérifier l'affichage
             faceLoginBtn.setStyle("-fx-background-color: #e53935; -fx-text-fill: white; -fx-font-weight: 700;");
             System.out.println("[LoginController] faceLoginBtn injected and forced visible");
         } else {
@@ -106,7 +98,7 @@ public class LoginController implements Initializable {
                 return;
             }
             if (!u.isActive()) {
-                statusLabel.setText("Compte désactivé.");
+                statusLabel.setText("Votre email n'est pas vérifié. Veuillez vérifier votre boîte mail.");
                 return;
             }
 
@@ -344,40 +336,38 @@ public class LoginController implements Initializable {
     public void onFaceLogin(ActionEvent e) {
         statusLabel.setText("");
         faceStatusLabel.setText("");
-
         try {
             if (!Services.FaceRecognitionService.isOpenCvAvailable()) {
                 faceStatusLabel.setText("❌ OpenCV non disponible. Impossible d'utiliser la caméra.");
                 faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
                 return;
             }
-
             faceStatusLabel.setText("⏳ Ouvrir la caméra et capturer...");
             faceStatusLabel.setStyle("-fx-text-fill: #FF6B35;");
-
             Services.FaceRecognitionService frs = new Services.FaceRecognitionService();
-            // capture 3 images with preview for reliability
-            List<org.bytedeco.opencv.opencv_core.Mat> mats = frs.captureFacesFromCamera(3, 10000, true);
+            List<org.bytedeco.opencv.opencv_core.Mat> mats;
+            try {
+                mats = frs.captureFacesFromCamera(3, 10000, true);
+            } catch (Exception ex) {
+                faceStatusLabel.setText("❌ Erreur capture caméra: " + ex.getMessage());
+                faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
+                return;
+            }
             if (mats == null || mats.isEmpty()) {
                 faceStatusLabel.setText("❌ Aucun visage détecté. Réessayez.");
                 faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
                 return;
             }
-
-            // iterate models in data/face_models
             Path modelsDir = Path.of("data/face_models");
             if (!Files.exists(modelsDir)) {
                 faceStatusLabel.setText("❌ Aucun modèle face enregistré.");
                 faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
                 return;
             }
-
             double bestConfidence = Double.MAX_VALUE;
             Long bestUserId = null;
-
             try (Connection cn = Db.getConnection()) {
                 JdbcUserDao userDao = new JdbcUserDao(cn);
-                // for each model file face_{id}.yml
                 try (var stream = Files.list(modelsDir)) {
                     for (Path p : (Iterable<Path>) stream::iterator) {
                         String name = p.getFileName().toString();
@@ -385,24 +375,19 @@ public class LoginController implements Initializable {
                         String idStr = name.substring(5, name.length() - 4);
                         Long uid;
                         try { uid = Long.parseLong(idStr); } catch (NumberFormatException ex) { continue; }
-
-                        // verify against each captured mat and take min confidence
                         double minConf = Double.MAX_VALUE;
                         for (org.bytedeco.opencv.opencv_core.Mat m : mats) {
                             double conf = frs.verifyWithModel(p, m);
                             if (conf < minConf) minConf = conf;
                         }
-
                         if (minConf < bestConfidence) {
                             bestConfidence = minConf;
                             bestUserId = uid;
                         }
                     }
                 }
-
-                double threshold = 60.0; // LBPH: lower is better; threshold to allow
+                double threshold = 60.0;
                 if (bestUserId != null && bestConfidence <= threshold) {
-                    // load user by id and login
                     var opt = userDao.findById(bestUserId);
                     if (opt.isPresent()) {
                         User matched = opt.get();
@@ -422,21 +407,30 @@ public class LoginController implements Initializable {
                         return;
                     }
                 }
-
-                // no match
                 faceStatusLabel.setText("❌ Aucun modèle correspondant (best=" + (bestConfidence==Double.MAX_VALUE?"n/a":String.format("%.2f", bestConfidence)) + ")");
                 faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
+            } catch (Exception ex) {
+                faceStatusLabel.setText("❌ Erreur Face ID: " + ex.getMessage());
+                faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
             }
-
         } catch (Exception ex) {
-            ex.printStackTrace();
             faceStatusLabel.setText("❌ Erreur Face ID: " + ex.getMessage());
             faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
         }
     }
 
+    // Ajout des handlers pour les boutons de fenêtre
     @FXML
-    public void onTogglePassword(ActionEvent e) {
-        showPasswordCheck.setSelected(!showPasswordCheck.isSelected());
+    private void onMinimize(ActionEvent event) {
+        ((Stage)((Node)event.getSource()).getScene().getWindow()).setIconified(true);
+    }
+    @FXML
+    private void onMaximize(ActionEvent event) {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setMaximized(!stage.isMaximized());
+    }
+    @FXML
+    private void onClose(ActionEvent event) {
+        ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
     }
 }

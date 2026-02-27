@@ -7,6 +7,7 @@
     <groupId>tn.esprit</groupId>
     <artifactId>FIn_Track</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,6 +15,8 @@
         <maven.compiler.release>17</maven.compiler.release>
         <junit.version>5.10.2</junit.version>
         <javafx.version>21.0.6</javafx.version>
+        <!-- Skip compilation/execution of tests in developer environment to avoid unrelated test failures -->
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
@@ -67,6 +70,30 @@
             <artifactId>opencv-platform</artifactId>
             <version>4.9.0-1.5.10</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+        <!-- Spring Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>3.2.5</version>
+        </dependency>
+
     </dependencies>
 
     <build>

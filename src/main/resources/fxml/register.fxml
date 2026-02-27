@@ -1,84 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox spacing="0" stylesheets="@/css/app.css,@/css/theme-orange.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegisterController">
-    <!-- Colonne gauche -->
-    <VBox maxWidth="36vw" minWidth="320" prefWidth="30vw" styleClass="left-panel">
-        <VBox spacing="2vw" styleClass="card" VBox.vgrow="ALWAYS">
-            <HBox alignment="CENTER_LEFT" spacing="12">
-                <ImageView fitHeight="6vw" fitWidth="10vw" pickOnBounds="true" preserveRatio="true">
+<VBox stylesheets="@/css/app.css,@/css/theme-orange.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegisterController" style="-fx-background-color: white;">
+    <!-- Title Bar -->
+    <HBox alignment="TOP_RIGHT" spacing="10" style="-fx-padding: 10 15 0 0; -fx-background-color: transparent;">
+        <Button onAction="#onMinimize" styleClass="window-btn, minimize-btn" text="—" />
+        <Button onAction="#onMaximize" styleClass="window-btn, maximize-btn" text="☐" />
+        <Button onAction="#onClose" styleClass="window-btn, close-btn" text="✕" />
+    </HBox>
+
+    <HBox spacing="0" VBox.vgrow="ALWAYS">
+        <!-- Colonne gauche (formulaire) -->
+        <StackPane maxWidth="420" minWidth="420" prefWidth="420" styleClass="left-panel">
+        <padding>
+            <Insets top="26" right="22" bottom="26" left="22" />
+        </padding>
+
+        <VBox spacing="14" styleClass="card" maxWidth="380">
+
+            <HBox alignment="CENTER" spacing="10">
+                <ImageView fitHeight="80" fitWidth="140" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@/assets/logo.png" />
                     </image>
                 </ImageView>
             </HBox>
-            <Label styleClass="title" text="Create your account" style="-fx-font-size: 1.2em;" />
+
+            <Region prefHeight="8" />
+
+            <Label styleClass="title" text="Create your account" />
+
             <!-- Bouton Face ID visible en haut pour debug / access rapide -->
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <Button fx:id="faceTopBtn" onAction="#onCaptureFace" styleClass="btn-primary" text="👤 Face ID (enregistrer)" />
-                <Label text="" />
-            </HBox>
-            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
-                <GridPane hgap="1vw" vgap="1vw">
+            <VBox spacing="6">
+                <Button fx:id="faceTopBtn" maxWidth="1.7976931348623157E308" onAction="#onCaptureFace" styleClass="btn-primary" text="👤 Face ID (enregistrer)" />
+            </VBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                <GridPane hgap="10" vgap="12">
                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" maxWidth="8vw" minWidth="6vw" />
+                        <ColumnConstraints halignment="LEFT" maxWidth="100" minWidth="90" />
                         <ColumnConstraints hgrow="ALWAYS" />
                     </columnConstraints>
-                    <Label styleClass="field-label" text="R" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <ComboBox fx:id="roleCombo" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    
+                    <Label styleClass="field-label" text="Rôle:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <ComboBox fx:id="roleCombo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    
                     <Label styleClass="field-label" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <TextField fx:id="emailField" promptText="ex: abdou@fintrack.tn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    
                     <Label styleClass="field-label" text="Mot de passe:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <PasswordField fx:id="passwordField" promptText="min 6 caractأ¨res" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <PasswordField fx:id="passwordField" promptText="min 6 caractères" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    
                     <Label styleClass="field-label" text="Nom complet:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                     <TextField fx:id="fullNameField" promptText="ex: abdou" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    
                     <Label fx:id="adminCodeLabel" styleClass="field-label" text="Admin code:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                     <TextField fx:id="adminCodeField" promptText="ex: ADM-001" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    
                     <Label fx:id="cinLabel" styleClass="field-label" text="CIN:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                     <TextField fx:id="cinField" promptText="chiffres 6..20" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                    
                     <Label fx:id="phoneLabel" styleClass="field-label" text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                     <TextField fx:id="phoneField" promptText="+216 20 000 000" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                    
                     <Label styleClass="field-label" text="Empreinte:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
                     <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="7">
-                        <Button fx:id="faceBtn" onAction="#onCaptureFace" styleClass="btn-primary" text="📷 Enregistrer visage" maxWidth="Infinity" />
+                        <Button fx:id="faceBtn" onAction="#onCaptureFace" styleClass="btn-primary" text="📷 Enregistrer visage" maxWidth="1.7976931348623157E308" />
                         <Label fx:id="faceStatusLabel" wrapText="true" style="-fx-font-size: 11px;" />
 
                         <!-- DEBUG: label visible pour vérifier la présence du bloc Face ID -->
-                        <Label text="⚠️ DEBUG: FACE BUTTON BLOCK" style="-fx-text-fill: #e53935; -fx-font-weight: 800; -fx-padding: 6 0 0 0;" />
+                        <Label text="⚠️ DEBUG: FACE BUTTON BLOCK" style="-fx-text-fill: #e53935; -fx-font-weight: 800; -fx-padding: 0;" />
 
-                        <Button fx:id="fingerprintBtn" onAction="#onCaptureFingerprint" styleClass="btn-secondary" text="📱 Enregistrer empreinte" maxWidth="Infinity" />
+                        <Button fx:id="fingerprintBtn" onAction="#onCaptureFingerprint" styleClass="btn-secondary" text="📱 Enregistrer empreinte" maxWidth="1.7976931348623157E308" />
                         <Label fx:id="fingerprintStatusLabel" wrapText="true" style="-fx-font-size: 11px;" />
                     </VBox>
-                <rowConstraints>
-                   <RowConstraints />
-                   <RowConstraints />
-                   <RowConstraints />
-                   <RowConstraints />
-                   <RowConstraints />
-                   <RowConstraints />
-                   <RowConstraints />
-                   <RowConstraints />
-                </rowConstraints>
                 </GridPane>
             </ScrollPane>
-            <HBox spacing="12">
-                <Button onAction="#onCreateAccount" styleClass="btn-primary" text="Crأ©er le compte" />
-                <Button onAction="#onGoLogin" styleClass="btn-secondary" text="Retour login" />
-                <Pane HBox.hgrow="ALWAYS" />
-                <Button onAction="#onClear" styleClass="btn-link" text="Vider" />
+
+            <HBox spacing="10">
+                <Button maxWidth="1.7976931348623157E308" onAction="#onCreateAccount" styleClass="btn-primary" text="Créer le compte" HBox.hgrow="ALWAYS" />
+                <Button maxWidth="1.7976931348623157E308" onAction="#onClear" styleClass="btn-secondary" text="Vider" HBox.hgrow="ALWAYS" />
             </HBox>
+
+            <Separator />
+
+            <Button maxWidth="1.7976931348623157E308" onAction="#onGoLogin" styleClass="btn-link" text="Retour login" />
+
             <Label fx:id="statusLabel" styleClass="status" wrapText="true" />
+
+            <VBox fx:id="verificationPane" spacing="10" visible="false" managed="false" style="-fx-background-color: #f9f9f9; -fx-border-color: #e0e0e0; -fx-border-radius: 5; -fx-padding: 15;">
+                <Label styleClass="field-label" text="Code de vérification envoyé sur votre email:" wrapText="true" />
+                <TextField fx:id="verificationCodeField" promptText="Code à 6 chiffres" styleClass="enhanced-focus" />
+                <HBox spacing="10">
+                    <Button fx:id="verificationVerifyBtn" onAction="#onVerifyCodeFromRegister" styleClass="btn-primary" text="Vérifier" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="verificationResendBtn" onAction="#onResendCodeFromRegister" styleClass="btn-secondary" text="Renvoyer le code" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                </HBox>
+                <Label fx:id="verificationStatusLabel" styleClass="status" wrapText="true" />
+            </VBox>
+
         </VBox>
-    </VBox>
-    <!-- Colonne droite -->
-    <StackPane minWidth="400" styleClass="right-panel" HBox.hgrow="ALWAYS">
-        <ImageView fitWidth="620" preserveRatio="true" smooth="true">
+    </StackPane>
+
+    <!-- Colonne droite (illustration) -->
+    <StackPane styleClass="right-panel" HBox.hgrow="ALWAYS">
+        <ImageView preserveRatio="true" smooth="true" fitWidth="760">
             <image>
                 <Image url="@/assets/illustration.png" />
             </image>
         </ImageView>
     </StackPane>
-</HBox>
+
+    </HBox>
+</VBox>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane stylesheets="@/css/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.VerifyEmailController" styleClass="root">
+    <VBox alignment="CENTER" spacing="20" styleClass="card" VBox.vgrow="ALWAYS">
+        <Label styleClass="title" text="Vérification de l'email" />
+        
+        <VBox spacing="20" alignment="CENTER" maxWidth="400">
+            <Label styleClass="field-label" text="Veuillez saisir le code reçu par mail :" wrapText="true" textAlignment="CENTER" />
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="codeField" prefWidth="180" promptText="Code à 6 chiffres" styleClass="enhanced-focus" />
+                <Button fx:id="verifyBtn" onAction="#onVerifyCode" styleClass="btn-primary" text="Vérifier" />
+            </HBox>
+            
+            <Button fx:id="resendBtn" onAction="#onResendCode" styleClass="btn-link" text="Renvoyer le code" />
+            
+            <Label fx:id="statusLabel" styleClass="status" wrapText="true" alignment="CENTER" />
+        </VBox>
+    </VBox>
+</StackPane>

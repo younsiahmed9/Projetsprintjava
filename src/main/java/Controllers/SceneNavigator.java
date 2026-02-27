@@ -1,5 +1,6 @@
 package Controllers;
 
+import Models.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,7 +30,9 @@ public final class SceneNavigator {
             FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
             stage.setTitle(title);
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
             stage.show();
         } catch (Exception e) {
             // Affiche la vraie cause dans la console pour debug
@@ -67,5 +70,37 @@ public final class SceneNavigator {
 
     public static void goAdminDashboard() {
         goTo("/fxml/admin_dashboard.fxml", "FinTrack - Dashboard Admin");
+    }
+
+    public static void goVerifyEmail(boolean success) {
+        try {
+            var url = SceneNavigator.class.getResource("/fxml/verify_email.fxml");
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            VerifyEmailPageController controller = loader.getController();
+            controller.setResult(success);
+            stage.setTitle("FinTrack - Vérification Email");
+            stage.setScene(new Scene(root));
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void goVerifyCode(User user) {
+        try {
+            var url = SceneNavigator.class.getResource("/fxml/verify_email.fxml");
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            VerifyEmailController controller = loader.getController();
+            controller.setUser(user);
+            stage.setTitle("FinTrack - Vérification Email");
+            stage.setScene(new Scene(root));
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

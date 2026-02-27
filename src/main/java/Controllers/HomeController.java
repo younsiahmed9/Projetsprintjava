@@ -58,6 +58,7 @@ public class HomeController {
 
     private String profilePhotoPath; // chemin local ou uri (persisté en DB)
 
+    // Désactivation de la logique de thèmes dynamiques : on n'utilisera qu'un seul fichier CSS fourni par le repo
     private static final String THEME_ORANGE = "/css/theme-orange.css";
     private static final String THEME_LOGO = "/css/theme-logo.css";
     private static final String PREF_THEME_KEY = "fintrack.theme";
@@ -66,10 +67,10 @@ public class HomeController {
 
     @FXML
     public void initialize() {
+
         refreshHeader();
 
-        // Applique le thème sauvegardé dès que la scene est disponible
-        Platform.runLater(this::applySavedTheme);
+        // Ne pas appliquer de thème sauvegardé dynamiquement : l'application utilisera le CSS unique fourni
 
         // caché par défaut (au cas où)
         showEditProfileOverlay(false);
@@ -578,41 +579,6 @@ public class HomeController {
         int dot = fileName.lastIndexOf('.');
         if (dot < 0 || dot == fileName.length() - 1) return "";
         return fileName.substring(dot + 1).toLowerCase();
-    }
-
-    @FXML
-    public void onToggleTheme(ActionEvent e) {
-        Parent root = welcomeLabel == null ? null : welcomeLabel.getScene().getRoot();
-        if (root == null) return;
-
-        String current = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
-        String next = THEME_ORANGE.equals(current) ? THEME_LOGO : THEME_ORANGE;
-        prefs.put(PREF_THEME_KEY, next);
-        applyThemeToRoot(root, next);
-    }
-
-    private void applySavedTheme() {
-        Parent root = welcomeLabel == null ? null : welcomeLabel.getScene().getRoot();
-        if (root == null) return;
-
-        String theme = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
-        applyThemeToRoot(root, theme);
-    }
-
-    private void applyThemeToRoot(Parent root, String themeResourcePath) {
-        URL res = getClass().getResource(themeResourcePath);
-        if (res == null) {
-            // Ressource manquante -> ne casse pas l'UI
-            return;
-        }
-        String uri = res.toExternalForm();
-
-        // Retire uniquement nos 2 thèmes connus
-        root.getStylesheets().removeIf(s -> s.endsWith("theme-orange.css") || s.endsWith("theme-logo.css"));
-
-        if (!root.getStylesheets().contains(uri)) {
-            root.getStylesheets().add(uri);
-        }
     }
 
     @FXML

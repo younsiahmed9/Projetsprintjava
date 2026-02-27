@@ -16,6 +16,7 @@ public class LoginFxmlRunner extends Application {
         System.out.println("Loader controller: " + (ctrl == null ? "null" : ctrl.getClass().getName()));
         primaryStage.setTitle("Login FXML Runner");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

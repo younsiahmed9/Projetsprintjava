@@ -5,293 +5,46 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane prefHeight="309.0" prefWidth="676.0" stylesheets="@/css/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.HomeController">
+<StackPane prefHeight="600.0" prefWidth="1000.0" styleClass="root" stylesheets="@/css/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.HomeController">
+    <!-- Contenu principal fluide -->
+    <VBox spacing="16" style="-fx-padding: 20;">
+        <!-- Titre simple et Boutons d'action rapides -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <ImageView fitHeight="40" fitWidth="100" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@/assets/logo.png" />
+                </image>
+            </ImageView>
+            <Label fx:id="welcomeLabel" styleClass="title" text="Bienvenue" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button onAction="#onToggleTheme" styleClass="btn-secondary" text="🎨 Thème" />
+            <Button onAction="#onLogout" styleClass="btn-primary" text="🚪 Déconnexion" />
+        </HBox>
 
-    <!-- Contenu principal -->
-    <HBox>
-        <!-- Sidebar -->
-        <VBox prefWidth="220.0" spacing="10" style="-fx-padding: 15;" styleClass="sidebar">
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <ImageView fitHeight="107.0" fitWidth="173.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@/assets/logo.png" />
-                    </image>
-                </ImageView>
-                <VBox spacing="2" />
-            </HBox>
-            <!-- Section Navigation -->
-            <VBox spacing="8" style="-fx-padding: 10 0 10 0;">
-                <Label style="-fx-text-fill: #999; -fx-font-size: 11px; -fx-font-weight: bold;" text="NAVIGATION" />
-                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="🏠 Accueil" />
-                <Button onMouseClicked="#onHeaderAvatarClick" style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="👤 Mon Profil" />
-            </VBox>
+        <ScrollPane fitToWidth="true" styleClass="modern-scroll-pane" VBox.vgrow="ALWAYS">
+            <VBox spacing="20">
+                <!-- Section Transactions centralisée -->
+                <VBox fx:id="transactionsSection" managed="false" spacing="20" visible="false">
+                    <Label style="-fx-font-size: 28px;" styleClass="title" text="Mes Transactions" />
+                    
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Button styleClass="btn-primary" text="+ Nouvelle Transaction" />
+                        <Button styleClass="btn-secondary" text="🔄 Rafraîchir" />
+                    </HBox>
 
-            <!-- Section Admin (visible uniquement pour les admins) -->
-            <VBox fx:id="adminMenuSection" managed="false" spacing="8" style="-fx-padding: 10 0 10 0;" visible="false">
-                <Separator />
-                <Label style="-fx-text-fill: #999; -fx-font-size: 11px; -fx-font-weight: bold;" text="ADMINISTRATION" />
-                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="📊 Dashboard" />
-                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="👥 Utilisateurs" />
-                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="💳 Transactions" />
-                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="📈 Statistiques" />
-                <Button style="-fx-alignment: CENTER-LEFT;" styleClass="btn-link" text="⚙️ Paramètres" />
-            </VBox>
-
-            <Region VBox.vgrow="ALWAYS" />
-
-            <!-- Section Thème et Déconnexion -->
-            <VBox spacing="8">
-                <Separator />
-            </VBox>
-        </VBox>
-
-        <!-- Zone principale: header fixe + contenu scrollable -->
-        <VBox HBox.hgrow="ALWAYS" spacing="16" style="-fx-padding: 20;">
-
-            <!-- En-tête FIXE (hors ScrollPane) -->
-            <HBox alignment="CENTER_LEFT" spacing="12">
-                <Label fx:id="welcomeLabel" styleClass="title" text="Bienvenue" textFill="#002a5e" />
-                <Pane HBox.hgrow="ALWAYS">
-                  <children>
-                         <Button layoutX="187.0" layoutY="9.0" onAction="#onLogout" styleClass="btn-secondary" text="🚪 Déconnexion" />
-                         <Button layoutX="43.0" layoutY="10.0" onAction="#onToggleTheme" prefHeight="35.0" prefWidth="135.0" styleClass="btn-primary" text="🎨 Changer thème" />
-                          <ImageView fx:id="headerAvatarView" fitHeight="50" fitWidth="50" layoutX="-11.0" layoutY="4.0" onMouseClicked="#onHeaderAvatarClick" preserveRatio="true" styleClass="avatar" />
-                  </children></Pane>
-            </HBox>
-
-            <!-- Contenu scrollable (uniquement ce bloc) -->
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                <VBox spacing="16">
-
-                    <!-- Section Transactions (style moderne) -->
-                    <VBox fx:id="transactionsSection" managed="false" spacing="16" styleClass="card" visible="false">
-                        <!-- En-tête avec onglets -->
-                        <VBox spacing="16">
-                            <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" styleClass="title" text="Transaction" />
-
-                            <!-- Onglets -->
-                            <HBox alignment="CENTER_LEFT" spacing="12">
-                                <Button style="-fx-background-color: transparent; -fx-text-fill: #182d88; -fx-border-color: transparent transparent #182d88 transparent; -fx-border-width: 0 0 2 0; -fx-padding: 8 16; -fx-font-weight: bold;" styleClass="tab-button-active" text="All" />
-                                <Button style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-border-color: transparent; -fx-padding: 8 16;" styleClass="tab-button" text="Revenue" />
-                                <Button style="-fx-background-color: transparent; -fx-text-fill: #6b7280; -fx-border-color: transparent; -fx-padding: 8 16;" styleClass="tab-button" text="Expenses" />
-                            </HBox>
-
-                            <!-- Boutons d'action -->
-                            <HBox alignment="CENTER_LEFT" spacing="10">
-                                <Button style="-fx-background-color: white; -fx-text-fill: #182d88; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-font-size: 18px; -fx-font-weight: bold; -fx-cursor: hand;" styleClass="btn-action" text="+" />
-                                <Button style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-cursor: hand;" styleClass="btn-action">
-                                    <graphic>
-                                        <Label style="-fx-font-size: 16px;" text="🗑️" />
-                                    </graphic>
-                                </Button>
-                                <Button style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12; -fx-cursor: hand;" styleClass="btn-action">
-                                    <graphic>
-                                        <Label style="-fx-font-size: 16px;" text="🔄" />
-                                    </graphic>
-                                </Button>
-                            </HBox>
-                        </VBox>
-
-                        <Separator style="-fx-background-color: #e5e7eb;" />
-
-                        <!-- Tableau des transactions -->
-                        <VBox spacing="0">
-                            <!-- En-tête du tableau -->
-                            <HBox spacing="20" style="-fx-padding: 12 16; -fx-background-color: #f9fafb; -fx-background-radius: 8 8 0 0;">
-                                <Label style="-fx-font-weight: bold; -fx-text-fill: #374151; -fx-min-width: 150;" text="Items" />
-                                <Label style="-fx-font-weight: bold; -fx-text-fill: #374151; -fx-min-width: 120;" text="Shop Name" />
-                                <Label style="-fx-font-weight: bold; -fx-text-fill: #374151; -fx-min-width: 120;" text="Date" />
-                                <Label style="-fx-font-weight: bold; -fx-text-fill: #374151; -fx-min-width: 140;" text="Payment Method" />
-                                <Label style="-fx-font-weight: bold; -fx-text-fill: #374151; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="Amount" />
-                            </HBox>
-
-                            <!-- Lignes de transactions -->
-                            <VBox fx:id="transactionsList" spacing="0">
-                                <!-- Transaction 1 -->
-                                <HBox spacing="20" style="-fx-padding: 16; -fx-border-color: transparent transparent #e5e7eb transparent; -fx-border-width: 0 0 1 0;">
-                                    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-min-width: 150;">
-                                        <Label style="-fx-font-size: 20px;" text="🎧" />
-                                        <Label style="-fx-text-fill: #1f2937;" text="headsets" />
-                                    </HBox>
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="Simba" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="17 May, 2023" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 140;" text="Credit Card" />
-                                    <Label style="-fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="160.00 DT" />
-                                </HBox>
-
-                                <!-- Transaction 2 -->
-                                <HBox spacing="20" style="-fx-padding: 16; -fx-border-color: transparent transparent #e5e7eb transparent; -fx-border-width: 0 0 1 0;">
-                                    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-min-width: 150;">
-                                        <Label style="-fx-font-size: 20px;" text="🛋️" />
-                                        <Label style="-fx-text-fill: #1f2937;" text="furniture" />
-                                    </HBox>
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="Electro" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="17 May, 2023" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 140;" text="Invoice" />
-                                    <Label style="-fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="20.00 DT" />
-                                </HBox>
-
-                                <!-- Transaction 3 -->
-                                <HBox spacing="20" style="-fx-padding: 16; -fx-border-color: transparent transparent #e5e7eb transparent; -fx-border-width: 0 0 1 0;">
-                                    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-min-width: 150;">
-                                        <Label style="-fx-font-size: 20px;" text="🏠" />
-                                        <Label style="-fx-text-fill: #1f2937;" text="Biryani" />
-                                    </HBox>
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="Marketplace" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="17 May, 2023" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 140;" text="Credit Card" />
-                                    <Label style="-fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="12.00 DT" />
-                                </HBox>
-
-                                <!-- Transaction 4 -->
-                                <HBox spacing="20" style="-fx-padding: 16; -fx-border-color: transparent transparent #e5e7eb transparent; -fx-border-width: 0 0 1 0;">
-                                    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-min-width: 150;">
-                                        <Label style="-fx-font-size: 20px;" text="📶" />
-                                        <Label style="-fx-text-fill: #1f2937;" text="Internet" />
-                                    </HBox>
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="Marketplace" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="17 May, 2023" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 140;" text="Credit Card" />
-                                    <Label style="-fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="15.00 DT" />
-                                </HBox>
-
-                                <!-- Transaction 5 -->
-                                <HBox spacing="20" style="-fx-padding: 16; -fx-border-color: transparent transparent #e5e7eb transparent; -fx-border-width: 0 0 1 0;">
-                                    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-min-width: 150;">
-                                        <Label style="-fx-font-size: 20px;" text="🚗" />
-                                        <Label style="-fx-text-fill: #1f2937;" text="Car" />
-                                    </HBox>
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="Marketplace" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="17 May, 2023" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 140;" text="cash" />
-                                    <Label style="-fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="10.00 DT" />
-                                </HBox>
-
-                                <!-- Transaction 6 -->
-                                <HBox spacing="20" style="-fx-padding: 16; -fx-border-color: transparent transparent #e5e7eb transparent; -fx-border-width: 0 0 1 0;">
-                                    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-min-width: 150;">
-                                        <Label style="-fx-font-size: 20px;" text="🍔" />
-                                        <Label style="-fx-text-fill: #1f2937;" text="Lunch items" />
-                                    </HBox>
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="Market" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="17 May, 2023" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 140;" text="Credit Card" />
-                                    <Label style="-fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="20.00 DT" />
-                                </HBox>
-
-                                <!-- Transaction 7 -->
-                                <HBox spacing="20" style="-fx-padding: 16;">
-                                    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-min-width: 150;">
-                                        <Label style="-fx-font-size: 20px;" text="⌨️" />
-                                        <Label style="-fx-text-fill: #1f2937;" text="Keyboard" />
-                                    </HBox>
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="Market" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 120;" text="17 May, 2023" />
-                                    <Label style="-fx-text-fill: #6b7280; -fx-min-width: 140;" text="Credit Card" />
-                                    <Label style="-fx-text-fill: #1f2937; -fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="30.00 DT" />
-                                </HBox>
-                            </VBox>
-                        </VBox>
-
-                        <!-- Bouton Load More -->
-                        <HBox alignment="CENTER" style="-fx-padding: 20 0 0 0;">
-                            <Button style="-fx-background-color: #fbbf24; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 48; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 14px;" text="Load More" />
+                    <!-- Tableau stylisé -->
+                    <VBox spacing="0" styleClass="card">
+                        <HBox spacing="20" style="-fx-padding: 15; -fx-background-color: #f9fafb; -fx-background-radius: 12 12 0 0; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1 0;">
+                            <Label style="-fx-font-weight: bold; -fx-min-width: 150;" text="Article" />
+                            <Label style="-fx-font-weight: bold; -fx-min-width: 120;" text="Boutique" />
+                            <Label style="-fx-font-weight: bold; -fx-min-width: 120;" text="Date" />
+                            <Label style="-fx-font-weight: bold; -fx-min-width: 140;" text="Méthode" />
+                            <Label style="-fx-font-weight: bold; -fx-min-width: 100; -fx-alignment: CENTER-RIGHT;" text="Montant" />
                         </HBox>
+                        <VBox fx:id="transactionsList" spacing="0" />
                     </VBox>
-
                 </VBox>
-            </ScrollPane>
-
-        </VBox>
-
-    </HBox>
-
-    <!-- Overlay Edit Profile (caché par défaut) -->
-    <StackPane fx:id="editProfileBackdrop" managed="false" onMouseClicked="#onEditProfileBackdropClick" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false">
-        <ScrollPane fx:id="editProfileScroll" fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
-            <VBox fx:id="editProfileCard" maxWidth="500" onMouseClicked="#consumeEvent" spacing="12" styleClass="overlay-card">
-                <HBox alignment="CENTER_LEFT">
-                    <Label styleClass="title" text="✏️ Modifier mon profil" />
-                    <Pane HBox.hgrow="ALWAYS" />
-                    <Button onAction="#onCloseEditProfile" styleClass="btn-link" text="✕" />
-                </HBox>
-
-                <Separator />
-
-                <!-- Avatar photo -->
-                <VBox alignment="CENTER" spacing="8">
-                    <ImageView fx:id="profileAvatarView" fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="avatar-large" />
-                    <Button onAction="#onPickProfilePhoto" styleClass="btn-secondary" text="📷 Changer la photo" />
-                    <Label fx:id="profilePhotoHintLabel" styleClass="hint" text="(Aucune photo)" />
-                </VBox>
-
-                <Separator />
-
-                <Label styleClass="subtitle" text="Nom complet" />
-                <TextField fx:id="profileFullNameField" promptText="Nom complet" />
-
-                <Label styleClass="subtitle" text="Email" />
-                <TextField fx:id="profileEmailField" promptText="Email" />
-
-                <Label styleClass="subtitle" text="Nouveau mot de passe (optionnel)" />
-                <PasswordField fx:id="profileNewPasswordField" promptText="Nouveau mot de passe" />
-
-                <Label styleClass="subtitle" text="Confirmer le mot de passe" />
-                <PasswordField fx:id="profileConfirmPasswordField" promptText="Confirmer" />
-
-                <HBox spacing="10">
-                    <Button onAction="#onSaveProfile" styleClass="btn-primary" text="💾 Enregistrer" HBox.hgrow="ALWAYS" />
-                    <Button onAction="#onCloseEditProfile" styleClass="btn-secondary" text="Annuler" />
-                </HBox>
-
-                <Label fx:id="profileStatusLabel" styleClass="status" wrapText="true" />
             </VBox>
         </ScrollPane>
-    </StackPane>
-
-    <!-- Overlay Admin Edit User (caché par défaut) -->
-    <StackPane fx:id="adminEditUserBackdrop"
-               alignment="CENTER"
-               managed="false"
-               onMouseClicked="#onAdminEditUserBackdropClick"
-               styleClass="overlay-backdrop"
-               visible="false">
-        <VBox fx:id="adminEditUserCard"
-              alignment="TOP_LEFT"
-              maxWidth="500"
-              onMouseClicked="#consumeEvent"
-              spacing="12"
-              styleClass="overlay-card">
-            <HBox alignment="CENTER_LEFT">
-                <Label styleClass="title" text="✏️ Modifier utilisateur" />
-                <Pane HBox.hgrow="ALWAYS" />
-                <Button onAction="#onCloseAdminEditUser" styleClass="btn-link" text="✕" />
-            </HBox>
-
-            <Separator />
-
-            <Label styleClass="field-label" text="ID" />
-            <Label fx:id="adminEditUserIdLabel" text="-" />
-
-            <Label styleClass="field-label" text="Nom complet" />
-            <TextField fx:id="adminEditUserFullNameField" promptText="Nom complet" styleClass="enhanced-focus" />
-
-            <Label styleClass="field-label" text="Email" />
-            <TextField fx:id="adminEditUserEmailField" promptText="Email" styleClass="enhanced-focus" />
-
-            <Label styleClass="field-label" text="Rôle" />
-            <ComboBox fx:id="adminEditUserRoleBox" prefWidth="200" styleClass="enhanced-focus" />
-
-            <CheckBox fx:id="adminEditUserActiveCheck" text="Compte actif" />
-
-            <HBox spacing="10">
-                <Button onAction="#onAdminSaveUser" styleClass="btn-primary" text="💾 Enregistrer" HBox.hgrow="ALWAYS" />
-                <Button onAction="#onAdminDeleteUser" styleClass="btn-danger" text="🗑️ Supprimer" />
-                <Button onAction="#onCloseAdminEditUser" styleClass="btn-secondary" text="Annuler" />
-            </HBox>
-
-            <Label fx:id="adminEditUserStatusLabel" styleClass="status" wrapText="true" />
-        </VBox>
-    </StackPane>
-
+    </VBox>
 </StackPane>

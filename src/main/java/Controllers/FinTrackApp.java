@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 public class FinTrackApp extends Application {
     @Override
     public void start(Stage stage) {
+        stage.setMaximized(true);
         SceneNavigator.init(stage);
         SceneNavigator.goLogin();
     }

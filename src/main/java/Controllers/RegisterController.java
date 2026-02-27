@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import utils.Db;
 import Models.Admin;
 import Models.Client;
@@ -14,14 +15,23 @@ import Services.BiometricAuthService;
 import Services.JdbcAdminDao;
 import Services.JdbcClientDao;
 import Services.JdbcUserDao;
+import Services.MailService;
+import Services.EmailVerificationDao;
+import Models.EmailVerification;
+import java.security.SecureRandom;
+import java.math.BigInteger;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
+import javafx.stage.Stage;
 
 public class RegisterController implements Initializable {
 
@@ -56,12 +66,29 @@ public class RegisterController implements Initializable {
 
     @FXML private Label statusLabel;
 
+    @FXML private VBox verificationPane;
+    @FXML private TextField verificationCodeField;
+    @FXML private Button verificationVerifyBtn;
+    @FXML private Button verificationResendBtn;
+    @FXML private Label verificationStatusLabel;
+
     private byte[] capturedFingerprint = null;
     private byte[] capturedFace = null;
     private List<org.bytedeco.opencv.opencv_core.Mat> capturedFaceMats = null; // in-memory mats captured from camera
+    private Properties mailProps;
+
+    public RegisterController() {
+        mailProps = new Properties();
+        try {
+            mailProps.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+        } catch (Exception e) {
+            System.err.println("Erreur chargement propriétés mail: " + e.getMessage());
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         roleCombo.getItems().setAll(Role.ADMIN, Role.CLIENT);
         roleCombo.setValue(Role.CLIENT);
 
@@ -112,6 +139,11 @@ public class RegisterController implements Initializable {
             System.out.println("[RegisterController] faceTopBtn injected and styled");
         } else {
             System.out.println("[RegisterController] faceTopBtn NOT injected (null)");
+        }
+
+        if (verificationPane != null) {
+            verificationPane.setVisible(false);
+            verificationPane.setManaged(false);
         }
     }
 
@@ -259,7 +291,7 @@ public class RegisterController implements Initializable {
                 return;
             }
 
-            User u = new User(null, email, passwordHash, fullName, role, true);
+            User u = new User(null, email, passwordHash, fullName, role, false); // Par défaut, compte inactif
 
             // Ajouter l'empreinte si elle a été capturée
             if (capturedFingerprint != null) {
@@ -301,15 +333,88 @@ public class RegisterController implements Initializable {
                 clientDao.insert(new Client(userId, cin, phone.isBlank() ? null : phone));
             }
 
-            // Auto-login + redirection accueil
-            AppState.setCurrentUser(u);
-            if (role == Role.ADMIN) {
-                SceneNavigator.goHomeAdmin();
-            } else {
-                SceneNavigator.goHome();
-            }
+            // Envoi de l'email de vérification (ancien flux avec lien) -- supprimé pour garder uniquement le code
+            // boolean mailSent = sendVerificationEmail(u);
+            // if (!mailSent) {
+            //     statusLabel.setText("Erreur lors de l'envoi de l'email de vérification. Veuillez vérifier votre connexion ou réessayer.");
+            //     System.err.println("[DEBUG] Lien de vérification: http://localhost:8080/verify-email?token=DEBUG_TOKEN"); // Pour debug
+            //     return;
+            // }
+
+            // Générer et envoyer le code de vérification
+            sendVerificationCode(u);
+
+            // Afficher le formulaire de vérification dans la même page
+            javafx.application.Platform.runLater(() -> {
+                verificationPane.setVisible(true);
+                verificationPane.setManaged(true);
+                verificationStatusLabel.setText("");
+            });
+
+            // Ne pas rediriger
+            return;
         } catch (Exception ex) {
             statusLabel.setText("Erreur: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * Génère un code de vérification aléatoire (6 chiffres)
+     */
+    private String generateVerificationCode() {
+        SecureRandom random = new SecureRandom();
+        int code = 100000 + random.nextInt(900000); // 6 chiffres
+        return String.valueOf(code);
+    }
+
+    /**
+     * Appelé lors de l'inscription pour créer et envoyer le code de vérification
+     */
+    private void sendVerificationCode(User user) {
+        String code = generateVerificationCode();
+        Instant now = Instant.now();
+        Instant expiresAt = now.plus(10, ChronoUnit.MINUTES); // expiration 10 min
+        try (Connection cn = Db.getConnection()) {
+            EmailVerification verification = new EmailVerification(
+                user.getId(), code, now, expiresAt, false
+            );
+            EmailVerificationDao dao = new EmailVerificationDao(cn);
+            dao.save(verification);
+            String smtpUser = mailProps.getProperty("mail.smtp.user");
+            String smtpPass = mailProps.getProperty("mail.smtp.password");
+            String smtpFrom = mailProps.getProperty("mail.from");
+            MailService mailService = new MailService(smtpUser, smtpPass, smtpFrom);
+            mailService.sendVerificationCode(user.getEmail(), code);
+        } catch (Exception ex) {
+            System.err.println("Erreur envoi code: " + ex.getMessage());
+        }
+    }
+
+    private boolean sendVerificationEmail(User user) {
+        try {
+            System.out.println("Tentative d'envoi de l'email de vérification à : " + user.getEmail());
+            String token = new BigInteger(130, new SecureRandom()).toString(32);
+            Instant now = Instant.now();
+            Instant expires = now.plus(24, ChronoUnit.HOURS);
+            EmailVerification ev = new EmailVerification(user.getId(), token, now, expires, false);
+            EmailVerificationDao evDao = new EmailVerificationDao(Db.getConnection());
+            evDao.insert(ev);
+            // Use the lightweight verify server (SimpleVerifyServer) to avoid Tomcat/Security popup
+            String link = "http://localhost:8081/verify-email?token=" + token;
+            String subject = mailProps.getProperty("mail.subject");
+            String body = mailProps.getProperty("mail.body").replace("{verification_link}", link);
+            MailService mailService = new MailService(
+                mailProps.getProperty("mail.smtp.user"),
+                mailProps.getProperty("mail.smtp.password"),
+                mailProps.getProperty("mail.from")
+            );
+            mailService.sendVerificationMail(user.getEmail(), subject, body);
+            System.out.println("Email de vérification envoyé avec succès à : " + user.getEmail());
+            return true;
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'envoi de l'email de vérification: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -543,5 +648,99 @@ public class RegisterController implements Initializable {
         if (faceBtn != null) {
             faceBtn.setText("📷 Enregistrer visage");
         }
+    }
+
+    @FXML
+    public void onVerifyCodeFromRegister(ActionEvent e) {
+        String code = verificationCodeField.getText();
+        if (code == null || code.length() != 6) {
+            verificationStatusLabel.setText("Code invalide.");
+            return;
+        }
+        try (Connection cn = Db.getConnection()) {
+            JdbcUserDao userDao = new JdbcUserDao(cn);
+            var userOpt = userDao.findByEmail(emailField.getText().trim());
+            if (userOpt.isEmpty()) {
+                verificationStatusLabel.setText("Mail introuvable, veuillez écrire un mail valide.");
+                return;
+            }
+            User user = userOpt.get();
+            EmailVerificationDao dao = new EmailVerificationDao(cn);
+            var evOpt = dao.findLatestByUserId(user.getId());
+            if (evOpt.isEmpty()) {
+                verificationStatusLabel.setText("Aucun code trouvé. Demandez un renvoi.");
+                return;
+            }
+            EmailVerification ev = evOpt.get();
+            if (ev.isUsed()) {
+                verificationStatusLabel.setText("Code déjà utilisé.");
+                return;
+            }
+            if (ev.getExpiresAt() != null && ev.getExpiresAt().isBefore(Instant.now())) {
+                verificationStatusLabel.setText("Code expiré.");
+                return;
+            }
+            if (!ev.getToken().equals(code)) {
+                verificationStatusLabel.setText("Code incorrect.");
+                return;
+            }
+            dao.markUsed(ev.getId());
+            user.setActive(true);
+            userDao.update(user);
+            verificationStatusLabel.setText("Email vérifié avec succès !");
+            // rediriger vers login
+            SceneNavigator.goLogin();
+        } catch (Exception ex) {
+            verificationStatusLabel.setText("Erreur: " + ex.getMessage());
+        }
+    }
+
+    @FXML
+    public void onResendCodeFromRegister(ActionEvent e) {
+        String email = emailField.getText().trim();
+        if (email.isBlank()) {
+            verificationStatusLabel.setText("Veuillez saisir votre email au préalable.");
+            return;
+        }
+        try (Connection cn = Db.getConnection()) {
+            JdbcUserDao userDao = new JdbcUserDao(cn);
+            var userOpt = userDao.findByEmail(email);
+            if (userOpt.isEmpty()) {
+                verificationStatusLabel.setText("Mail introuvable, veuillez écrire un mail valide.");
+                return;
+            }
+            User user = userOpt.get();
+            // Générer et enregistrer nouveau code
+            String code = generateVerificationCode();
+            Instant now = Instant.now();
+            Instant expiresAt = now.plus(10, ChronoUnit.MINUTES);
+            EmailVerification ev = new EmailVerification(user.getId(), code, now, expiresAt, false);
+            EmailVerificationDao dao = new EmailVerificationDao(cn);
+            dao.save(ev);
+            MailService mailService = new MailService(
+                mailProps.getProperty("mail.smtp.user"),
+                mailProps.getProperty("mail.smtp.password"),
+                mailProps.getProperty("mail.from")
+            );
+            mailService.sendVerificationCode(user.getEmail(), code);
+            verificationStatusLabel.setText("Code renvoyé par mail.");
+        } catch (Exception ex) {
+            verificationStatusLabel.setText("Erreur: " + ex.getMessage());
+        }
+    }
+
+    // Ajout des handlers pour les boutons de fenêtre
+    @FXML
+    private void onMinimize(ActionEvent event) {
+        ((Stage)((Node)event.getSource()).getScene().getWindow()).setIconified(true);
+    }
+    @FXML
+    private void onMaximize(ActionEvent event) {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setMaximized(!stage.isMaximized());
+    }
+    @FXML
+    private void onClose(ActionEvent event) {
+        ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
     }
 }

@@ -2,6 +2,27 @@
    🎨 THÈME MIX ORANGE + KAKI/OLIVE - Mat & Élégant
    ═══════════════════════════════════════════════════════════════════ */
 
+.window-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.window-btn:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333;
+}
+
+.close-btn:hover {
+    -fx-background-color: #e81123;
+    -fx-text-fill: white;
+}
+
 .root {
     /* ═══ PALETTE ORANGE (couleurs principales login & accents) ═══ */
     -fx-orange-50: #fff7ed;
@@ -100,11 +121,12 @@
     -fx-border-color: -fx-warm-gray-200;
     -fx-border-width: 1px;
     -fx-border-radius: 14px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 18, 0.12, 0, 5);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 18, 0.12, 0, 5);
 }
 
 /* Champs comme la capture (gris clair, coins arrondis) */
-.text-field, .password-field {
+.text-field,
+.password-field {
     -fx-background-color: -fx-warm-gray-100;
     -fx-border-color: transparent;
     -fx-border-width: 0;
@@ -114,7 +136,8 @@
     -fx-text-fill: -fx-warm-gray-900;
 }
 
-.text-field:focused, .password-field:focused {
+.text-field:focused,
+.password-field:focused {
     -fx-background-color: white;
     -fx-border-color: -fx-orange-400;
     -fx-border-width: 1.5px;
@@ -130,8 +153,13 @@
     -fx-font-weight: 700;
 }
 
-.btn-primary:hover { -fx-background-color: -fx-orange-500; }
-.btn-primary:pressed { -fx-background-color: -fx-orange-600; }
+.btn-primary:hover {
+    -fx-background-color: -fx-orange-500;
+}
+
+.btn-primary:pressed {
+    -fx-background-color: -fx-orange-600;
+}
 
 /* Bouton secondaire encadré orange (signup) */
 .btn-secondary {
@@ -301,7 +329,7 @@
     -fx-border-color: transparent;
 }
 
-.scroll-pane > .viewport {
+.scroll-pane>.viewport {
     -fx-background-color: transparent;
 }
 
@@ -318,15 +346,37 @@
 }
 
 /* ═══ CHARTS: Couleurs adaptées au thème ORANGE/KAKI (remplace le bleu de app.css) ═══ */
-.default-color0.chart-bar { -fx-bar-fill: -fx-orange-500; }
-.default-color1.chart-bar { -fx-bar-fill: -fx-olive-500; }
-.default-color2.chart-bar { -fx-bar-fill: -fx-orange-700; }
-.default-color3.chart-bar { -fx-bar-fill: -fx-sage-500; }
+.default-color0.chart-bar {
+    -fx-bar-fill: -fx-orange-500;
+}
 
-.default-color0.chart-pie { -fx-pie-color: -fx-orange-500; }
-.default-color1.chart-pie { -fx-pie-color: -fx-olive-500; }
-.default-color2.chart-pie { -fx-pie-color: -fx-orange-700; }
-.default-color3.chart-pie { -fx-pie-color: -fx-sage-500; }
+.default-color1.chart-bar {
+    -fx-bar-fill: -fx-olive-500;
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: -fx-orange-700;
+}
+
+.default-color3.chart-bar {
+    -fx-bar-fill: -fx-sage-500;
+}
+
+.default-color0.chart-pie {
+    -fx-pie-color: -fx-orange-500;
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: -fx-olive-500;
+}
+
+.default-color2.chart-pie {
+    -fx-pie-color: -fx-orange-700;
+}
+
+.default-color3.chart-pie {
+    -fx-pie-color: -fx-sage-500;
+}
 
 /* ═══ CHECKBOX ═══ */
 .check-box .box {
@@ -381,28 +431,33 @@
 }
 
 .side-item-active {
-    -fx-background-color: #dbeafe; /* bleu clair */
+    -fx-background-color: #dbeafe;
+    /* bleu clair */
 }
 
 .side-icon {
-    -fx-text-fill: #94a3b8; /* gris */
+    -fx-text-fill: #94a3b8;
+    /* gris */
     -fx-font-size: 14px;
 }
 
 .side-text {
-    -fx-text-fill: #64748b; /* gris */
+    -fx-text-fill: #64748b;
+    /* gris */
     -fx-font-size: 13px;
     -fx-font-weight: 600;
 }
 
 .side-item-active .side-text {
-    -fx-text-fill: #2563eb; /* bleu */
+    -fx-text-fill: #2563eb;
+    /* bleu */
 }
 
 /* ═══ SIDEBAR BUTTONS (comme image 1) ═══ */
 .side-nav-button {
     -fx-background-color: transparent;
-    -fx-text-fill: rgba(100, 116, 139, 0.55); /* gris très clair (image 1) */
+    -fx-text-fill: rgba(100, 116, 139, 0.55);
+    /* gris très clair (image 1) */
     -fx-font-size: 13px;
     -fx-font-weight: 600;
     -fx-alignment: CENTER_LEFT;
@@ -416,7 +471,8 @@
 }
 
 .side-nav-button:hover {
-    -fx-background-color: rgba(148, 163, 184, 0.10); /* hover très discret */
+    -fx-background-color: rgba(148, 163, 184, 0.10);
+    /* hover très discret */
 }
 
 .side-nav-button:focused {
@@ -426,6 +482,8 @@
 }
 
 .side-nav-button-active {
-    -fx-background-color: #eaf2ff; /* bleu très pâle */
-    -fx-text-fill: #3b82f6;        /* bleu (image 1) */
+    -fx-background-color: #eaf2ff;
+    /* bleu très pâle */
+    -fx-text-fill: #3b82f6;
+    /* bleu (image 1) */
 }
