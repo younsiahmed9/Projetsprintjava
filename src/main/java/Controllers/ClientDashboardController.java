@@ -5,9 +5,7 @@ import Models.Portefeuille;
 import Models.ScheduledTransfer;
 import Models.Session;
 import Models.Utilisateur;
-import Services.CarteVirtuelleService;
-import Services.PortefeuilleService;
-import Services.ScheduledTransferService;
+import Services.*;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +46,7 @@ public class ClientDashboardController {
     private PortefeuilleService portefeuilleService = new PortefeuilleService();
     private CarteVirtuelleService carteService = new CarteVirtuelleService();
     private ScheduledTransferService scheduledService = new ScheduledTransferService();
+    private UtilisateurService utilisateurService = new UtilisateurService();
 
     private ObservableList<Portefeuille> portefeuilles = FXCollections.observableArrayList();
     private ObservableList<ScheduledTransfer> scheduledTransfers = FXCollections.observableArrayList();
@@ -78,6 +78,65 @@ public class ClientDashboardController {
         for (CarteVirtuelle c : allUserCards) {
             carteCache.put(c.getId(), c);
         }
+    }
+
+    // ========== EXPORT METHODS ==========
+
+    @FXML
+    private void handleExportScheduledPDF() {
+        List<ScheduledTransferExport.ScheduledTransferData> data = prepareScheduledTransferData();
+        boolean success = ScheduledTransferExport.exportToPDF(data, scheduledTable.getScene().getWindow());
+        if (success) {
+            showInfo("✅ PDF exporté avec succès !");
+        } else {
+            showAlert("❌ Erreur lors de l'export PDF");
+        }
+    }
+
+    @FXML
+    private void handleExportScheduledExcel() {
+        // Pour Excel, vous pouvez implémenter une méthode similaire
+        showInfo("📊 Export Excel sera bientôt disponible");
+    }
+
+    private List<ScheduledTransferExport.ScheduledTransferData> prepareScheduledTransferData() {
+        List<ScheduledTransferExport.ScheduledTransferData> data = new ArrayList<>();
+
+        for (ScheduledTransfer st : scheduledTransfers) {
+            String carteSourceNum = getFullCardNumberById(st.getFromCardId());
+            String carteDestNum = getFullCardNumberById(st.getToCardId());
+
+            // Récupérer les informations du propriétaire
+            String email = "";
+            String nom = "";
+            CarteVirtuelle carte = carteCache.get(st.getFromCardId());
+            if (carte != null) {
+                Utilisateur proprietaire = utilisateurService.getUserByCardId(carte.getId());
+                if (proprietaire != null) {
+                    email = proprietaire.getEmail();
+                    nom = proprietaire.getPrenom() + " " + proprietaire.getNom();
+                }
+            }
+
+            // Déterminer la fréquence (à adapter selon votre modèle)
+            String frequence = "Une fois";
+            // Si vous avez un champ fréquence dans ScheduledTransfer, utilisez-le
+
+            data.add(new ScheduledTransferExport.ScheduledTransferData(
+                    st, carteSourceNum, carteDestNum, email, nom, frequence));
+        }
+
+        return data;
+    }
+
+    private String getFullCardNumberById(int cardId) {
+        CarteVirtuelle c = carteCache.get(cardId);
+        return c != null ? c.getNumeroCarte() : "Inconnue";
+    }
+
+    private void showInfo(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
+        alert.showAndWait();
     }
 
     // ========== Portefeuilles methods ==========

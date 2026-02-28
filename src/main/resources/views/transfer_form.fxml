@@ -115,12 +115,15 @@
                             <TextField fx:id="txtMontant" promptText="0.00" styleClass="modern-input"/>
                         </VBox>
 
-                        <!-- Aperçu du transfert -->
+                        <!-- Aperçu du transfert avec frais -->
                         <VBox spacing="5" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 12;">
                             <Label text="APERÇU DU TRANSFERT" styleClass="card-type-header" style="-fx-text-fill: #666;"/>
                             <Label fx:id="lblSourceInfo" text="Source: -"/>
                             <Label fx:id="lblDestInfo" text="Destination: -"/>
                             <Label fx:id="lblMontantInfo" text="Montant: -"/>
+                            <Label fx:id="lblFraisInfo" text="Frais: -" style="-fx-text-fill: #e67e22;"/>
+                            <Label fx:id="lblFraisMontant" text="-" style="-fx-text-fill: #e67e22; -fx-font-weight: bold;"/>
+                            <Label fx:id="lblMontantTotal" text="-" style="-fx-text-fill: #e74c3c; -fx-font-weight: bold;"/>
                             <Label fx:id="lblConversionInfo" text="Taux: 1 USD = 3.1 DT | 1 EUR = 3.4 DT"/>
                         </VBox>
 

@@ -1,10 +1,7 @@
 package Controllers;
 
-import Models.Session;
-import Models.Transaction;
-import Models.Utilisateur;
-import Services.TransactionService;
-import Services.CarteVirtuelleService;
+import Models.*;
+import Services.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +28,7 @@ public class TransactionsController {
 
     private TransactionService transactionService = new TransactionService();
     private CarteVirtuelleService carteService = new CarteVirtuelleService();
+    private UtilisateurService utilisateurService = new UtilisateurService();
     private ObservableList<Transaction> transactions = FXCollections.observableArrayList();
     private String currentFilter = "ALL";
 
@@ -43,8 +42,6 @@ public class TransactionsController {
     }
 
     private void loadTransactions() {
-        // Récupérer toutes les transactions (pour l'instant)
-        // Idéalement, on pourrait filtrer par utilisateur via les cartes
         List<Transaction> allTransactions = transactionService.afficherTous();
         transactions.setAll(allTransactions);
         applyFilter();
@@ -168,6 +165,76 @@ public class TransactionsController {
         return "Carte " + cardId;
     }
 
+    // ========== NOUVELLES MÉTHODES D'EXPORT ==========
+
+    @FXML
+    private void handleExportPDF() {
+        List<ExportService.TransferData> transferData = prepareTransferData();
+        boolean success = ExportService.exportToPDF(transferData, lblTotalTransactions.getScene().getWindow());
+        if (success) {
+            showInfo("✅ Fichier PDF exporté avec succès !");
+        } else {
+            showAlert("❌ Erreur lors de l'export PDF");
+        }
+    }
+
+    @FXML
+    private void handleExportExcel() {
+        List<ExportService.TransferData> transferData = prepareTransferData();
+        boolean success = ExportService.exportToExcel(transferData, lblTotalTransactions.getScene().getWindow());
+        if (success) {
+            showInfo("✅ Fichier Excel exporté avec succès !");
+        } else {
+            showAlert("❌ Erreur lors de l'export Excel");
+        }
+    }
+
+    private List<ExportService.TransferData> prepareTransferData() {
+        List<ExportService.TransferData> data = new ArrayList<>();
+
+        for (Transaction t : transactions) {
+            String carteSourceNum = getFullCardNumber(t.getCarteSourceId());
+            String carteDestNum = getFullCardNumber(t.getCarteDestId());
+
+            // Récupérer les informations du propriétaire
+            String email = "";
+            String nom = "";
+            if (t.getCarteSourceId() != null) {
+                CarteVirtuelle carte = carteService.afficherParId(t.getCarteSourceId());
+                if (carte != null) {
+                    Utilisateur proprietaire = utilisateurService.getUserByCardId(carte.getId());
+                    if (proprietaire != null) {
+                        email = proprietaire.getEmail();
+                        nom = proprietaire.getPrenom() + " " + proprietaire.getNom();
+                    }
+                }
+            }
+
+            data.add(new ExportService.TransferData(t, carteSourceNum, carteDestNum, email, nom));
+        }
+
+        return data;
+    }
+
+    private String getFullCardNumber(Integer cardId) {
+        if (cardId == null) return "-";
+        var carte = carteService.afficherParId(cardId);
+        if (carte == null) return "Carte " + cardId;
+        return carte.getNumeroCarte();
+    }
+
+    private void showInfo(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
+        alert.showAndWait();
+    }
+
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, msg);
+        alert.showAndWait();
+    }
+
+    // ========== MÉTHODES DE FILTRAGE EXISTANTES ==========
+
     @FXML
     private void handleAllTransactions() {
         currentFilter = "ALL";
@@ -191,6 +258,8 @@ public class TransactionsController {
         currentFilter = "TRANSFERT";
         applyFilter();
     }
+
+    // ========== MÉTHODES DE NAVIGATION EXISTANTES ==========
 
     @FXML
     private void handlePortefeuilles() {

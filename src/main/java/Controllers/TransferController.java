@@ -29,8 +29,14 @@ public class TransferController {
     @FXML private TextField txtMontant;
     @FXML private Label lblSourceInfo, lblDestInfo, lblMontantInfo, lblConversionInfo;
 
+    // New fee-related fields
+    @FXML private Label lblFraisInfo;
+    @FXML private Label lblFraisMontant;
+    @FXML private Label lblMontantTotal;
+
     private CarteVirtuelleService carteService = new CarteVirtuelleService();
     private UtilisateurService utilisateurService = new UtilisateurService();
+    private TransferFeeService transferFeeService = new TransferFeeService();
     private ObservableList<CarteVirtuelle> mesCartes = FXCollections.observableArrayList();
     private ObservableList<CarteVirtuelle> searchResults = FXCollections.observableArrayList();
     private CarteVirtuelle selectedDestCard = null;
@@ -170,10 +176,42 @@ public class TransferController {
         updateInfo();
     }
 
+    private void updateFees() {
+        CarteVirtuelle source = comboMesCartes.getValue();
+        String montantText = txtMontant.getText().trim();
+
+        if (source != null && !montantText.isEmpty()) {
+            try {
+                double montant = Double.parseDouble(montantText);
+                if (montant > 0) {
+                    int userId = Session.getUtilisateur().getId();
+
+                    // Calculer les frais
+                    double frais = transferFeeService.calculerFrais(montant, userId);
+                    double montantTotal = montant + frais;
+
+                    // Mettre à jour les labels
+                    lblFraisInfo.setText(transferFeeService.getFeesInfoMessage(userId));
+                    lblFraisMontant.setText(String.format("Frais (%.1f%%): %.2f %s",
+                            transferFeeService.getTauxFrais(userId), frais, source.getDevise()));
+                    lblMontantTotal.setText(String.format("Total à débiter: %.2f %s",
+                            montantTotal, source.getDevise()));
+                }
+            } catch (NumberFormatException e) {
+                // Ignorer
+            }
+        } else {
+            lblFraisInfo.setText("Frais: -");
+            lblFraisMontant.setText("-");
+            lblMontantTotal.setText("-");
+        }
+    }
+
     private void updateInfo() {
         CarteVirtuelle source = comboMesCartes.getValue();
         String montantText = txtMontant.getText().trim();
 
+        // Info source
         if (source != null) {
             lblSourceInfo.setText("Source: ID:" + source.getId() + " | " +
                     source.getNumeroCarte() + " (" + source.getSolde() + " " + source.getDevise() + ")");
@@ -181,6 +219,7 @@ public class TransferController {
             lblSourceInfo.setText("Source: -");
         }
 
+        // Info destination
         if (selectedDestCard != null) {
             lblDestInfo.setText("Destination: ID:" + selectedDestCard.getId() + " | " +
                     selectedDestCard.getNumeroCarte() + " (" + selectedDestCard.getSolde() + " " + selectedDestCard.getDevise() + ")");
@@ -188,6 +227,7 @@ public class TransferController {
             lblDestInfo.setText("Destination: -");
         }
 
+        // Info montant et conversion
         if (!montantText.isEmpty() && source != null && selectedDestCard != null) {
             try {
                 double montant = Double.parseDouble(montantText);
@@ -202,10 +242,18 @@ public class TransferController {
                         lblMontantInfo.setText(String.format("Montant: %.2f %s",
                                 montant, source.getDevise()));
                     }
+
+                    // Mettre à jour les frais
+                    updateFees();
                 }
             } catch (NumberFormatException e) {
                 // Ignorer
             }
+        } else {
+            // Reset fee display if no valid input
+            lblFraisInfo.setText("Frais: -");
+            lblFraisMontant.setText("-");
+            lblMontantTotal.setText("-");
         }
     }
 
@@ -236,8 +284,14 @@ public class TransferController {
             return;
         }
 
-        if (source.getSolde() < montant) {
-            showAlert("Solde insuffisant sur votre carte.");
+        // Calculer le montant total avec frais
+        int userId = Session.getUtilisateur().getId();
+        double frais = transferFeeService.calculerFrais(montant, userId);
+        double montantTotal = montant + frais;
+
+        if (source.getSolde() < montantTotal) {
+            showAlert(String.format("Solde insuffisant sur votre carte. Nécessaire: %.2f %s (dont frais: %.2f %s)",
+                    montantTotal, source.getDevise(), frais, source.getDevise()));
             return;
         }
 
@@ -275,11 +329,31 @@ public class TransferController {
         System.out.println("✅ Vérification réussie - Transfert autorisé pour " + country + ", " + city);
         // --- FIN DE LA VÉRIFICATION ---
 
+        // Demander confirmation des frais
+        double taux = transferFeeService.getTauxFrais(userId);
+
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirmation des frais");
+        confirmAlert.setHeaderText("Frais de transfert");
+        confirmAlert.setContentText(String.format(
+                "Montant à transférer: %.2f %s\n" +
+                        "Frais (%.1f%%): %.2f %s\n" +
+                        "Total à débiter: %.2f %s\n\n" +
+                        "Voulez-vous continuer?",
+                montant, source.getDevise(), taux, frais, source.getDevise(),
+                montantTotal, source.getDevise()));
+
+        if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+            return;
+        }
+
+        // Effectuer le transfert (seulement le montant, pas les frais)
         boolean success = carteService.transferer(source.getId(), selectedDestCard.getId(), montant);
 
         if (success) {
             Alert info = new Alert(Alert.AlertType.INFORMATION,
-                    "✅ Transfert effectué avec succès !");
+                    String.format("✅ Transfert effectué avec succès !\nFrais prélevés: %.2f %s",
+                            frais, source.getDevise()));
             info.showAndWait();
             fermer();
         } else {
