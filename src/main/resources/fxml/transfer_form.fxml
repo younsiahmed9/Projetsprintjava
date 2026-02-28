@@ -127,8 +127,9 @@
                             <Label fx:id="lblConversionInfo" text="Taux: 1 USD = 3.1 DT | 1 EUR = 3.4 DT"/>
                         </VBox>
 
-                        <!-- Boutons d'action -->
+                        <!-- Boutons d'action (UN SEUL JEU DE BOUTONS) -->
                         <HBox spacing="15" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+                            <Button text="← Retour" onAction="#handleRetour" styleClass="btn-back" prefWidth="120" prefHeight="40"/>
                             <Button text="Annuler" onAction="#handleAnnuler" styleClass="btn-cancel" prefWidth="120" prefHeight="40"/>
                             <Button text="Transférer" onAction="#handleTransferer" styleClass="btn-details-orange" prefWidth="200" prefHeight="40"/>
                         </HBox>

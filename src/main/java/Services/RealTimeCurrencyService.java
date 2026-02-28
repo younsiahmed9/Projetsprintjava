@@ -17,7 +17,7 @@ import java.util.Map;
 public class RealTimeCurrencyService {
 
     // Remplacez par votre clé API gratuite depuis https://www.exchangerate-api.com/
-    private static final String API_KEY = "VOTRE_CLE_API";
+    private static final String API_KEY = "ee4a5a4e699ab5e39e85079d";
     private static final String API_URL = "https://v6.exchangerate-api.com/v6/" + API_KEY + "/latest/";
 
     // Cache pour éviter trop d'appels API

@@ -52,14 +52,14 @@
     -fx-max-width: 60;
     -fx-min-height: 60;
     -fx-max-height: 60;
-    -fx-background-radius: 50; /* Forme cercle */
+    -fx-background-radius: 50;
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 10);
 }
 
 .btn-add-circle:hover {
     -fx-background-color: #f78f34;
-    -fx-translate-y: -3; /* Effet de soulèvement */
+    -fx-translate-y: -3;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 20, 0, 0, 12);
 }
 
@@ -95,7 +95,7 @@
 }
 
 .account-card:hover {
-    -fx-translate-y: -5; /* Effet elevated au survol */
+    -fx-translate-y: -5;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 25, 0, 0, 15);
 }
 
@@ -115,9 +115,10 @@
 
 .btn-details-orange:hover {
     -fx-background-color: #f78f34;
-    -fx-scale-x: 1.05; /* Agrandit légèrement au survol */
+    -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
+
 /* Style du conteneur Popup */
 .popup-container {
     -fx-background-color: white;
@@ -153,17 +154,17 @@
 }
 
 .modern-input {
-    -fx-prompt-text-fill: #BCBCBC; /* Couleur grise claire pour le placeholder */
+    -fx-prompt-text-fill: #BCBCBC;
     -fx-font-style: italic;
 }
 
 .modern-input:focused {
-    -fx-prompt-text-fill: transparent; /* Cache le texte quand on clique dedans */
+    -fx-prompt-text-fill: transparent;
 }
 
 /* Fond grisâtre qui recouvre tout l'écran */
 .overlay {
-    -fx-background-color: rgba(0, 0, 0, 0.5); /* Noir avec 50% d'opacité */
+    -fx-background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Fenêtre Popup agrandie et centrée */
@@ -184,34 +185,32 @@
 }
 
 /* --- BOUTON MODIFIER (VERT) --- */
-.btn-action-light-blue { /* Garde ce nom si c'est celui dans ton FXML pour le bouton vert */
-    -fx-background-color: #E8F5E9; /* Vert très clair */
-    -fx-text-fill: #175905;        /* Ton vert foncé */
+.btn-action-light-blue {
+    -fx-background-color: #E8F5E9;
+    -fx-text-fill: #175905;
     -fx-font-weight: bold;
     -fx-background-radius: 12;
     -fx-cursor: hand;
 }
 .btn-action-light-blue:hover {
-    -fx-background-color: #d3f4ca; /* Vert un peu plus prononcé au hover */
+    -fx-background-color: #d3f4ca;
 }
 
 /* --- BOUTON SUPPRIMER (BLEU) --- */
-.btn-action-light-red { /* Garde ce nom si c'est celui dans ton FXML pour le bouton bleu */
-    -fx-background-color: #E8EAF6; /* Bleu très clair */
-    -fx-text-fill: #182d88;        /* Ton bleu foncé */
+.btn-action-light-red {
+    -fx-background-color: #E8EAF6;
+    -fx-text-fill: #182d88;
     -fx-font-weight: bold;
     -fx-background-radius: 12;
     -fx-cursor: hand;
 }
 .btn-action-light-red:hover {
-    -fx-background-color: #cbd4f6; /* Bleu un peu plus prononcé au hover */
+    -fx-background-color: #cbd4f6;
 }
-
 
 /* Etat de compte badges */
 .badge-actif { -fx-background-color: #E8F5E9; -fx-text-fill: #2E7D32; }
 .badge-bloque { -fx-background-color: #FFEBEE; -fx-text-fill: #C62828; }
-
 
 /* Conteneur de la popup de suppression */
 .delete-popup {
@@ -232,8 +231,8 @@
 }
 
 .btn-confirm-delete {
-    -fx-background-color: #FFEBEE; /* Rouge très clair (Pastel) */
-    -fx-text-fill: #C62828;        /* Rouge foncé */
+    -fx-background-color: #FFEBEE;
+    -fx-text-fill: #C62828;
     -fx-background-radius: 12;
     -fx-font-weight: bold;
     -fx-cursor: hand;
@@ -246,8 +245,6 @@
 }
 
 /* --- Styles pour le Formulaire de Modification --- */
-
-/* Conteneur principal (VBox) */
 .form-container {
     -fx-background-color: white;
     -fx-background-radius: 25;
@@ -257,15 +254,13 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 10);
 }
 
-/* Labels au-dessus des champs (Numéro, Solde, etc.) */
 .field-label {
     -fx-text-fill: #7f8c8d;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-padding: 0 0 2 5; /* Petit décalage vers la droite */
+    -fx-padding: 0 0 2 5;
 }
 
-/* Champs de texte (TextField) et ComboBox */
 .form-field {
     -fx-background-color: #f8f9fa;
     -fx-background-radius: 10;
@@ -283,12 +278,10 @@
     -fx-border-width: 1.5;
 }
 
-/* Style spécifique pour la ComboBox */
 .combo-box .list-cell {
     -fx-text-fill: #2c3e50;
 }
 
-/* Bouton Enregistrer (Déjà fourni, mais intégré ici) */
 .btn-save {
     -fx-background-color: #182d88;
     -fx-text-fill: white;
@@ -305,7 +298,6 @@
     -fx-scale-y: 1.02;
 }
 
-/* Bouton Annuler (Réutilisant le style gris que nous avons créé pour la suppression) */
 .btn-cancel-flat {
     -fx-background-color: #f5f5f5;
     -fx-text-fill: #757575;
@@ -326,7 +318,7 @@
 
 .menu-button {
     -fx-alignment: BASELINE_LEFT;
-    -fx-graphic-text-gap: 10; /* Espace entre l'icône et le texte */
+    -fx-graphic-text-gap: 10;
 }
 
 .search-box {
@@ -349,16 +341,14 @@
     -fx-border-color: transparent;
 }
 
-
 .status-badge {
-    -fx-padding: 6 0; /* On enlève le padding latéral pour gérer la largeur via le label */
-    -fx-min-width: 100; /* Largeur fixe du badge lui-même */
+    -fx-padding: 6 0;
+    -fx-min-width: 100;
     -fx-alignment: center;
     -fx-background-radius: 8;
     -fx-font-size: 11;
     -fx-font-weight: bold;
 }
-
 
 .column-header-custom {
     -fx-text-fill: #A0A0A0;
@@ -397,19 +387,17 @@
 .btn-action-edit { -fx-text-fill: #182d88; -fx-background-color: transparent; -fx-font-size: 18; -fx-cursor: hand; }
 .btn-action-delete { -fx-text-fill: #FF5252; -fx-background-color: transparent; -fx-font-size: 18; -fx-cursor: hand; }
 
-/* Style des colonnes d'en-tête (custom) */
 .column-header-custom {
     -fx-text-fill: #999999;
     -fx-font-weight: bold;
     -fx-font-size: 11px;
 }
 
-/* Style de chaque ligne de crédit */
 .custom-row-credit {
     -fx-background-color: white;
     -fx-background-radius: 12;
     -fx-border-color: #f0f0f0;
-    -fx-border-width: 0 0 1 0; /* Ligne de séparation fine */
+    -fx-border-width: 0 0 1 0;
     -fx-transition: 0.3s;
 }
 
@@ -418,7 +406,6 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
 }
 
-/* Badges Status */
 .status-badge {
     -fx-padding: 4 10;
     -fx-background-radius: 10;
@@ -429,7 +416,6 @@
 .status-active { -fx-background-color: #e8f5e9; -fx-text-fill: #3e893e; }
 .status-pending { -fx-background-color: #fff3e0; -fx-text-fill: #ef6c00; }
 
-/* Boutons Action */
 .btn-action-edit, .btn-action-delete {
     -fx-background-color: transparent;
     -fx-font-size: 16;
@@ -440,8 +426,6 @@
 .btn-action-delete { -fx-text-fill: #e74c3c; }
 .btn-action-edit:hover { -fx-background-color: #e8eaf6; -fx-background-radius: 5; }
 .btn-action-delete:hover { -fx-background-color: #fdedec; -fx-background-radius: 5; }
-
-
 
 /* Style du bouton retour */
 .btn-back {
@@ -458,19 +442,42 @@
 }
 .btn-back:hover { -fx-background-color: #eeeeee; }
 
-/* KPI Cards */
+/* ========== STYLES ADMIN DASHBOARD (NOUVEAU) ========== */
+
+/* KPI Cards - Version Admin */
 .kpi-card {
     -fx-background-color: white;
     -fx-background-radius: 20;
     -fx-padding: 20;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 15, 0, 0, 5);
+    -fx-alignment: center;
 }
 
-.kpi-value-blue { -fx-text-fill: #182d88; -fx-font-size: 24; -fx-font-weight: bold; }
-.kpi-value-green { -fx-text-fill: #3e893e; -fx-font-size: 24; -fx-font-weight: bold; }
-.kpi-value-dark { -fx-text-fill: #EF6C00FF; -fx-font-size: 24; -fx-font-weight: bold; }
+.kpi-value-blue {
+    -fx-text-fill: #182d88;
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+}
 
-/* Containers */
+.kpi-value-green {
+    -fx-text-fill: #3e893e;
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+}
+
+.kpi-value-orange {
+    -fx-text-fill: #f39c12;
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+}
+
+.kpi-value-dark {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+}
+
+/* Containers pour graphiques */
 .chart-container, .table-card-container {
     -fx-background-color: white;
     -fx-background-radius: 20;
@@ -484,45 +491,39 @@
     -fx-text-fill: #2c3e50;
 }
 
-/* Style des barres en mode "Stick" */
+/* Style des barres pour graphiques */
 .chart-bar {
     -fx-bar-fill: #182d88;
-    /* On force une largeur très fine */
     -fx-max-bar-width: 8px;
-    /* On arrondit les bords pour un effet capsule/stick */
     -fx-background-radius: 10;
 }
 
-/* Optionnel : changer la couleur au survol pour l'interactivité */
 .chart-bar:hover {
     -fx-bar-fill: #0d1847;
 }
 
-/* Rendre les lignes de la grille encore plus discrètes */
+/* Lignes de grille discrètes */
 .chart-horizontal-grid-lines {
     -fx-stroke: #f5f5f5;
-    -fx-stroke-dash-array: 3 3; /* Lignes pointillées pour plus de finesse */
+    -fx-stroke-dash-array: 3 3;
 }
 
-/* Style des lignes de la grille (plus discrètes) */
 .chart-vertical-grid-lines, .chart-horizontal-grid-lines {
     -fx-stroke: #f0f0f0;
 }
 
-/* Style des labels sur les axes */
+/* Labels des axes */
 .axis-label {
     -fx-text-fill: #182d88;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
 }
 
-/* Style des chiffres et noms sur les axes */
 .axis {
     -fx-tick-label-fill: #999999;
     -fx-font-size: 10px;
 }
 
-/* Supprimer la bordure du graphique */
 .chart-content {
     -fx-padding: 10px;
 }
@@ -531,31 +532,29 @@
     -fx-background-color: transparent;
 }
 
+/* Styles pour les couleurs des graphiques pie */
+.default-color0.chart-pie { -fx-pie-color: #182d88; }
+.default-color1.chart-pie { -fx-pie-color: #27ae60; }
+.default-color2.chart-pie { -fx-pie-color: #f39c12; }
+.default-color3.chart-pie { -fx-pie-color: #e74c3c; }
+.default-color4.chart-pie { -fx-pie-color: #9b59b6; }
 
-.popup-container {
-    -fx-background-color: white;
-    -fx-background-radius: 20;
-}
-
-.modern-input {
-    -fx-background-color: #f4f4f4;
-    -fx-background-radius: 8;
-    -fx-padding: 10;
-    -fx-border-color: transparent;
-}
-
-.modern-input:focused {
-    -fx-border-color: #182d88;
-    -fx-background-color: white;
-}
-
-.field-label-bold {
+/* Bouton Danger (Rouge) */
+.btn-danger {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-text-fill: #444;
-    -fx-font-size: 13;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
 }
 
-.btn-primary-modern {
+.btn-danger:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* Bouton Primaire (Bleu) */
+.btn-primary {
     -fx-background-color: #182d88;
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -564,60 +563,35 @@
     -fx-cursor: hand;
 }
 
+.btn-primary:hover {
+    -fx-background-color: #263ea3;
+}
+
+/* Bouton Secondaire (Gris) */
 .btn-secondary {
-    -fx-background-color: #eee;
-    -fx-text-fill: #666;
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
     -fx-background-radius: 8;
     -fx-padding: 10 20;
     -fx-cursor: hand;
 }
-.popup-card {
-    -fx-background-color: white;
-    -fx-background-radius: 20; /* Coins très arrondis */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 0);
+
+.btn-secondary:hover {
+    -fx-background-color: #7f8c8d;
 }
 
-.modern-input {
-    -fx-background-color: #fcfcfc;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-padding: 8;
-    -fx-font-size: 14;
+/* Progress Bar */
+.progress-bar {
+    -fx-accent: #182d88;
 }
 
-.btn-confirm {
-    -fx-background-color: #182d88;
-    -fx-text-fill: white;
-    -fx-background-radius: 12;
-    -fx-font-weight: bold;
-    -fx-padding: 12 25;
+.progress-bar .track {
+    -fx-background-color: #ecf0f1;
 }
 
-.btn-cancel {
-    -fx-background-color: #f1f2f6;
-    -fx-text-fill: #2f3542;
-    -fx-background-radius: 12;
-    -fx-font-weight: bold;
-    -fx-padding: 12 25;
-}
+/* ========== CARTE STYLES (EXISTANT) ========== */
 
-.btn-delete-final {
-    -fx-background-color: #ffebee; /* Fond rose/rouge très clair */
-    -fx-text-fill: #d32f2f;       /* Texte rouge foncé */
-    -fx-background-radius: 12;
-    -fx-font-weight: bold;
-    -fx-padding: 12 25;
-    -fx-cursor: hand;
-    -fx-border-color: #ffcdd2;    /* Bordure légère */
-    -fx-border-radius: 12;
-}
-
-.btn-delete-final:hover {
-    -fx-background-color: #ffcdd2;
-}
-
-/* Carte styles for card display */
 .carte-card {
     -fx-background-color: white;
     -fx-background-radius: 15;
@@ -674,4 +648,357 @@
     -fx-background-color: rgba(0,0,0,0.2);
     -fx-background-radius: 10;
     -fx-padding: 2 8;
+}
+
+/* Popup card */
+.popup-card {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 15, 0, 0, 0);
+}
+
+/* Bouton confirmation */
+.btn-confirm {
+    -fx-background-color: #182d88;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+    -fx-padding: 12 25;
+}
+
+/* Bouton suppression final */
+.btn-delete-final {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #d32f2f;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-border-color: #ffcdd2;
+    -fx-border-radius: 12;
+}
+
+.btn-delete-final:hover {
+    -fx-background-color: #ffcdd2;
+}
+
+/* Styles pour les lignes de transaction */
+.transaction-row {
+    -fx-background-color: white;
+    -fx-padding: 12 25;
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1 0;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.transaction-row:hover {
+    -fx-background-color: #f9f9fb;
+}
+
+.transaction-row .label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+}
+
+/* Style pour les montants positifs/négatifs */
+.amount-positive {
+    -fx-text-fill: #27ae60;
+    -fx-font-weight: bold;
+}
+
+.amount-negative {
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
+
+/* Badges de statut */
+.status-success {
+    -fx-background-color: #e8f5e9;
+    -fx-text-fill: #3e893e;
+    -fx-padding: 4 10;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+}
+
+.status-failed {
+    -fx-background-color: #ffebee;
+    -fx-text-fill: #c62828;
+    -fx-padding: 4 10;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+}
+
+/* En-têtes de colonnes */
+.column-header-custom {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+/* Styles pour l'Accordion */
+.accordion {
+    -fx-background-color: transparent;
+}
+
+.titled-pane {
+    -fx-background-color: transparent;
+    -fx-text-fill: #182d88;
+}
+
+.titled-pane > .title {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 12 15;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+}
+
+.titled-pane > .title:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #182d88;
+}
+
+.titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5 0 0 0;
+}
+
+/* Styles pour les sous-menus */
+.submenu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666;
+    -fx-font-size: 13px;
+    -fx-padding: 8 15;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+}
+
+.submenu-button:hover {
+    -fx-background-color: #f0f5ff;
+    -fx-text-fill: #182d88;
+}
+
+.submenu-button:pressed {
+    -fx-background-color: #e3e9f5;
+}
+
+/* Bouton de déconnexion spécial */
+.logout-button {
+    -fx-background-color: #fff3e0;
+    -fx-text-fill: #e65100;
+    -fx-font-weight: bold;
+    -fx-border-color: #ffe0b2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.logout-button:hover {
+    -fx-background-color: #ffe0b2;
+}
+
+/* Ajustements pour la sidebar */
+.sidebar {
+    -fx-background-color: white;
+    -fx-padding: 30 15;
+    -fx-min-width: 260;
+    -fx-border-color: #eee;
+    -fx-border-width: 0 1 0 0;
+}
+
+
+/* Styles pour l'Accordion */
+.accordion {
+    -fx-background-color: transparent;
+}
+
+.titled-pane {
+    -fx-background-color: transparent;
+    -fx-text-fill: #182d88;
+}
+
+.titled-pane > .title {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 12 15;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+}
+
+.titled-pane > .title:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #182d88;
+}
+
+.titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5 0 0 0;
+}
+
+/* Styles pour les sous-menus */
+.submenu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666;
+    -fx-font-size: 13px;
+    -fx-padding: 8 15;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-max-width: Infinity;
+}
+
+.submenu-button:hover {
+    -fx-background-color: #f0f5ff;
+    -fx-text-fill: #182d88;
+}
+
+.submenu-button:pressed {
+    -fx-background-color: #e3e9f5;
+}
+
+/* Bouton de déconnexion spécial */
+.logout-button {
+    -fx-background-color: #fff3e0;
+    -fx-text-fill: #e65100;
+    -fx-font-weight: bold;
+    -fx-border-color: #ffe0b2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.logout-button:hover {
+    -fx-background-color: #ffe0b2;
+}
+
+/* Ajustements pour la sidebar */
+.sidebar {
+    -fx-background-color: white;
+    -fx-padding: 30 15;
+    -fx-min-width: 260;
+    -fx-border-color: #eee;
+    -fx-border-width: 0 1 0 0;
+}
+
+/* Style des boutons de menu */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8E92AC;
+    -fx-font-size: 15;
+    -fx-max-width: Infinity;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 15 25;
+    -fx-cursor: hand;
+}
+
+.menu-button .label {
+    -fx-text-fill: #3e893e;
+    -fx-font-size: 18px;
+}
+
+/* Styles pour l'Accordion */
+.accordion {
+    -fx-background-color: transparent;
+}
+
+.titled-pane {
+    -fx-background-color: transparent;
+    -fx-text-fill: #182d88;
+}
+
+.titled-pane > .title {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 12 15;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+}
+
+.titled-pane > .title:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #182d88;
+}
+
+.titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5 0 0 0;
+}
+
+/* Styles pour les sous-menus */
+.submenu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666;
+    -fx-font-size: 13px;
+    -fx-padding: 8 15;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-max-width: Infinity;
+}
+
+.submenu-button:hover {
+    -fx-background-color: #f0f5ff;
+    -fx-text-fill: #182d88;
+}
+
+/* Bouton de déconnexion */
+.logout-button {
+    -fx-background-color: #fff3e0;
+    -fx-text-fill: #e65100;
+    -fx-font-weight: bold;
+    -fx-border-color: #ffe0b2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 15 20;
+}
+
+.logout-button:hover {
+    -fx-background-color: #ffe0b2;
+}
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: white;
+    -fx-padding: 30 15;
+    -fx-min-width: 260;
+    -fx-border-color: #eee;
+    -fx-border-width: 0 1 0 0;
+}
+
+/* Styles pour les boutons d'action dans le tableau */
+/* Styles pour les boutons d'action dans le tableau */
+.btn-action-edit {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 5;
+}
+
+.btn-action-delete {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-padding: 5 10;
+    -fx-background-radius: 5;
+}
+
+/* Style pour la section des transactions */
+#transactionsSection {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);
 }

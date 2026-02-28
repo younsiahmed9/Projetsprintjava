@@ -1,30 +1,32 @@
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import Services.Config;
+import Services.RealTimeCurrencyService;
 import utils.MyDataBase;
+import Services.NavigationService;
 import Services.ScheduledTransferExecutor;
 import javafx.application.Application;
 import javafx.stage.Stage;
-/**
- * Point d'entrée principal de l'application FinTrack.
- * Lance l'interface de connexion (login.fxml).
- */
+
 public class Main extends Application {
     private ScheduledTransferExecutor executor;
-
 
     @Override
     public void init() {
         executor = new ScheduledTransferExecutor();
-        executor.start();  // starts the background thread
+        executor.start();
         System.out.println("🚀 Scheduled transfer executor started.");
+
+        // Test de configuration email
+        System.out.println("📧 Test de configuration email:");
+        System.out.println("   Clé API: " + (Config.getApiKey() != null ? "✅ Configurée" : "❌ Non configurée"));
+        System.out.println("   From: " + Config.getFromEmail());
     }
 
     @Override
     public void start(Stage primaryStage) {
         try {
+            // Initialiser le service de navigation
+            NavigationService.init(primaryStage);
+
             // Tester connexion DB
             if (MyDataBase.getInstance().getConnection() == null) {
                 System.err.println("❌ Connexion DB échouée!");
@@ -32,23 +34,38 @@ public class Main extends Application {
             }
             System.out.println("✅ Connexion DB réussie!");
 
-            // Charger login.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
-            Parent root = loader.load();
+            // ✅ TEST DES TAUX DE CHANGE EN TEMPS RÉEL
+            System.out.println("\n💱 TEST DES TAUX DE CHANGE:");
+            try {
+                double usdToDt = RealTimeCurrencyService.getExchangeRate("USD", "TND");
+                double eurToDt = RealTimeCurrencyService.getExchangeRate("EUR", "TND");
+                System.out.println("   ✅ Connexion API réussie!");
+                System.out.println("   💵 1 USD = " + String.format("%.3f", usdToDt) + " TND");
+                System.out.println("   💶 1 EUR = " + String.format("%.3f", eurToDt) + " TND");
+                System.out.println("   ⏱️  Mis à jour: " + java.time.LocalDateTime.now());
+            } catch (Exception e) {
+                System.out.println("   ❌ Erreur API taux de change: " + e.getMessage());
+                System.out.println("   ⚠️  Utilisation des taux de secours (3.1 USD, 3.4 EUR)");
+            }
+            System.out.println("----------------------------------------\n");
 
-            Scene scene = new Scene(root, 600, 450);
-            // CSS global (tokens + components)
-            scene.getStylesheets().add(getClass().getResource("/styles/colors.css").toExternalForm());
-            scene.getStylesheets().add(getClass().getResource("/styles/dashboard.css").toExternalForm());
+            // Charger login.fxml via le service de navigation
+            NavigationService.navigateTo("/fxml/login.fxml", "Connexion");
 
-            primaryStage.setTitle("FinTrack - Connexion");
-            primaryStage.setScene(scene);
-            primaryStage.setResizable(true);
+            // Afficher la stage (important !)
             primaryStage.show();
 
         } catch (Exception e) {
             System.err.println("❌ Erreur au démarrage: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stop() {
+        if (executor != null) {
+            executor.stop();
+            System.out.println("🛑 Scheduled transfer executor stopped.");
         }
     }
 

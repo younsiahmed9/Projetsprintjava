@@ -1,21 +1,15 @@
 package Controllers;
 
-import Models.CarteVirtuelle;
-import Models.Session;
-import Models.Utilisateur;
+import Models.*;
 import Services.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-import java.io.IOException;
 import java.util.List;
 
 public class TransferController {
@@ -37,6 +31,9 @@ public class TransferController {
     private CarteVirtuelleService carteService = new CarteVirtuelleService();
     private UtilisateurService utilisateurService = new UtilisateurService();
     private TransferFeeService transferFeeService = new TransferFeeService();
+    private TransactionService transactionService = new TransactionService();
+    private JavaMailService emailService = new JavaMailService(); // ✅ Changé ici
+
     private ObservableList<CarteVirtuelle> mesCartes = FXCollections.observableArrayList();
     private ObservableList<CarteVirtuelle> searchResults = FXCollections.observableArrayList();
     private CarteVirtuelle selectedDestCard = null;
@@ -351,11 +348,31 @@ public class TransferController {
         boolean success = carteService.transferer(source.getId(), selectedDestCard.getId(), montant);
 
         if (success) {
+            // Récupérer la transaction créée
+            List<Transaction> transactions = transactionService.afficherTous();
+            Transaction lastTransaction = transactions.stream()
+                    .filter(t -> t.getCarteSourceId() != null
+                            && t.getCarteSourceId() == source.getId()
+                            && t.getCarteDestId() != null
+                            && t.getCarteDestId() == selectedDestCard.getId()
+                            && Math.abs(t.getMontant() - montant) < 0.001)
+                    .findFirst()
+                    .orElse(null);
+
+            if (lastTransaction != null) {
+                // ✅ Envoyer email de confirmation avec JavaMail
+                emailService.sendTransferConfirmation(
+                        lastTransaction, source, selectedDestCard, frais
+                );
+            }
+
             Alert info = new Alert(Alert.AlertType.INFORMATION,
-                    String.format("✅ Transfert effectué avec succès !\nFrais prélevés: %.2f %s",
+                    String.format("✅ Transfert effectué avec succès !\nFrais prélevés: %.2f %s\nUn email de confirmation a été envoyé.",
                             frais, source.getDevise()));
             info.showAndWait();
-            fermer();
+
+            // Utiliser le service de navigation
+            NavigationService.navigateTo("/fxml/client_dashboard.fxml", "Mes Portefeuilles");
         } else {
             showAlert("Échec du transfert. Vérifiez les soldes et réessayez.");
         }
@@ -365,73 +382,33 @@ public class TransferController {
 
     @FXML
     private void handlePortefeuilles() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/client_dashboard.fxml"));
-            Stage stage = (Stage) comboMesCartes.getScene().getWindow();
-            stage.setScene(new Scene(root, 1280, 800));
-            stage.setTitle("FinTrack - Mes Portefeuilles");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur lors de la navigation vers les portefeuilles");
-        }
+        NavigationService.navigateTo("/fxml/client_dashboard.fxml", "Mes Portefeuilles");
     }
 
     @FXML
     private void handleCartes() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/carte_list.fxml"));
-            Stage stage = (Stage) comboMesCartes.getScene().getWindow();
-            stage.setScene(new Scene(root, 1280, 800));
-            stage.setTitle("FinTrack - Mes Cartes");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur lors de la navigation vers les cartes");
-        }
+        NavigationService.navigateTo("/fxml/carte_list.fxml", "Mes Cartes");
     }
 
     @FXML
     private void handleTransactions() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/transactions.fxml"));
-            Stage stage = (Stage) comboMesCartes.getScene().getWindow();
-            stage.setScene(new Scene(root, 1280, 800));
-            stage.setTitle("FinTrack - Transactions");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur lors de la navigation vers les transactions");
-        }
+        NavigationService.navigateTo("/fxml/transactions.fxml", "Transactions");
     }
 
     @FXML
     private void handleScheduledTransfer() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/scheduled_transfer_form.fxml"));
-            Stage stage = (Stage) comboMesCartes.getScene().getWindow();
-            stage.setScene(new Scene(root, 1280, 800));
-            stage.setTitle("FinTrack - Transferts programmés");
-        } catch (IOException e) {
+            NavigationService.navigateTo("/fxml/scheduled_transfer_form.fxml", "Transferts programmés");
+        } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Erreur lors de la navigation vers les transferts programmés");
+            showAlert("Erreur de navigation: " + e.getMessage());
         }
     }
 
     @FXML
     private void handleLogout() {
         Session.clear();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
-            Stage stage = (Stage) comboMesCartes.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("FinTrack - Connexion");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur lors de la déconnexion");
-        }
-    }
-
-    @FXML
-    private void handleRetour() {
-        handlePortefeuilles(); // Retour au dashboard principal
+        NavigationService.navigateTo("/fxml/login.fxml", "Connexion");
     }
 
     @FXML
@@ -442,6 +419,11 @@ public class TransferController {
     private void fermer() {
         Stage stage = (Stage) comboMesCartes.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void handleRetour() {
+        NavigationService.navigateTo("/fxml/client_dashboard.fxml", "Mes Portefeuilles");
     }
 
     private void showAlert(String msg) {

@@ -10,7 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -21,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -122,7 +120,7 @@ public class CarteListController {
 
     private void ouvrirFormulaireCarte(CarteVirtuelle c) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/carte_form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/carte_form.fxml"));
             Parent root = loader.load();
             CarteFormController controller = loader.getController();
             controller.setPortefeuille(portefeuille);
@@ -154,7 +152,7 @@ public class CarteListController {
     @FXML
     private void handleRetour() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/client_dashboard.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/client_dashboard.fxml"));
             Stage stage = (Stage) lblInfosPortefeuille.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {

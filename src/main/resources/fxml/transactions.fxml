@@ -12,6 +12,7 @@
 
     <BorderPane fx:id="mainContent" styleClass="main-container">
 
+        <!-- Left Sidebar -->
         <left>
             <VBox fx:id="sidebar" spacing="40" styleClass="sidebar">
                 <ImageView fitHeight="160" fitWidth="160" pickOnBounds="true" preserveRatio="true">
@@ -33,12 +34,6 @@
                         </graphic>
                     </Button>
 
-                    <Button text="Transactions" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT">
-                        <graphic>
-                            <Label text="📊" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
-                        </graphic>
-                    </Button>
-
                     <Button text="Transferts" onAction="#handleTransferts" styleClass="menu-button" alignment="BASELINE_LEFT">
                         <graphic>
                             <Label text="💸" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
@@ -51,6 +46,12 @@
                         </graphic>
                     </Button>
 
+                    <Button text="Transactions" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📊" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
                     <Button text="Déconnexion" onAction="#handleLogout" styleClass="menu-button" alignment="BASELINE_LEFT">
                         <graphic>
                             <Label text="🚪" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
@@ -60,11 +61,12 @@
             </VBox>
         </left>
 
+        <!-- Center Content -->
         <center>
             <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
-                <VBox spacing="30" style="-fx-padding: 35;">
+                <VBox spacing="25" style="-fx-padding: 30;">
 
-                    <!-- En-tête -->
+                    <!-- Header with Stats -->
                     <HBox alignment="CENTER_LEFT">
                         <VBox spacing="5">
                             <Label text="Historique des transactions" styleClass="header-title-blue"/>
@@ -81,32 +83,31 @@
                         </HBox>
                     </HBox>
 
-                    <!-- Statistiques des transactions -->
-                    <HBox spacing="30">
-                        <VBox spacing="20" prefWidth="200">
-                            <VBox styleClass="kpi-card">
-                                <Label text="Total transactions" styleClass="field-label"/>
-                                <Label fx:id="lblTotalTransactions" text="0" styleClass="kpi-value-blue"/>
-                            </VBox>
+                    <!-- Statistiques -->
+                    <HBox spacing="20">
+                        <VBox spacing="10" styleClass="kpi-card" prefWidth="200">
+                            <Label text="Total transactions" styleClass="field-label"/>
+                            <Label fx:id="lblTotalTransactions" text="0" styleClass="kpi-value-blue" style="-fx-font-size: 28;"/>
                         </VBox>
-                        <VBox spacing="20" prefWidth="200">
-                            <VBox styleClass="kpi-card">
-                                <Label text="Montant total" styleClass="field-label"/>
-                                <Label fx:id="lblMontantTotal" text="0.00 DT" styleClass="kpi-value-green"/>
-                            </VBox>
+
+                        <VBox spacing="10" styleClass="kpi-card" prefWidth="200">
+                            <Label text="Montant total" styleClass="field-label"/>
+                            <Label fx:id="lblMontantTotal" text="0.00 DT" styleClass="kpi-value-green" style="-fx-font-size: 28;"/>
                         </VBox>
-                        <VBox spacing="20" prefWidth="200">
-                            <VBox styleClass="kpi-card">
-                                <Label text="Réussies" styleClass="field-label"/>
-                                <Label fx:id="lblReussies" text="0" styleClass="kpi-value-dark"/>
-                            </VBox>
+
+                        <VBox spacing="10" styleClass="kpi-card" prefWidth="200">
+                            <Label text="Réussies" styleClass="field-label"/>
+                            <Label fx:id="lblReussies" text="0" styleClass="kpi-value-orange" style="-fx-font-size: 28;"/>
                         </VBox>
+
                         <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleExportPDF" styleClass="btn-primary" text="📄 PDF" prefWidth="100"/>
+                        <Button onAction="#handleExportExcel" styleClass="btn-secondary" text="📊 Excel" prefWidth="100"/>
                     </HBox>
 
-                    <!-- Tableau des transactions -->
-                    <VBox styleClass="table-card-container" VBox.vgrow="ALWAYS">
-                        <Label text="Liste des transactions" styleClass="card-title-internal" style="-fx-padding: 0 0 20 0;"/>
+                    <!-- Transactions Table -->
+                    <VBox spacing="15" styleClass="table-card-container">
+                        <Label text="Liste des transactions" styleClass="card-title-internal"/>
 
                         <!-- En-tête du tableau -->
                         <HBox spacing="0" alignment="CENTER_LEFT" style="-fx-padding: 12 25; -fx-background-color: #f8f9fa; -fx-background-radius: 10;">
@@ -121,14 +122,14 @@
                             <Label text="DESCRIPTION" minWidth="200" prefWidth="200" styleClass="column-header-custom" />
                         </HBox>
 
-                        <!-- Conteneur des transactions (rempli dynamiquement) -->
+                        <!-- Conteneur des transactions -->
                         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" vbarPolicy="NEVER">
                             <VBox fx:id="containerTransactions" spacing="0" style="-fx-padding: 5 0 0 0;" />
                         </ScrollPane>
-                    </VBox>
 
-                    <!-- Message si aucune transaction -->
-                    <Label fx:id="messageLabel" styleClass="status" wrapText="true" alignment="CENTER" maxWidth="Infinity"/>
+                        <!-- Message si aucune transaction -->
+                        <Label fx:id="messageLabel" styleClass="status" wrapText="true" alignment="CENTER" maxWidth="Infinity"/>
+                    </VBox>
 
                 </VBox>
             </ScrollPane>

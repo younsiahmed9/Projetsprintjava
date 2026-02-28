@@ -71,7 +71,7 @@ public class CarteController {
     @FXML
     private void goBackPortefeuilles() {
         try {
-            var resource = getClass().getResource("/views/portefeuille_dashboard.fxml");
+            var resource = getClass().getResource("/fxml/portefeuille_dashboard.fxml");
             if (resource == null) { messageLabel.setText("portefeuille_dashboard.fxml introuvable"); return; }
             Parent root = FXMLLoader.load(resource);
             Stage stage = (Stage) cartesFlow.getScene().getWindow();
@@ -121,7 +121,7 @@ public class CarteController {
     private void handleDeconnexion() {
         Session.clear();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
             Stage stage = (Stage) cartesFlow.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 450));
             stage.setTitle("FinTrack - Connexion");

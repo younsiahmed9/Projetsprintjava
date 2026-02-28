@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="Controllers.AdminDashboardController"
+           stylesheets="@../css/styles.css">
+
+    <BorderPane fx:id="mainContent" styleClass="main-container">
+
+        <!-- Left Sidebar -->
+        <left>
+            <VBox fx:id="sidebar" spacing="40" styleClass="sidebar">
+                <ImageView fitHeight="160" fitWidth="160" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png"/>
+                    </image>
+                </ImageView>
+
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Button text="Dashboard" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT" onAction="#handleDashboard">
+                        <graphic>
+                            <Label text="📊" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Utilisateurs" onAction="#handleUtilisateurs" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="👥" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Portefeuilles" onAction="#handlePortefeuilles" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💼" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Cartes" onAction="#handleCartes" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="💳" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Transactions" onAction="#handleTransactions" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📈" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Button text="Statistiques" onAction="#handleStatistiques" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="📉" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+
+                    <Region VBox.vgrow="ALWAYS" />
+
+                    <Button text="Déconnexion" onAction="#handleLogout" styleClass="menu-button" alignment="BASELINE_LEFT">
+                        <graphic>
+                            <Label text="🚪" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+            </VBox>
+        </left>
+
+        <!-- Center Content -->
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="25" style="-fx-padding: 30;">
+
+                    <!-- Header with Refresh and Export Buttons -->
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="5">
+                            <Label text="Dashboard Administration" styleClass="header-title-blue"/>
+                            <Label fx:id="welcomeLabel" text="Bienvenue, Administrateur" style="-fx-text-fill: #999; -fx-font-size: 14;"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleExportStatsPDF" styleClass="btn-primary" text="📊 Statistiques PDF" prefWidth="150"/>
+                        <Button onAction="#handleRefresh" styleClass="btn-primary" text="🔄 Rafraîchir" prefWidth="120" style="-fx-background-color: #182d88; -fx-margin-left: 10;"/>
+                    </HBox>
+
+                    <!-- KPI Cards - 4 cards in a row -->
+                    <HBox spacing="20" alignment="CENTER">
+                        <!-- Total utilisateurs -->
+                        <VBox spacing="10" styleClass="kpi-card" prefWidth="200">
+                            <Label text="👥 Utilisateurs" styleClass="field-label"/>
+                            <Label fx:id="lblNbUtilisateurs" text="0" styleClass="kpi-value-blue" style="-fx-font-size: 32;"/>
+                            <Label fx:id="lblNewUsersToday" text="+0 aujourd'hui" style="-fx-text-fill: #27ae60; -fx-font-size: 12;"/>
+                        </VBox>
+
+                        <!-- Total portefeuilles -->
+                        <VBox spacing="10" styleClass="kpi-card" prefWidth="200">
+                            <Label text="💼 Portefeuilles" styleClass="field-label"/>
+                            <Label fx:id="lblNbPortefeuilles" text="0" styleClass="kpi-value-green" style="-fx-font-size: 32;"/>
+                            <Label fx:id="lblAvgPortefeuilles" text="Moy. 0/user" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12;"/>
+                        </VBox>
+
+                        <!-- Total cartes -->
+                        <VBox spacing="10" styleClass="kpi-card" prefWidth="200">
+                            <Label text="💳 Cartes" styleClass="field-label"/>
+                            <Label fx:id="lblNbCartes" text="0" styleClass="kpi-value-orange" style="-fx-font-size: 32;"/>
+                            <Label fx:id="lblCartesActives" text="0 actives" style="-fx-text-fill: #27ae60; -fx-font-size: 12;"/>
+                        </VBox>
+
+                        <!-- Volume transactions -->
+                        <VBox spacing="10" styleClass="kpi-card" prefWidth="200">
+                            <Label text="💰 Transactions" styleClass="field-label"/>
+                            <Label fx:id="lblTotalTransactions" text="0" styleClass="kpi-value-dark" style="-fx-font-size: 32;"/>
+                            <Label fx:id="lblVolumeTotal" text="0 DT" style="-fx-text-fill: #f39c12; -fx-font-size: 12;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Charts Row 1 - User Growth & Role Distribution -->
+                    <HBox spacing="20">
+                        <!-- Évolution des inscriptions (7 jours) -->
+                        <VBox spacing="10" styleClass="chart-container" HBox.hgrow="ALWAYS">
+                            <Label text="📈 Évolution des inscriptions (7 derniers jours)" styleClass="card-title-internal"/>
+                            <BarChart fx:id="userGrowthChart" prefHeight="300" legendVisible="false">
+                                <xAxis>
+                                    <CategoryAxis side="BOTTOM" label="Jour"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis side="LEFT" label="Nombre d'inscriptions"/>
+                                </yAxis>
+                            </BarChart>
+                        </VBox>
+
+                        <!-- Répartition par rôle (Admin/User) -->
+                        <VBox spacing="10" styleClass="chart-container" prefWidth="300">
+                            <Label text="👥 Répartition par rôle" styleClass="card-title-internal"/>
+                            <PieChart fx:id="rolePieChart" prefHeight="300" legendVisible="true"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Charts Row 2 - Transactions & Card Types -->
+                    <HBox spacing="20">
+                        <!-- Transactions par jour -->
+                        <VBox spacing="10" styleClass="chart-container" HBox.hgrow="ALWAYS">
+                            <Label text="💸 Transactions par jour" styleClass="card-title-internal"/>
+                            <LineChart fx:id="transactionsChart" prefHeight="300" legendVisible="false">
+                                <xAxis>
+                                    <CategoryAxis side="BOTTOM" label="Jour"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis side="LEFT" label="Nombre de transactions"/>
+                                </yAxis>
+                            </LineChart>
+                        </VBox>
+
+                        <!-- Répartition par type de carte (NORMAL/GOLD/SILVER) -->
+                        <VBox spacing="10" styleClass="chart-container" prefWidth="300">
+                            <Label text="💳 Types de cartes" styleClass="card-title-internal"/>
+                            <PieChart fx:id="cardTypePieChart" prefHeight="300" legendVisible="true"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Users Table with Actions -->
+                    <VBox spacing="15" styleClass="table-card-container">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="👥 Gestion des utilisateurs" styleClass="card-title-internal"/>
+                            <Pane HBox.hgrow="ALWAYS"/>
+                            <Button onAction="#handleExportUsersPDF" styleClass="btn-primary" text="📄 Export PDF" prefWidth="120"/>
+                            <Button onAction="#handleExportUsersExcel" styleClass="btn-secondary" text="📊 Export Excel" prefWidth="120"/>
+                        </HBox>
+
+                        <TableView fx:id="usersTable" prefHeight="350">
+                            <columns>
+                                <TableColumn fx:id="colUserId" text="ID" prefWidth="50"/>
+                                <TableColumn fx:id="colUserNom" text="Nom" prefWidth="100"/>
+                                <TableColumn fx:id="colUserPrenom" text="Prénom" prefWidth="100"/>
+                                <TableColumn fx:id="colUserEmail" text="Email" prefWidth="200"/>
+                                <TableColumn fx:id="colUserRole" text="Rôle" prefWidth="80"/>
+                                <TableColumn fx:id="colUserStatus" text="Statut" prefWidth="80"/>
+                                <TableColumn fx:id="colUserPortefeuilles" text="Portefeuilles" prefWidth="90"/>
+                                <TableColumn fx:id="colUserCartes" text="Cartes" prefWidth="70"/>
+                                <TableColumn fx:id="colUserDate" text="Inscription" prefWidth="100"/>
+                                <TableColumn fx:id="colUserActions" text="Actions" prefWidth="200"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Transactions Table for Selected User -->
+                    <VBox spacing="15" styleClass="table-card-container" fx:id="transactionsSection" visible="false" managed="false">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label fx:id="transactionsTitle" text="Transactions de l'utilisateur" styleClass="card-title-internal"/>
+                            <Pane HBox.hgrow="ALWAYS"/>
+                            <Button onAction="#handleExportTransactionsPDF" styleClass="btn-primary" text="📄 Export PDF" prefWidth="120"/>
+                            <Button onAction="#handleCloseTransactions" styleClass="btn-secondary" text="✕ Fermer" prefWidth="100"/>
+                        </HBox>
+
+                        <TableView fx:id="transactionsTable" prefHeight="250">
+                            <columns>
+                                <TableColumn fx:id="colTransId" text="ID" prefWidth="50"/>
+                                <TableColumn fx:id="colTransDate" text="Date" prefWidth="150"/>
+                                <TableColumn fx:id="colTransType" text="Type" prefWidth="100"/>
+                                <TableColumn fx:id="colTransMontant" text="Montant" prefWidth="100"/>
+                                <TableColumn fx:id="colTransDevise" text="Devise" prefWidth="70"/>
+                                <TableColumn fx:id="colTransStatut" text="Statut" prefWidth="80"/>
+                                <TableColumn fx:id="colTransSource" text="Carte source" prefWidth="120"/>
+                                <TableColumn fx:id="colTransDest" text="Carte dest" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Quick Actions -->
+                    <HBox spacing="20">
+                        <!-- Quick Actions -->
+                        <VBox spacing="10" styleClass="table-card-container" HBox.hgrow="ALWAYS">
+                            <Label text="⚡ Actions rapides" styleClass="card-title-internal"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Button onAction="#handleAjouterUtilisateur" styleClass="btn-primary" text="➕ Ajouter utilisateur"/>
+                                <Button onAction="#handleExporterRapport" styleClass="btn-secondary" text="📊 Rapport mensuel"/>
+                                <Button onAction="#handleNettoyerBD" styleClass="btn-danger" text="🗑️ Nettoyer logs"/>
+                                <Button onAction="#handleEnvoyerNewsletter" styleClass="btn-primary" text="📧 Newsletter"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- System Information -->
+                        <VBox spacing="10" styleClass="table-card-container" prefWidth="300">
+                            <Label text="ℹ️ Informations système" styleClass="card-title-internal"/>
+                            <Label fx:id="lblVersion" text="Version: 1.0.0"/>
+                            <Label fx:id="lblLastBackup" text="Dernière sauvegarde: -"/>
+                            <Label fx:id="lblUptime" text="Uptime: -"/>
+                            <ProgressBar fx:id="storageBar" prefWidth="280" progress="0.5"/>
+                            <Label fx:id="lblStorage" text="Espace utilisé: 50%"/>
+                        </VBox>
+                    </HBox>
+
+                </VBox>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</StackPane>

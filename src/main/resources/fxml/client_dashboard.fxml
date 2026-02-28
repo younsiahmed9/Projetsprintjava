@@ -10,7 +10,6 @@
 
     <BorderPane fx:id="mainContent" styleClass="main-container">
 
-        <!-- Left Sidebar -->
         <left>
             <VBox fx:id="sidebar" spacing="40" styleClass="sidebar">
                 <ImageView fitHeight="160" fitWidth="160" pickOnBounds="true" preserveRatio="true">
@@ -19,6 +18,7 @@
                     </image>
                 </ImageView>
 
+
                 <VBox spacing="10" VBox.vgrow="ALWAYS">
                     <Button text="Mes Portefeuilles" styleClass="menu-button, active-menu" alignment="BASELINE_LEFT">
                         <graphic>
@@ -26,7 +26,7 @@
                         </graphic>
                     </Button>
 
-                    <Button text="Mes Cartes" styleClass="menu-button" alignment="BASELINE_LEFT">
+                    <Button text="Mes Cartes" onAction="#handleCartes" styleClass="menu-button" alignment="BASELINE_LEFT">
                         <graphic>
                             <Label text="💳" style="-fx-padding: 0 10 0 0; -fx-text-fill: #3e893e; -fx-font-size: 18;"/>
                         </graphic>
@@ -59,7 +59,6 @@
             </VBox>
         </left>
 
-        <!-- Center Content -->
         <center>
             <ScrollPane fitToWidth="true" styleClass="edge-to-edge" style="-fx-background-color: transparent; -fx-background: transparent;">
                 <VBox spacing="30" style="-fx-padding: 35;">
@@ -114,6 +113,7 @@
                             </columns>
                         </TableView>
                     </VBox>
+
                 </VBox>
             </ScrollPane>
         </center>

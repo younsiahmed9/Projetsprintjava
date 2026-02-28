@@ -14,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -211,7 +210,7 @@ public class PortefeuilleController {
     private void openCartesView(int portefeuilleId) {
         try {
             // Use the correct FXML file name from your project
-            var resource = getClass().getResource("/views/carte_list.fxml");
+            var resource = getClass().getResource("/fxml/carte_list.fxml");
             if (resource == null) {
                 messageLabel.setText("carte_list.fxml introuvable");
                 return;
@@ -238,7 +237,7 @@ public class PortefeuilleController {
 
     private void openTransactionsView() {
         try {
-            var resource = getClass().getResource("/views/transactions.fxml");
+            var resource = getClass().getResource("/fxml/transactions.fxml");
             if (resource == null) { messageLabel.setText("transactions.fxml introuvable"); return; }
             Parent root = FXMLLoader.load(resource);
             Stage stage = (Stage) portefeuillesFlow.getScene().getWindow();
@@ -256,7 +255,7 @@ public class PortefeuilleController {
     private void handleDeconnexion() {
         Session.clear();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
             Stage stage = (Stage) portefeuillesFlow.getScene().getWindow();
             Scene scene = new Scene(root, 600, 450);
             scene.getStylesheets().add(getClass().getResource("/styles/colors.css").toExternalForm());

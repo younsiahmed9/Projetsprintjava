@@ -1,19 +1,18 @@
 package Controllers;
 
-import Models.*;
+import Models.CarteVirtuelle;
+import Models.Session;
+import Models.Transaction;
+import Models.Utilisateur;
 import Services.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,72 +88,78 @@ public class TransactionsController {
 
     private HBox createTransactionRow(Transaction t, DateTimeFormatter formatter) {
         HBox row = new HBox(0);
-        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        row.setAlignment(Pos.CENTER_LEFT);
         row.setPrefHeight(50);
-        row.getStyleClass().add("custom-row-credit");
-        row.setStyle("-fx-border-color: #f0f0f0; -fx-border-width: 0 0 1 0;");
+        row.getStyleClass().add("transaction-row");
 
+        // ID
         Label idLabel = new Label(String.valueOf(t.getId()));
         idLabel.setMinWidth(60);
         idLabel.setPrefWidth(60);
         idLabel.setMaxWidth(60);
-        idLabel.getStyleClass().add("transaction-item");
 
+        // Date
         Label dateLabel = new Label(t.getDate().format(formatter));
         dateLabel.setMinWidth(150);
         dateLabel.setPrefWidth(150);
         dateLabel.setMaxWidth(150);
-        dateLabel.getStyleClass().add("transaction-item");
 
+        // Type
         Label typeLabel = new Label(t.getType().toString());
         typeLabel.setMinWidth(100);
         typeLabel.setPrefWidth(100);
         typeLabel.setMaxWidth(100);
-        typeLabel.getStyleClass().add("transaction-item");
 
+        // Montant
         Label montantLabel = new Label(String.format("%.2f", t.getMontant()));
         montantLabel.setMinWidth(120);
         montantLabel.setPrefWidth(120);
         montantLabel.setMaxWidth(120);
-        montantLabel.getStyleClass().add("transaction-item");
+        montantLabel.getStyleClass().add(t.getMontant() > 0 ? "amount-positive" : "amount-negative");
 
+        // Devise
         Label deviseLabel = new Label(t.getDevise());
         deviseLabel.setMinWidth(80);
         deviseLabel.setPrefWidth(80);
         deviseLabel.setMaxWidth(80);
-        deviseLabel.getStyleClass().add("transaction-item");
 
+        // Statut
         Label statutLabel = new Label(t.getStatut().toString());
         statutLabel.setMinWidth(100);
         statutLabel.setPrefWidth(100);
         statutLabel.setMaxWidth(100);
-        statutLabel.getStyleClass().addAll("status-badge",
-                "SUCCESS".equals(t.getStatut().toString()) ? "status-active" : "status-pending");
+        statutLabel.getStyleClass().addAll(
+                "status-badge",
+                "SUCCESS".equals(t.getStatut().toString()) ? "status-success" : "status-failed"
+        );
 
-        Label sourceLabel = new Label(getCardNumber(t.getCarteSourceId()));
+        // Carte source
+        Label sourceLabel = new Label(getCardInfo(t.getCarteSourceId()));
         sourceLabel.setMinWidth(100);
         sourceLabel.setPrefWidth(100);
         sourceLabel.setMaxWidth(100);
-        sourceLabel.getStyleClass().add("transaction-item");
 
-        Label destLabel = new Label(getCardNumber(t.getCarteDestId()));
+        // Carte destination
+        Label destLabel = new Label(getCardInfo(t.getCarteDestId()));
         destLabel.setMinWidth(100);
         destLabel.setPrefWidth(100);
         destLabel.setMaxWidth(100);
-        destLabel.getStyleClass().add("transaction-item");
 
+        // Description
         Label descLabel = new Label(t.getDescription() != null ? t.getDescription() : "");
         descLabel.setMinWidth(200);
         descLabel.setPrefWidth(200);
         descLabel.setMaxWidth(200);
-        descLabel.getStyleClass().add("transaction-item");
 
-        row.getChildren().addAll(idLabel, dateLabel, typeLabel, montantLabel, deviseLabel,
-                statutLabel, sourceLabel, destLabel, descLabel);
+        row.getChildren().addAll(
+                idLabel, dateLabel, typeLabel, montantLabel, deviseLabel,
+                statutLabel, sourceLabel, destLabel, descLabel
+        );
+
         return row;
     }
 
-    private String getCardNumber(Integer cardId) {
+    private String getCardInfo(Integer cardId) {
         if (cardId == null) return "-";
         var carte = carteService.afficherParId(cardId);
         if (carte == null) return "Carte " + cardId;
@@ -165,7 +170,33 @@ public class TransactionsController {
         return "Carte " + cardId;
     }
 
-    // ========== NOUVELLES MÉTHODES D'EXPORT ==========
+    // ========== MÉTHODES DE FILTRAGE ==========
+
+    @FXML
+    private void handleAllTransactions() {
+        currentFilter = "ALL";
+        applyFilter();
+    }
+
+    @FXML
+    private void handleDepotTransactions() {
+        currentFilter = "DEPOT";
+        applyFilter();
+    }
+
+    @FXML
+    private void handleRetraitTransactions() {
+        currentFilter = "RETRAIT";
+        applyFilter();
+    }
+
+    @FXML
+    private void handleTransfertTransactions() {
+        currentFilter = "TRANSFERT";
+        applyFilter();
+    }
+
+    // ========== MÉTHODES D'EXPORT ==========
 
     @FXML
     private void handleExportPDF() {
@@ -196,7 +227,6 @@ public class TransactionsController {
             String carteSourceNum = getFullCardNumber(t.getCarteSourceId());
             String carteDestNum = getFullCardNumber(t.getCarteDestId());
 
-            // Récupérer les informations du propriétaire
             String email = "";
             String nom = "";
             if (t.getCarteSourceId() != null) {
@@ -223,54 +253,18 @@ public class TransactionsController {
         return carte.getNumeroCarte();
     }
 
-    private void showInfo(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
-        alert.showAndWait();
-    }
-
-    private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, msg);
-        alert.showAndWait();
-    }
-
-    // ========== MÉTHODES DE FILTRAGE EXISTANTES ==========
-
-    @FXML
-    private void handleAllTransactions() {
-        currentFilter = "ALL";
-        applyFilter();
-    }
-
-    @FXML
-    private void handleDepotTransactions() {
-        currentFilter = "DEPOT";
-        applyFilter();
-    }
-
-    @FXML
-    private void handleRetraitTransactions() {
-        currentFilter = "RETRAIT";
-        applyFilter();
-    }
-
-    @FXML
-    private void handleTransfertTransactions() {
-        currentFilter = "TRANSFERT";
-        applyFilter();
-    }
-
-    // ========== MÉTHODES DE NAVIGATION EXISTANTES ==========
+    // ========== MÉTHODES DE NAVIGATION ==========
 
     @FXML
     private void handlePortefeuilles() {
-        navigateTo("/views/client_dashboard.fxml", "FinTrack - Mes Portefeuilles");
+        NavigationService.navigateTo("/fxml/client_dashboard.fxml", "Mes Portefeuilles");
     }
 
     @FXML
     private void handleCartes() {
         Integer selectedPortefeuille = Session.getSelectedPortefeuilleId();
         if (selectedPortefeuille != null) {
-            navigateTo("/views/carte_list.fxml", "FinTrack - Mes Cartes");
+            NavigationService.navigateTo("/fxml/carte_list.fxml", "Mes Cartes");
         } else {
             messageLabel.setText("Veuillez d'abord sélectionner un portefeuille.");
         }
@@ -278,38 +272,27 @@ public class TransactionsController {
 
     @FXML
     private void handleTransferts() {
-        navigateTo("/views/transfer_form.fxml", "FinTrack - Transfert");
+        NavigationService.navigateTo("/fxml/transfer_form.fxml", "Transfert");
     }
 
     @FXML
     private void handleScheduledTransfer() {
-        navigateTo("/views/scheduled_transfer_form.fxml", "FinTrack - Transfert programmé");
+        NavigationService.navigateTo("/fxml/scheduled_transfer_form.fxml", "Transfert programmé");
     }
 
     @FXML
     private void handleLogout() {
         Session.clear();
-        navigateTo("/views/login.fxml", "FinTrack - Connexion");
+        NavigationService.navigateTo("/fxml/login.fxml", "Connexion");
     }
 
-    private void navigateTo(String fxmlPath, String title) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-            Scene scene = new Scene(root, 1280, 800);
-            try {
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            } catch (Exception e) {
-                // CSS may not exist, ignore
-            }
-            stage.setScene(scene);
-            stage.setTitle(title);
-            stage.centerOnScreen();
-        } catch (IOException e) {
-            if (messageLabel != null) {
-                messageLabel.setText("Erreur navigation: " + e.getMessage());
-            }
-            e.printStackTrace();
-        }
+    private void showAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR, msg);
+        alert.showAndWait();
+    }
+
+    private void showInfo(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
+        alert.showAndWait();
     }
 }

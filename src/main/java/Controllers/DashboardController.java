@@ -277,7 +277,7 @@ public class DashboardController {
     private void handleDeconnexion() {
         Session.clear();
         try {
-            var resource = getClass().getResource("/views/login.fxml");
+            var resource = getClass().getResource("/fxml/login.fxml");
             if (resource != null) {
                 Parent root = FXMLLoader.load(resource);
                 Stage stage = (Stage) userGreeting.getScene().getWindow();

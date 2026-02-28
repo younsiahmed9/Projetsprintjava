@@ -1,4 +1,5 @@
 package Controllers;
+
 import Models.CarteVirtuelle;
 import Models.Portefeuille;
 import Models.ScheduledTransfer;
@@ -26,14 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ClientDashboardController {
+public class DashboardContentController {
 
     @FXML private Label welcomeLabel;
     @FXML private FlowPane containerPortefeuilles;
     @FXML private TextField txtRecherche;
     @FXML private Button btnTous, btnDT, btnUSD, btnEUR;
 
-    // New fields for scheduled transfers
     @FXML private TableView<ScheduledTransfer> scheduledTable;
     @FXML private TableColumn<ScheduledTransfer, Integer> colId;
     @FXML private TableColumn<ScheduledTransfer, String> colFromCard;
@@ -50,7 +50,13 @@ public class ClientDashboardController {
     private ObservableList<Portefeuille> portefeuilles = FXCollections.observableArrayList();
     private ObservableList<ScheduledTransfer> scheduledTransfers = FXCollections.observableArrayList();
     private String currentFilter = "TOUS";
-    private Map<Integer, CarteVirtuelle> carteCache; // Cache for card numbers
+    private Map<Integer, CarteVirtuelle> carteCache;
+
+    private ClientDashboardController parentController;
+
+    public void setParentController(ClientDashboardController parent) {
+        this.parentController = parent;
+    }
 
     @FXML
     public void initialize() {
@@ -59,14 +65,9 @@ public class ClientDashboardController {
             welcomeLabel.setText("Bienvenue, " + user.getPrenom() + " " + user.getNom());
         }
 
-        // Load card cache once
         loadCardCache();
-
-        // Portefeuilles section
         loadPortefeuilles();
         setupSearchListener();
-
-        // Scheduled transfers section
         setupScheduledTable();
         loadScheduledTransfers();
     }
@@ -77,60 +78,6 @@ public class ClientDashboardController {
         for (CarteVirtuelle c : allUserCards) {
             carteCache.put(c.getId(), c);
         }
-    }
-
-    // ========== EXPORT METHODS ==========
-
-    @FXML
-    private void handleExportScheduledPDF() {
-        List<ScheduledTransferExport.ScheduledTransferData> data = prepareScheduledTransferData();
-        boolean success = ScheduledTransferExport.exportToPDF(data, scheduledTable.getScene().getWindow());
-        if (success) {
-            showInfo("✅ PDF exporté avec succès !");
-        } else {
-            showAlert("❌ Erreur lors de l'export PDF");
-        }
-    }
-
-    @FXML
-    private void handleExportScheduledExcel() {
-        showInfo("📊 Export Excel sera bientôt disponible");
-    }
-
-    private List<ScheduledTransferExport.ScheduledTransferData> prepareScheduledTransferData() {
-        List<ScheduledTransferExport.ScheduledTransferData> data = new ArrayList<>();
-
-        for (ScheduledTransfer st : scheduledTransfers) {
-            String carteSourceNum = getFullCardNumberById(st.getFromCardId());
-            String carteDestNum = getFullCardNumberById(st.getToCardId());
-
-            String email = "";
-            String nom = "";
-            CarteVirtuelle carte = carteCache.get(st.getFromCardId());
-            if (carte != null) {
-                Utilisateur proprietaire = utilisateurService.getUserByCardId(carte.getId());
-                if (proprietaire != null) {
-                    email = proprietaire.getEmail();
-                    nom = proprietaire.getPrenom() + " " + proprietaire.getNom();
-                }
-            }
-
-            String frequence = "Une fois";
-            data.add(new ScheduledTransferExport.ScheduledTransferData(
-                    st, carteSourceNum, carteDestNum, email, nom, frequence));
-        }
-
-        return data;
-    }
-
-    private String getFullCardNumberById(int cardId) {
-        CarteVirtuelle c = carteCache.get(cardId);
-        return c != null ? c.getNumeroCarte() : "Inconnue";
-    }
-
-    private void showInfo(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
-        alert.showAndWait();
     }
 
     // ========== Portefeuilles methods ==========
@@ -292,53 +239,58 @@ public class ClientDashboardController {
         loadScheduledTransfers();
     }
 
-    // ========== Navigation methods ==========
+    // ========== Export methods ==========
 
     @FXML
-    private void handleCartes() {
-        NavigationService.navigateTo("/fxml/carte_list.fxml", "Mes Cartes");
+    private void handleExportScheduledPDF() {
+        List<ScheduledTransferExport.ScheduledTransferData> data = prepareScheduledTransferData();
+        boolean success = ScheduledTransferExport.exportToPDF(data, scheduledTable.getScene().getWindow());
+        if (success) {
+            showInfo("✅ PDF exporté avec succès !");
+        } else {
+            showAlert("❌ Erreur lors de l'export PDF");
+        }
     }
 
     @FXML
-    private void handleTransferts() {
-        NavigationService.navigateTo("/fxml/transfer_form.fxml", "Transfert");
+    private void handleExportScheduledExcel() {
+        showInfo("📊 Export Excel sera bientôt disponible");
     }
 
-    @FXML
-    private void handleScheduledTransfer() {
-        NavigationService.navigateTo("/fxml/scheduled_transfer_form.fxml", "Transfert programmé");
-    }
+    private List<ScheduledTransferExport.ScheduledTransferData> prepareScheduledTransferData() {
+        List<ScheduledTransferExport.ScheduledTransferData> data = new ArrayList<>();
 
-    @FXML
-    private void handleTransactions() {
-        NavigationService.navigateTo("/fxml/transactions.fxml", "Transactions");
-    }
+        for (ScheduledTransfer st : scheduledTransfers) {
+            String carteSourceNum = getFullCardNumberById(st.getFromCardId());
+            String carteDestNum = getFullCardNumberById(st.getToCardId());
 
-    @FXML
-    private void handleLogout() {
-        Session.clear();
-        NavigationService.navigateTo("/fxml/login.fxml", "Connexion");
-    }
+            String email = "";
+            String nom = "";
+            CarteVirtuelle carte = carteCache.get(st.getFromCardId());
+            if (carte != null) {
+                Utilisateur proprietaire = utilisateurService.getUserByCardId(carte.getId());
+                if (proprietaire != null) {
+                    email = proprietaire.getEmail();
+                    nom = proprietaire.getPrenom() + " " + proprietaire.getNom();
+                }
+            }
 
-    // ========== Test Email Method ==========
-    @FXML
-    private void testEmail() {
-        ElasticEmailService emailService = new ElasticEmailService();
-
-        Utilisateur user = Session.getUtilisateur();
-        if (user == null) {
-            showAlert("❌ Aucun utilisateur connecté");
-            return;
+            String frequence = "Une fois";
+            data.add(new ScheduledTransferExport.ScheduledTransferData(
+                    st, carteSourceNum, carteDestNum, email, nom, frequence));
         }
 
-        String testEmail = user.getEmail();
-        String subject = "📧 Test FinTrack - " + java.time.LocalDateTime.now();
-        String content = "Bonjour " + user.getPrenom() + " " + user.getNom() + ",\n\n" +
-                "Ceci est un email de test depuis FinTrack.\n\n" +
-                "Date : " + java.time.LocalDateTime.now();
+        return data;
+    }
 
-        emailService.sendEmail(testEmail, user.getPrenom() + " " + user.getNom(), subject, content);
-        showInfo("✅ Email de test envoyé à " + testEmail);
+    private String getFullCardNumberById(int cardId) {
+        CarteVirtuelle c = carteCache.get(cardId);
+        return c != null ? c.getNumeroCarte() : "Inconnue";
+    }
+
+    private void showInfo(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
+        alert.showAndWait();
     }
 
     private void showAlert(String msg) {
