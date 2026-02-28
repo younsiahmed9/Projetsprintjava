@@ -46,6 +46,16 @@ public class ServiceController implements Initializable {
     @SuppressWarnings("unused") @FXML private Button addServiceButton;
     @SuppressWarnings("unused") @FXML private Button addProductButton;
 
+    // Statistiques détaillées
+    @FXML private Label statTotalServices;
+    @FXML private Label statServicesActifs;
+    @FXML private Label statServicesSuspendus;
+    @FXML private Label statServicesExpires;
+    @FXML private Label statTotalProduits;
+    @FXML private Label statProduitsDisponibles;
+    @FXML private Label statProduitsEpuses;
+    @FXML private Label statMontantTotal;
+
     private ServiceService serviceService;
     private ServiceProduit produitService;
     private final ObservableList<Service> serviceList = FXCollections.observableArrayList();
@@ -233,8 +243,35 @@ public class ServiceController implements Initializable {
     }
 
     public void mettreAJourStatistiques() {
+        // Anciens compteurs
         if (totalServices != null) totalServices.setText(String.valueOf(serviceList.size()));
         if (totalProduits != null) totalProduits.setText(String.valueOf(produitList.size()));
+
+        // Nouvelles statistiques détaillées
+        if (statTotalServices != null) statTotalServices.setText(String.valueOf(serviceList.size()));
+        if (statTotalProduits != null) statTotalProduits.setText(String.valueOf(produitList.size()));
+
+        // Compter par statut pour les services
+        long servicesActifs = serviceList.stream().filter(s -> "actif".equals(s.getStatut())).count();
+        long servicesSuspendus = serviceList.stream().filter(s -> "suspendu".equals(s.getStatut())).count();
+        long servicesExpires = serviceList.stream().filter(s -> "expire".equals(s.getStatut())).count();
+
+        if (statServicesActifs != null) statServicesActifs.setText(String.valueOf(servicesActifs));
+        if (statServicesSuspendus != null) statServicesSuspendus.setText(String.valueOf(servicesSuspendus));
+        if (statServicesExpires != null) statServicesExpires.setText(String.valueOf(servicesExpires));
+
+        // Compter par statut pour les produits (adaptez selon vos statuts)
+        long produitsDisponibles = produitList.stream().filter(p -> "disponible".equals(p.getStatut())).count();
+        long produitsEpuses = produitList.stream().filter(p -> "epuise".equals(p.getStatut())).count();
+
+        if (statProduitsDisponibles != null) statProduitsDisponibles.setText(String.valueOf(produitsDisponibles));
+        if (statProduitsEpuses != null) statProduitsEpuses.setText(String.valueOf(produitsEpuses));
+
+        // Montant total des produits
+        double montantTotal = produitList.stream()
+                .mapToDouble(p -> p.getMontant() != null ? p.getMontant().doubleValue() : 0)
+                .sum();
+        if (statMontantTotal != null) statMontantTotal.setText(String.format("%.2f DT", montantTotal));
     }
 
     @FXML
@@ -418,7 +455,25 @@ public class ServiceController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(s);
         alert.showAndWait();
-
     }
 
+    @FXML
+    private void openDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/DashboardView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) searchServiceField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Tableau de bord");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible de charger DashboardView.fxml: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
 }

@@ -3,8 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
 <ScrollPane fitToWidth="true" styleClass="main-container" stylesheets="@/styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServiceController">
     <content>
@@ -17,16 +17,18 @@
 
                 <!-- Recherche -->
                 <HBox styleClass="search-box" HBox.hgrow="ALWAYS">
-                    <TextField fx:id="searchServiceField" promptText="Rechercher un service..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="searchServiceField" promptText="Rechercher un service..." styleClass="search-field" HBox.hgrow="ALWAYS" />
                 </HBox>
 
                 <!-- Filtre Statut -->
                 <ComboBox fx:id="filterStatutService" prefWidth="120" promptText="Statut" styleClass="filter-combo" />
 
                 <!-- BOUTONS : Ajouter Service, Ajouter Produit, Factures -->
-                <Button fx:id="addServiceButton" text="+ Ajouter Service" onAction="#ajouterService" styleClass="btn-add" />
-                <Button fx:id="addProductButton" text="+ Ajouter Produit" onAction="#ajouterProduit" styleClass="btn-add" />
-                <Button fx:id="factureButton" text="📄 Factures" onAction="#handleFactures" styleClass="btn-primary" />            </HBox>
+                <Button fx:id="addServiceButton" onAction="#ajouterService" prefHeight="33.0" prefWidth="142.0" styleClass="btn-add" text="+ Ajouter Service" />
+                <Button fx:id="addProductButton" onAction="#ajouterProduit" prefHeight="36.0" prefWidth="141.0" styleClass="btn-add" text="+ Ajouter Produit" />
+                <Button fx:id="factureButton" onAction="#handleFactures" styleClass="btn-primary" text="📄 Factures" />
+                <Button fx:id="dashboardButton" onAction="#openDashboard" styleClass="btn-primary" text="📊 Dashboard" />
+            </HBox>
 
             <!-- Stats Cards -->
             <HBox spacing="20" styleClass="stats-container">
@@ -47,16 +49,69 @@
                 </VBox>
             </HBox>
 
+            <!-- Statistiques détaillées (remplace les graphiques) -->
+            <HBox spacing="20" styleClass="charts-container">
+                <padding>
+                    <Insets bottom="20" left="30" right="30" top="20" />
+                </padding>
+
+                <!-- Statistiques Services -->
+                <VBox styleClass="stats-card-large" HBox.hgrow="ALWAYS" spacing="15">
+                    <Label text="📊 Statistiques Services" styleClass="stats-title-large" />
+                    <GridPane hgap="20" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <Label text="Total services :" styleClass="stat-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="statTotalServices" text="0" styleClass="stat-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Services actifs :" styleClass="stat-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Label fx:id="statServicesActifs" text="0" styleClass="stat-value-success" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Services suspendus :" styleClass="stat-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <Label fx:id="statServicesSuspendus" text="0" styleClass="stat-value-warning" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Services expirés :" styleClass="stat-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <Label fx:id="statServicesExpires" text="0" styleClass="stat-value-error" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- Statistiques Produits -->
+                <VBox styleClass="stats-card-large" HBox.hgrow="ALWAYS" spacing="15">
+                    <Label text="📦 Statistiques Produits" styleClass="stats-title-large" />
+                    <GridPane hgap="20" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50"/>
+                            <ColumnConstraints percentWidth="50"/>
+                        </columnConstraints>
+
+                        <Label text="Total produits :" styleClass="stat-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="statTotalProduits" text="0" styleClass="stat-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Produits disponibles :" styleClass="stat-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Label fx:id="statProduitsDisponibles" text="0" styleClass="stat-value-success" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Produits épuisés :" styleClass="stat-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <Label fx:id="statProduitsEpuses" text="0" styleClass="stat-value-warning" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Montant total :" styleClass="stat-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <Label fx:id="statMontantTotal" text="0 DT" styleClass="stat-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </VBox>
+            </HBox>
+
             <!-- Content Area with Tabs -->
-            <TabPane VBox.vgrow="ALWAYS">
+            <TabPane>
                 <Tab closable="false" text="Services">
                     <ScrollPane fitToWidth="true">
-                        <FlowPane fx:id="servicesFlow" hgap="20" vgap="20" styleClass="flow-pane" />
+                        <FlowPane fx:id="servicesFlow" hgap="20" styleClass="flow-pane" vgap="20" />
                     </ScrollPane>
                 </Tab>
                 <Tab closable="false" text="Produits">
                     <ScrollPane fitToWidth="true">
-                        <FlowPane fx:id="produitsFlow" hgap="20" vgap="20" styleClass="flow-pane" />
+                        <FlowPane fx:id="produitsFlow" hgap="20" styleClass="flow-pane" vgap="20" />
                     </ScrollPane>
                 </Tab>
             </TabPane>

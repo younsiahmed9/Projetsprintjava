@@ -337,7 +337,6 @@ public class ServiceFacture {
             f.setDateFacture(dateFacture.toLocalDate());
         }
 
-        // ✅ CORRECTION: Utilisez date_echeance (avec deux 'e')
         Date dateEcheance = rs.getDate("date_echeance");
         if (dateEcheance != null) {
             f.setDateEcheance(dateEcheance.toLocalDate());
@@ -352,5 +351,74 @@ public class ServiceFacture {
         f.setStatut(rs.getString("statut"));
 
         return f;
+    }
+    /**
+     * Récupère toutes les factures (version corrigée)
+     * @return Liste de toutes les factures
+     * @throws SQLException en cas d'erreur de base de données
+     */
+    public List<Facture> recupererToutesLesFactures() throws SQLException {
+        List<Facture> factures = new ArrayList<>();
+
+        // ✅ CORRECTION: Utilisez les noms de colonnes corrects (avec underscores)
+        String query = "SELECT id_facture, numero_facture, montant, date_facture, date_echeance, statut, " +
+                "id_service, id_produit FROM facture ORDER BY date_facture DESC";
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                Facture facture = new Facture();
+
+                // ✅ CORRECTION: Utilisez les bons noms de colonnes
+                facture.setIdFacture(rs.getInt("id_facture"));
+                facture.setNumeroFacture(rs.getString("numero_facture"));
+                facture.setMontant(rs.getBigDecimal("montant"));
+                facture.setStatut(rs.getString("statut"));
+
+                Date dateFacture = rs.getDate("date_facture");
+                if (dateFacture != null) {
+                    facture.setDateFacture(dateFacture.toLocalDate());
+                }
+
+                Date dateEcheance = rs.getDate("date_echeance");
+                if (dateEcheance != null) {
+                    facture.setDateEcheance(dateEcheance.toLocalDate());
+                }
+
+                // Récupérer les IDs des relations
+                int idService = rs.getInt("id_service");
+                if (!rs.wasNull()) {
+                    facture.setIdService(idService);
+                }
+
+                int idProduit = rs.getInt("id_produit");
+                if (!rs.wasNull()) {
+                    facture.setIdProduit(idProduit);
+                }
+
+                factures.add(facture);
+            }
+        }
+
+        // Charger les services et produits associés
+        for (Facture f : factures) {
+            if (f.getIdService() != null) {
+                try {
+                    f.setService(serviceService.getById(f.getIdService()));
+                } catch (Exception e) {
+                    System.err.println("⚠️ Erreur chargement service pour facture " + f.getIdFacture());
+                }
+            }
+            if (f.getIdProduit() != null) {
+                try {
+                    f.setProduit(produitService.getById(f.getIdProduit()));
+                } catch (Exception e) {
+                    System.err.println("⚠️ Erreur chargement produit pour facture " + f.getIdFacture());
+                }
+            }
+        }
+
+        return factures;
     }
 }

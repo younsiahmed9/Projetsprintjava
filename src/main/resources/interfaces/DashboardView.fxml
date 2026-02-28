@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" style="-fx-background: #f5f7fa;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DashboardController">
+    <VBox spacing="20" style="-fx-padding: 20;">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+
+        <!-- En-tête avec boutons -->
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button fx:id="btnActualiser" onAction="#handleActualiser" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;" text="🔄 Actualiser" />
+            <Button fx:id="btnExporter" onAction="#handleExporter" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 8 15; -fx-background-radius: 5;" text="📊 Exporter" />
+        </HBox>
+
+        <!-- Cartes de résumé -->
+        <HBox alignment="CENTER" spacing="15">
+            <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <Label style="-fx-font-size: 14; -fx-text-fill: #666;" text="📦 Produits" />
+                <Label fx:id="totalProduitsLabel" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="0" />
+            </VBox>
+            <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <Label style="-fx-font-size: 14; -fx-text-fill: #666;" text="🔧 Services" />
+                <Label fx:id="totalServicesLabel" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="0" />
+            </VBox>
+            <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <Label style="-fx-font-size: 14; -fx-text-fill: #666;" text="📄 Factures" />
+                <Label fx:id="totalFacturesLabel" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="0" />
+            </VBox>
+            <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+                <Label style="-fx-font-size: 14; -fx-text-fill: #666;" text="💰 Montant total" />
+                <Label fx:id="montantTotalFacturesLabel" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="0 €" />
+            </VBox>
+        </HBox>
+
+        <!-- NOUVELLE SECTION : Statistiques avancées des factures -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="📈 Statistiques avancées des factures" />
+            <GridPane hgap="20" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="25" />
+                    <ColumnConstraints percentWidth="25" />
+                    <ColumnConstraints percentWidth="25" />
+                    <ColumnConstraints percentWidth="25" />
+                </columnConstraints>
+
+                <!-- Ligne 1 -->
+                <Label style="-fx-font-weight: bold;" text="Factures mois en cours :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label fx:id="facturesMoisEnCours" style="-fx-font-weight: bold; -fx-text-fill: #2196F3;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label style="-fx-font-weight: bold;" text="Factures mois précédent :" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <Label fx:id="facturesMoisPrecedent" style="-fx-font-weight: bold; -fx-text-fill: #FF9800;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                <!-- Ligne 2 -->
+                <Label style="-fx-font-weight: bold;" text="Montant moyen :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label fx:id="montantMoyenFacture" style="-fx-font-weight: bold; -fx-text-fill: #4CAF50;" text="0 €" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <Label style="-fx-font-weight: bold;" text="Factures à échéance :" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <Label fx:id="facturesEcheance" style="-fx-font-weight: bold; -fx-text-fill: #FF9800;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                <!-- Ligne 3 -->
+                <Label style="-fx-font-weight: bold;" text="Factures en retard :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label fx:id="facturesEnRetard" style="-fx-font-weight: bold; -fx-text-fill: #F44336;" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <Label text="" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                <Label text="" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            </GridPane>
+        </VBox>
+
+        <!-- Statistiques des factures (barres) -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Label style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="📊 Répartition des factures par statut" />
+            <GridPane hgap="10" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="20" />
+                    <ColumnConstraints percentWidth="60" />
+                    <ColumnConstraints percentWidth="20" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                    <RowConstraints />
+                </rowConstraints>
+
+                <Label style="-fx-font-weight: bold;" text="En attente" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <ProgressBar fx:id="progressEnAttente" progress="0" style="-fx-pref-width: 100%; -fx-accent: #FF9800;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Label fx:id="labelEnAttente" style="-fx-font-weight: bold; -fx-text-fill: #FF9800;" text="0%" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+                <Label style="-fx-font-weight: bold;" text="Payées" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <ProgressBar fx:id="progressPayees" progress="0" style="-fx-accent: #4CAF50;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label fx:id="labelPayees" style="-fx-font-weight: bold; -fx-text-fill: #4CAF50;" text="0%" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+                <Label style="-fx-font-weight: bold;" text="Impayées" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <ProgressBar fx:id="progressImpayees" progress="0" style="-fx-accent: #F44336;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label fx:id="labelImpayees" style="-fx-font-weight: bold; -fx-text-fill: #F44336;" text="0%" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+                <Label style="-fx-font-weight: bold;" text="Annulées" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <ProgressBar fx:id="progressAnnulees" progress="0" style="-fx-accent: #9E9E9E;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label fx:id="labelAnnulees" style="-fx-font-weight: bold; -fx-text-fill: #9E9E9E;" text="0%" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            </GridPane>
+        </VBox>
+
+        <!-- Section Produits -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="📦 Produits par type" />
+            <HBox alignment="CENTER" spacing="15">
+                <PieChart fx:id="produitsPieChart" prefHeight="250" prefWidth="400"
+                          style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
+            </HBox>
+        </VBox>
+
+        <!-- Section Services -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="🔧 Services par type" />
+            <HBox alignment="CENTER" spacing="15">
+                <PieChart fx:id="servicesPieChart" prefHeight="250" prefWidth="400"
+                          style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
+            </HBox>
+        </VBox>
+
+        <!-- Section Factures -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #182d88;" text="📄 Factures par statut" />
+            <HBox alignment="CENTER" spacing="15">
+                <PieChart fx:id="facturesPieChart" prefHeight="250" prefWidth="400"
+                          style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
+            </HBox>
+        </VBox>
+    </VBox>
+</ScrollPane>
