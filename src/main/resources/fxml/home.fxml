@@ -6,21 +6,36 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane prefHeight="600.0" prefWidth="1000.0" styleClass="root" stylesheets="@/css/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.HomeController">
-    <!-- Contenu principal fluide -->
-    <VBox spacing="16" style="-fx-padding: 20;">
-        <!-- Titre simple et Boutons d'action rapides -->
-        <HBox alignment="CENTER_LEFT" spacing="20">
-            <ImageView fitHeight="40" fitWidth="100" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@/assets/logo.png" />
-                </image>
-            </ImageView>
-            <Label fx:id="welcomeLabel" styleClass="title" text="Bienvenue" />
-            <Pane HBox.hgrow="ALWAYS" />
-            <Button onAction="#onOpenChat" styleClass="btn-secondary" text="💬 Chat" />
-            <Button onAction="#onToggleTheme" styleClass="btn-secondary" text="🎨 Thème" />
-            <Button onAction="#onLogout" styleClass="btn-primary" text="🚪 Déconnexion" />
-        </HBox>
+<HBox>
+        <!-- Sidebar -->
+        <VBox prefWidth="250" spacing="10" styleClass="sidebar" style="-fx-padding: 20 15;">
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 30 0;">
+                <ImageView fitHeight="80" fitWidth="160" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png" />
+                    </image>
+                </ImageView>
+            </VBox>
+            
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button, side-nav-button-active" text="📊 Overview" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="📝 Transactions" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="💳 Accounts" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="📄 Invoices" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="🎯 Goals" maxWidth="Infinity" />
+            <Pane VBox.vgrow="ALWAYS" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="⚙️ Settings" maxWidth="Infinity" />
+        </VBox>
+
+        <!-- Main Content -->
+        <VBox spacing="16" style="-fx-padding: 20;" HBox.hgrow="ALWAYS">
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label fx:id="welcomeLabel" styleClass="title" text="Bienvenue" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button onAction="#onOpenChat" styleClass="btn-secondary" text="💬 Chat" />
+                <Button onAction="#onToggleTheme" styleClass="btn-secondary" text="🎨 Thème" />
+                <Button onAction="#onLogout" styleClass="btn-primary" text="🚪 Déconnexion" />
+            </HBox>
 
         <ScrollPane fitToWidth="true" styleClass="modern-scroll-pane" VBox.vgrow="ALWAYS">
             <VBox spacing="20">
@@ -47,5 +62,6 @@
                 </VBox>
             </VBox>
         </ScrollPane>
-    </VBox>
+        </VBox>
+    </HBox>
 </StackPane>

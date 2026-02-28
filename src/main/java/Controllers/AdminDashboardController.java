@@ -140,6 +140,26 @@ public class AdminDashboardController {
     public void initialize() {
 
         refreshHeader();
+
+        // Appliquer le thème sauvegardé
+        Platform.runLater(() -> {
+            if (welcomeLabel != null && welcomeLabel.getScene() != null) {
+                String savedTheme = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
+                // Toujours s'assurer que app.css est présent
+                if (!welcomeLabel.getScene().getStylesheets()
+                        .contains(getClass().getResource("/css/app.css").toExternalForm())) {
+                    welcomeLabel.getScene().getStylesheets()
+                            .add(getClass().getResource("/css/app.css").toExternalForm());
+                }
+
+                // Retirer les deux thèmes possibles d'abord
+                welcomeLabel.getScene().getStylesheets().remove(getClass().getResource(THEME_ORANGE).toExternalForm());
+                welcomeLabel.getScene().getStylesheets().remove(getClass().getResource(THEME_LOGO).toExternalForm());
+
+                // Ajouter le thème sauvegardé
+                welcomeLabel.getScene().getStylesheets().add(getClass().getResource(savedTheme).toExternalForm());
+            }
+        });
         showEditProfileOverlay(false);
         loadProfileFormFromState();
         loadProfilePhotoFromState();
@@ -195,7 +215,18 @@ public class AdminDashboardController {
 
     @FXML
     public void onToggleTheme(ActionEvent e) {
-        // Bouton de changement de thème neutralisé - ne fait rien
+        if (welcomeLabel == null || welcomeLabel.getScene() == null)
+            return;
+
+        String currentTheme = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
+        String newTheme = THEME_ORANGE.equals(currentTheme) ? THEME_LOGO : THEME_ORANGE;
+
+        // Appliquer le nouveau thème
+        welcomeLabel.getScene().getStylesheets().remove(getClass().getResource(currentTheme).toExternalForm());
+        welcomeLabel.getScene().getStylesheets().add(getClass().getResource(newTheme).toExternalForm());
+
+        // Sauvegarder dans les préférences
+        prefs.put(PREF_THEME_KEY, newTheme);
     }
 
     // --- Profile Methods ---

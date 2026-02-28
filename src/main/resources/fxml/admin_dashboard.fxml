@@ -6,16 +6,37 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane styleClass="root" stylesheets="@/css/app.css,@/css/theme-orange.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AdminDashboardController">
-    <VBox spacing="16" style="-fx-padding: 20;">
-        <!-- New Header with search or just title and logout -->
-        <HBox alignment="CENTER_LEFT" spacing="20">
-            <ImageView fx:id="headerAvatarView" fitHeight="40" fitWidth="40" onMouseClicked="#onHeaderAvatarClick" preserveRatio="true" styleClass="header-avatar" />
-            <Label styleClass="title" style="-fx-font-size: 24px;" text="Administration - Dashboard" />
-            <Pane HBox.hgrow="ALWAYS" />
-            <Button onAction="#onOpenChat" styleClass="btn-secondary" text="💬 Chat" />
-            <Button onAction="#onToggleTheme" styleClass="btn-secondary" text="🎨 Thème" />
-            <Button onAction="#onLogout" styleClass="btn-primary" text="🚪 Déconnexion" />
-        </HBox>
+<HBox>
+        <!-- Sidebar -->
+        <VBox prefWidth="250" spacing="10" styleClass="sidebar" style="-fx-padding: 20 15;">
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 30 0;">
+                <ImageView fitHeight="80" fitWidth="160" preserveRatio="true">
+                    <image>
+                        <Image url="@/assets/logo.png" />
+                    </image>
+                </ImageView>
+            </VBox>
+            
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button, side-nav-button-active" text="📊 Overview" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="📝 Transactions" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="💳 Accounts" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="📄 Invoices" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="🎯 Goals" maxWidth="Infinity" />
+            <Pane VBox.vgrow="ALWAYS" />
+            <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="⚙️ Settings" maxWidth="Infinity" />
+        </VBox>
+
+        <!-- Main Content -->
+        <VBox spacing="16" style="-fx-padding: 20;" HBox.hgrow="ALWAYS">
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <ImageView fx:id="headerAvatarView" fitHeight="40" fitWidth="40" onMouseClicked="#onHeaderAvatarClick" preserveRatio="true" styleClass="header-avatar" />
+                <Label styleClass="title" style="-fx-font-size: 24px;" text="Administration - Dashboard" />
+                <Pane HBox.hgrow="ALWAYS" />
+                <Button onAction="#onOpenChat" styleClass="btn-secondary" text="💬 Chat" />
+                <Button onAction="#onToggleTheme" styleClass="btn-secondary" text="🎨 Thème" />
+                <Button onAction="#onLogout" styleClass="btn-primary" text="🚪 Déconnexion" />
+            </HBox>
 
         <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="modern-scroll-pane" VBox.vgrow="ALWAYS">
             <content>
@@ -69,7 +90,8 @@
                 </VBox>
             </content>
         </ScrollPane>
-    </VBox>
+        </VBox>
+    </HBox>
 
     <!-- AJOUT: Overlay Edit Profile (caché par défaut) -->
     <StackPane fx:id="editProfileBackdrop" alignment="CENTER" managed="false" onMouseClicked="#onCloseEditProfileBackdrop" styleClass="overlay-backdrop" visible="false">

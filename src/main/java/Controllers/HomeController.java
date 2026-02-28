@@ -88,8 +88,25 @@ public class HomeController {
 
         refreshHeader();
 
-        // Ne pas appliquer de thème sauvegardé dynamiquement : l'application utilisera
-        // le CSS unique fourni
+        // Appliquer le thème sauvegardé
+        Platform.runLater(() -> {
+            if (welcomeLabel != null && welcomeLabel.getScene() != null) {
+                String savedTheme = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
+                // Toujours s'assurer que app.css est présent
+                if (!welcomeLabel.getScene().getStylesheets()
+                        .contains(getClass().getResource("/css/app.css").toExternalForm())) {
+                    welcomeLabel.getScene().getStylesheets()
+                            .add(getClass().getResource("/css/app.css").toExternalForm());
+                }
+
+                // Retirer les deux thèmes possibles d'abord
+                welcomeLabel.getScene().getStylesheets().remove(getClass().getResource(THEME_ORANGE).toExternalForm());
+                welcomeLabel.getScene().getStylesheets().remove(getClass().getResource(THEME_LOGO).toExternalForm());
+
+                // Ajouter le thème sauvegardé
+                welcomeLabel.getScene().getStylesheets().add(getClass().getResource(savedTheme).toExternalForm());
+            }
+        });
 
         // caché par défaut (au cas où)
         showEditProfileOverlay(false);
@@ -684,5 +701,21 @@ public class HomeController {
     public void onAdminEditUserBackdropClick(javafx.scene.input.MouseEvent e) {
         // Fermer l'overlay en cliquant sur le backdrop
         // Cette fonctionnalité est désactivée dans home.fxml (client view)
+    }
+
+    @FXML
+    private void onToggleTheme() {
+        if (welcomeLabel == null || welcomeLabel.getScene() == null)
+            return;
+
+        String currentTheme = prefs.get(PREF_THEME_KEY, THEME_ORANGE);
+        String newTheme = THEME_ORANGE.equals(currentTheme) ? THEME_LOGO : THEME_ORANGE;
+
+        // Appliquer le nouveau thème
+        welcomeLabel.getScene().getStylesheets().remove(getClass().getResource(currentTheme).toExternalForm());
+        welcomeLabel.getScene().getStylesheets().add(getClass().getResource(newTheme).toExternalForm());
+
+        // Sauvegarder dans les préférences
+        prefs.put(PREF_THEME_KEY, newTheme);
     }
 }
