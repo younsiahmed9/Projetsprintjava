@@ -229,6 +229,11 @@ public class AdminDashboardController {
         prefs.put(PREF_THEME_KEY, newTheme);
     }
 
+    @FXML
+    public void onOpenAiAssistant(ActionEvent e) {
+        SceneNavigator.goAiAssistant();
+    }
+
     // --- Profile Methods ---
     @FXML
     public void onHeaderAvatarClick(MouseEvent e) {

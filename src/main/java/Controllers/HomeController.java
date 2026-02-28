@@ -704,7 +704,7 @@ public class HomeController {
     }
 
     @FXML
-    private void onToggleTheme() {
+    public void onToggleTheme(javafx.event.ActionEvent e) {
         if (welcomeLabel == null || welcomeLabel.getScene() == null)
             return;
 
@@ -717,5 +717,10 @@ public class HomeController {
 
         // Sauvegarder dans les préférences
         prefs.put(PREF_THEME_KEY, newTheme);
+    }
+
+    @FXML
+    public void onOpenAiAssistant(javafx.event.ActionEvent e) {
+        SceneNavigator.goAiAssistant();
     }
 }

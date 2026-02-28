@@ -31,9 +31,14 @@
             </content>
         </ScrollPane>
 
-        <!-- Zone de saisie -->
-        <HBox spacing="10" style="-fx-padding: 15; -fx-border-color: #e7e5e4; -fx-border-width: 1 0 0 0; -fx-background-color: #fafaf9;">
+        <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 15; -fx-border-color: #e7e5e4; -fx-border-width: 1 0 0 0; -fx-background-color: #fafaf9;">
             <TextField fx:id="messageInput" promptText="Écrivez un message..." HBox.hgrow="ALWAYS" styleClass="text-field" onAction="#onSendMessage" />
+            <ProgressIndicator fx:id="aiLoadingIndicator" visible="false" prefHeight="20" prefWidth="20" />
+            <Button fx:id="aiReformulateBtn" text="✨" onAction="#onAiReformulate" styleClass="btn-secondary">
+                <tooltip>
+                    <Tooltip text="Reformuler par IA" />
+                </tooltip>
+            </Button>
             <Button text="Envoyer" onAction="#onSendMessage" styleClass="btn-primary" />
         </HBox>
         

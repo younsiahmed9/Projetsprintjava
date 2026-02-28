@@ -22,6 +22,7 @@
             <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="💳 Accounts" maxWidth="Infinity" />
             <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="📄 Invoices" maxWidth="Infinity" />
             <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="🎯 Goals" maxWidth="Infinity" />
+            <Button alignment="BASELINE_LEFT" onAction="#onOpenAiAssistant" styleClass="side-nav-button" text="🤖 Assistant IA" maxWidth="Infinity" />
             <Pane VBox.vgrow="ALWAYS" />
             <Button alignment="BASELINE_LEFT" styleClass="side-nav-button" text="⚙️ Settings" maxWidth="Infinity" />
         </VBox>

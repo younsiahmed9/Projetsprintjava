@@ -12,6 +12,7 @@ public class User {
     private byte[] faceTemplate;
     private Role role;
     private boolean active;
+    private boolean banned;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -97,6 +98,14 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
     public Instant getCreatedAt() {

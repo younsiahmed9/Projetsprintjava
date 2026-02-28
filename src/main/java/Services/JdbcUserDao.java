@@ -18,7 +18,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public long insert(User user) throws SQLException {
-        String sql = "INSERT INTO users(email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active) VALUES (?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO users(email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, is_banned) VALUES (?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
@@ -40,6 +40,7 @@ public class JdbcUserDao implements UserDao {
             }
             ps.setString(7, user.getRole().name());
             ps.setBoolean(8, user.isActive());
+            ps.setBoolean(9, user.isBanned());
             ps.executeUpdate();
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -55,11 +56,12 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Optional<User> findById(long id) throws SQLException {
-        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, created_at, updated_at FROM users WHERE id=?";
+        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, is_banned, created_at, updated_at FROM users WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return Optional.empty();
+                if (!rs.next())
+                    return Optional.empty();
                 return Optional.of(map(rs));
             }
         }
@@ -67,11 +69,12 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) throws SQLException {
-        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, created_at, updated_at FROM users WHERE email=?";
+        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, is_banned, created_at, updated_at FROM users WHERE email=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return Optional.empty();
+                if (!rs.next())
+                    return Optional.empty();
                 return Optional.of(map(rs));
             }
         }
@@ -79,9 +82,9 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public List<User> findAll() throws SQLException {
-        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, created_at, updated_at FROM users ORDER BY id";
+        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, is_banned, created_at, updated_at FROM users ORDER BY id";
         try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                ResultSet rs = ps.executeQuery()) {
 
             List<User> out = new ArrayList<>();
             while (rs.next()) {
@@ -96,7 +99,7 @@ public class JdbcUserDao implements UserDao {
         if (user.getId() == null) {
             throw new IllegalArgumentException("user.id obligatoire pour update()");
         }
-        String sql = "UPDATE users SET email=?, password_hash=?, full_name=?, profile_photo=?, fingerprint_template=?, face_template=?, role=?, is_active=? WHERE id=?";
+        String sql = "UPDATE users SET email=?, password_hash=?, full_name=?, profile_photo=?, fingerprint_template=?, face_template=?, role=?, is_active=?, is_banned=? WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPasswordHash());
@@ -118,7 +121,8 @@ public class JdbcUserDao implements UserDao {
             }
             ps.setString(7, user.getRole().name());
             ps.setBoolean(8, user.isActive());
-            ps.setLong(9, user.getId());
+            ps.setBoolean(9, user.isBanned());
+            ps.setLong(10, user.getId());
             return ps.executeUpdate() == 1;
         }
     }
@@ -140,18 +144,21 @@ public class JdbcUserDao implements UserDao {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, role.name());
             try (ResultSet rs = ps.executeQuery()) {
-                if (!rs.next()) return 0L;
+                if (!rs.next())
+                    return 0L;
                 return rs.getLong(1);
             }
         }
     }
 
     /**
-     * Stat: nombre d'utilisateurs créés par jour sur les derniers {@code days} jours (inclus aujourd'hui).
+     * Stat: nombre d'utilisateurs créés par jour sur les derniers {@code days}
+     * jours (inclus aujourd'hui).
      * Retourne une liste triée par date asc.
      */
     public List<DailyCount> countCreatedUsersLastDays(int days) throws SQLException {
-        if (days <= 0) throw new IllegalArgumentException("days doit être > 0");
+        if (days <= 0)
+            throw new IllegalArgumentException("days doit être > 0");
 
         String sql = "SELECT DATE(created_at) as d, COUNT(*) as c " +
                 "FROM users " +
@@ -173,17 +180,21 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
-    public record DailyCount(java.time.LocalDate date, long count) {}
+    public record DailyCount(java.time.LocalDate date, long count) {
+    }
 
     /**
      * Compare deux templates d'empreintes et retourne un score de similarité
+     * 
      * @param template1 Premier template
      * @param template2 Deuxième template
      * @return Score entre 0.0 (aucune similarité) et 1.0 (identique)
      */
     private double compareFingerprintTemplates(byte[] template1, byte[] template2) {
-        if (template1 == null || template2 == null) return 0.0;
-        if (template1.length == 0 || template2.length == 0) return 0.0;
+        if (template1 == null || template2 == null)
+            return 0.0;
+        if (template1.length == 0 || template2.length == 0)
+            return 0.0;
 
         // Méthode 1 : Comparaison exacte (pour templates identiques)
         if (java.util.Arrays.equals(template1, template2)) {
@@ -210,11 +221,13 @@ public class JdbcUserDao implements UserDao {
             total++;
         }
 
-        if (total == 0) return 0.0;
+        if (total == 0)
+            return 0.0;
 
         double similarity = (double) matches / total;
 
-        // Méthode 3 : Vérification du header (les premiers bytes devraient être similaires)
+        // Méthode 3 : Vérification du header (les premiers bytes devraient être
+        // similaires)
         int headerLength = Math.min(32, minLength);
         int headerMatches = 0;
         for (int i = 0; i < headerLength; i++) {
@@ -230,17 +243,21 @@ public class JdbcUserDao implements UserDao {
 
     /**
      * Vérifie si une empreinte digitale est déjà associée à un autre utilisateur
+     * 
      * @param fingerprintHash Le hash de l'empreinte à vérifier
-     * @param excludeUserId L'ID de l'utilisateur à exclure de la recherche (pour éviter de se trouver soi-même)
-     * @return Optional contenant l'utilisateur si l'empreinte existe déjà, vide sinon
+     * @param excludeUserId   L'ID de l'utilisateur à exclure de la recherche (pour
+     *                        éviter de se trouver soi-même)
+     * @return Optional contenant l'utilisateur si l'empreinte existe déjà, vide
+     *         sinon
      */
     public Optional<User> findByFingerprintHash(byte[] fingerprintHash, Long excludeUserId) throws SQLException {
         if (fingerprintHash == null || fingerprintHash.length == 0) {
             return Optional.empty();
         }
 
-        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, created_at, updated_at " +
-                     "FROM users WHERE fingerprint_template IS NOT NULL";
+        String sql = "SELECT id, email, password_hash, full_name, profile_photo, fingerprint_template, face_template, role, is_active, is_banned, created_at, updated_at "
+                +
+                "FROM users WHERE fingerprint_template IS NOT NULL";
 
         if (excludeUserId != null) {
             sql += " AND id != ?";
@@ -269,7 +286,6 @@ public class JdbcUserDao implements UserDao {
         return Optional.empty();
     }
 
-
     private static User map(ResultSet rs) throws SQLException {
         User u = new User();
         u.setId(rs.getLong("id"));
@@ -281,11 +297,14 @@ public class JdbcUserDao implements UserDao {
         u.setFaceTemplate(rs.getBytes("face_template"));
         u.setRole(Role.valueOf(rs.getString("role")));
         u.setActive(rs.getBoolean("is_active"));
+        u.setBanned(rs.getBoolean("is_banned"));
 
         Timestamp created = rs.getTimestamp("created_at");
         Timestamp updated = rs.getTimestamp("updated_at");
-        if (created != null) u.setCreatedAt(created.toInstant());
-        if (updated != null) u.setUpdatedAt(updated.toInstant());
+        if (created != null)
+            u.setCreatedAt(created.toInstant());
+        if (updated != null)
+            u.setUpdatedAt(updated.toInstant());
         return u;
     }
 }

@@ -3,8 +3,10 @@ package Controllers;
 import Models.Message;
 import Models.Role;
 import Models.User;
+import Services.GroqApiService;
 import Services.JdbcMessageDao;
 import Services.JdbcUserDao;
+import Services.ProfanityFilterService;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -43,12 +45,19 @@ public class ChatController implements Initializable {
     private ScrollPane chatScrollPane;
     @FXML
     private TextField messageInput;
+    @FXML
+    private Button aiReformulateBtn;
+    @FXML
+    private ProgressIndicator aiLoadingIndicator;
+
+    private final GroqApiService groqService = new GroqApiService();
 
     private User currentUser;
     private User selectedContact;
     private JdbcMessageDao messageDao;
     private JdbcUserDao userDao;
     private Timeline pollingTimeline;
+    private final ProfanityFilterService profanityFilter = new ProfanityFilterService();
 
     private ObservableList<User> contactsList = FXCollections.observableArrayList();
 
@@ -209,7 +218,6 @@ public class ChatController implements Initializable {
     @FXML
     public void onSendMessage(ActionEvent e) {
         if (selectedContact == null) {
-            // Pas de contact sélectionné
             return;
         }
 
@@ -218,14 +226,62 @@ public class ChatController implements Initializable {
             return;
         }
 
+        // Vérification des mots impolis
+        if (profanityFilter.containsProfanity(content)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ALERTE SÉCURITÉ");
+            alert.setHeaderText("COMPTE BANNI IMMÉDIATEMENT");
+            alert.setContentText(
+                    "En raison de l'utilisation d'un langage inapproprié, votre accès à FinTrack est révoqué.");
+            alert.showAndWait();
+
+            // Bannir l'utilisateur en BDD
+            currentUser.setBanned(true);
+            try (Connection cn = utils.Db.getConnection()) {
+                new Services.JdbcUserDao(cn).update(currentUser);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            // Déconnexion forcée
+            AppState.clear();
+            SceneNavigator.goLogin();
+            return;
+        }
+
         Message msg = new Message(currentUser.getId(), selectedContact.getId(), content.trim());
         try {
             messageDao.insert(msg);
             messageInput.clear();
-            loadMessages(); // On recharge immédiatement
+            loadMessages();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @FXML
+    public void onAiReformulate(ActionEvent e) {
+        String input = messageInput.getText();
+        if (input == null || input.isBlank()) {
+            return;
+        }
+
+        aiLoadingIndicator.setVisible(true);
+        aiReformulateBtn.setDisable(true);
+
+        groqService.getFintechSuggestion(input)
+                .thenAccept(suggestion -> Platform.runLater(() -> {
+                    messageInput.setText(suggestion);
+                    aiLoadingIndicator.setVisible(false);
+                    aiReformulateBtn.setDisable(false);
+                }))
+                .exceptionally(ex -> {
+                    Platform.runLater(() -> {
+                        aiLoadingIndicator.setVisible(false);
+                        aiReformulateBtn.setDisable(false);
+                    });
+                    return null;
+                });
     }
 
     public void stopPolling() {

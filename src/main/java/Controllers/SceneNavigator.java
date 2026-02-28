@@ -103,4 +103,18 @@ public final class SceneNavigator {
             e.printStackTrace();
         }
     }
+
+    public static void goAiAssistant() {
+        try {
+            var url = SceneNavigator.class.getResource("/fxml/ai_assistant.fxml");
+            FXMLLoader loader = new FXMLLoader(url);
+            Parent root = loader.load();
+            Stage newStage = new Stage();
+            newStage.setTitle("FinTrack - Assistant IA");
+            newStage.setScene(new Scene(root));
+            newStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

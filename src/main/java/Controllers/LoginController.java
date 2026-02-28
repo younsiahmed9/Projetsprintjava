@@ -20,22 +20,33 @@ import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
 
-    @FXML private TextField emailField;
+    @FXML
+    private TextField emailField;
 
-    @FXML private PasswordField passwordField;
-    @FXML private TextField passwordVisibleField;
-    @FXML private CheckBox showPasswordCheck;
-    @FXML private Button togglePasswordBtn;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private TextField passwordVisibleField;
+    @FXML
+    private CheckBox showPasswordCheck;
+    @FXML
+    private Button togglePasswordBtn;
 
-    @FXML private Button fingerprintLoginBtn;
-    @FXML private Label fingerprintStatusLabel;
+    @FXML
+    private Button fingerprintLoginBtn;
+    @FXML
+    private Label fingerprintStatusLabel;
 
-    @FXML private Button faceLoginBtn;
-    @FXML private Label faceStatusLabel;
+    @FXML
+    private Button faceLoginBtn;
+    @FXML
+    private Label faceStatusLabel;
 
-    @FXML private Label statusLabel;
+    @FXML
+    private Label statusLabel;
 
-    // Code restauré à l'état d'origine, sans aucune modification responsive ni navigation
+    // Code restauré à l'état d'origine, sans aucune modification responsive ni
+    // navigation
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         passwordVisibleField.textProperty().bindBidirectional(passwordField.textProperty());
@@ -63,7 +74,8 @@ public class LoginController implements Initializable {
             faceLoginBtn.setVisible(true);
             faceLoginBtn.setManaged(true);
             faceLoginBtn.setDisable(false);
-            if (faceStatusLabel != null) faceStatusLabel.setText("");
+            if (faceStatusLabel != null)
+                faceStatusLabel.setText("");
             faceLoginBtn.setStyle("-fx-background-color: #e53935; -fx-text-fill: white; -fx-font-weight: 700;");
             System.out.println("[LoginController] faceLoginBtn injected and forced visible");
         } else {
@@ -99,6 +111,10 @@ public class LoginController implements Initializable {
             }
             if (!u.isActive()) {
                 statusLabel.setText("Votre email n'est pas vérifié. Veuillez vérifier votre boîte mail.");
+                return;
+            }
+            if (u.isBanned()) {
+                statusLabel.setText("Votre compte a été banni pour non-respect des règles.");
                 return;
             }
 
@@ -209,7 +225,8 @@ public class LoginController implements Initializable {
                     javafx.application.Platform.runLater(() -> {
                         if (fingerprintStatusLabel != null) {
                             fingerprintStatusLabel.setText("🔍 AUTHENTIFICATION EN COURS...");
-                            fingerprintStatusLabel.setStyle("-fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-font-size: 13px;");
+                            fingerprintStatusLabel
+                                    .setStyle("-fx-text-fill: #FF6B35; -fx-font-weight: bold; -fx-font-size: 13px;");
                         }
                     });
 
@@ -278,7 +295,8 @@ public class LoginController implements Initializable {
                             }
 
                             AppState.setCurrentUser(finalAuthenticatedUser);
-                            if (finalAuthenticatedUser.getRole() != null && finalAuthenticatedUser.getRole() == Models.Role.ADMIN) {
+                            if (finalAuthenticatedUser.getRole() != null
+                                    && finalAuthenticatedUser.getRole() == Models.Role.ADMIN) {
                                 SceneNavigator.goAdminDashboard();
                             } else {
                                 SceneNavigator.goHome();
@@ -313,7 +331,6 @@ public class LoginController implements Initializable {
                     });
                 }
             }).start();
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -371,14 +388,20 @@ public class LoginController implements Initializable {
                 try (var stream = Files.list(modelsDir)) {
                     for (Path p : (Iterable<Path>) stream::iterator) {
                         String name = p.getFileName().toString();
-                        if (!name.startsWith("face_") || !name.endsWith(".yml")) continue;
+                        if (!name.startsWith("face_") || !name.endsWith(".yml"))
+                            continue;
                         String idStr = name.substring(5, name.length() - 4);
                         Long uid;
-                        try { uid = Long.parseLong(idStr); } catch (NumberFormatException ex) { continue; }
+                        try {
+                            uid = Long.parseLong(idStr);
+                        } catch (NumberFormatException ex) {
+                            continue;
+                        }
                         double minConf = Double.MAX_VALUE;
                         for (org.bytedeco.opencv.opencv_core.Mat m : mats) {
                             double conf = frs.verifyWithModel(p, m);
-                            if (conf < minConf) minConf = conf;
+                            if (conf < minConf)
+                                minConf = conf;
                         }
                         if (minConf < bestConfidence) {
                             bestConfidence = minConf;
@@ -397,7 +420,8 @@ public class LoginController implements Initializable {
                             return;
                         }
                         AppState.setCurrentUser(matched);
-                        faceStatusLabel.setText("✓ Connexion Face ID réussie (score=" + String.format("%.2f", bestConfidence) + ")");
+                        faceStatusLabel.setText(
+                                "✓ Connexion Face ID réussie (score=" + String.format("%.2f", bestConfidence) + ")");
                         faceStatusLabel.setStyle("-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
                         if (matched.getRole() != null && matched.getRole() == Models.Role.ADMIN) {
                             SceneNavigator.goAdminDashboard();
@@ -407,7 +431,8 @@ public class LoginController implements Initializable {
                         return;
                     }
                 }
-                faceStatusLabel.setText("❌ Aucun modèle correspondant (best=" + (bestConfidence==Double.MAX_VALUE?"n/a":String.format("%.2f", bestConfidence)) + ")");
+                faceStatusLabel.setText("❌ Aucun modèle correspondant (best="
+                        + (bestConfidence == Double.MAX_VALUE ? "n/a" : String.format("%.2f", bestConfidence)) + ")");
                 faceStatusLabel.setStyle("-fx-text-fill: #d32f2f;");
             } catch (Exception ex) {
                 faceStatusLabel.setText("❌ Erreur Face ID: " + ex.getMessage());
@@ -422,15 +447,17 @@ public class LoginController implements Initializable {
     // Ajout des handlers pour les boutons de fenêtre
     @FXML
     private void onMinimize(ActionEvent event) {
-        ((Stage)((Node)event.getSource()).getScene().getWindow()).setIconified(true);
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).setIconified(true);
     }
+
     @FXML
     private void onMaximize(ActionEvent event) {
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setMaximized(!stage.isMaximized());
     }
+
     @FXML
     private void onClose(ActionEvent event) {
-        ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 }
