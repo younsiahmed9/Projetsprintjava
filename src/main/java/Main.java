@@ -5,11 +5,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.MyDataBase;
 
+import java.util.Objects;
+
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/interfaces/serviceView.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/interfaces/MainView.fxml")));
         primaryStage.setTitle("FinTrack - Gestion des Services");
         primaryStage.setScene(new Scene(root, 1000, 700));
         primaryStage.show();

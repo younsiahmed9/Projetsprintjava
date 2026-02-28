@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" styleClass="main-container" stylesheets="/styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ProduitDetailsController">
+    <content>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <!-- En-tête avec titre -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label fx:id="titleLabel" prefHeight="19.0" prefWidth="119.0" styleClass="header-title-blue" text="Détails du produit" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleRefresh" prefHeight="27.0" prefWidth="91.0" styleClass="btn-action-light-blue" text="🔄 Rafraîchir" />
+                <Button onAction="#handleModifier" prefHeight="27.0" prefWidth="106.0" styleClass="btn-action-light-blue" text="✏️ Modifier" />
+                <Button onAction="#handleFermer" prefHeight="27.0" prefWidth="82.0" styleClass="btn-cancel-flat" text="❌ Fermer" />
+            </HBox>
+
+            <Separator />
+
+            <!-- Informations générales -->
+            <TitledPane collapsible="false" styleClass="form-container" text="Informations générales">
+                <GridPane hgap="10" vgap="10">
+                    <Label styleClass="field-label" text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="idField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <Label styleClass="field-label" text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="nomField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                    <Label styleClass="field-label" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="typeField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                    <Label styleClass="field-label" text="Montant:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="montantField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                    <Label styleClass="field-label" text="Code Unique:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <TextField fx:id="codeUniqueField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                    <Label styleClass="field-label" text="Date de création:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <DatePicker fx:id="dateCreationPicker" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                    <Label styleClass="field-label" text="Statut:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <TextField fx:id="statutField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                    </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+                </GridPane>
+            </TitledPane>
+        </VBox>
+    </content>
+</ScrollPane>

@@ -1,681 +1,424 @@
 package controllers;
 
-import services.ServicePersonne;
-import models.Service;
 import models.Produit;
+import models.Service;
+import services.ServiceService;
+import services.ServiceProduit;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
-import java.math.BigDecimal;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServiceController implements Initializable {
 
-    @FXML private TextField txtSearch;
-    @FXML private ComboBox<Service.TypeService> filterType;
-    @FXML private ComboBox<Service.StatutService> filterStatut;
-    @FXML private FlowPane servicesFlow;
-    @FXML private FlowPane produitsFlow;
     @FXML private Text totalServices;
     @FXML private Text totalProduits;
+    @FXML private FlowPane servicesFlow;
+    @FXML private FlowPane produitsFlow;
+    @FXML private TextField searchServiceField;
+    @FXML private ComboBox<String> filterStatutService;
+    @SuppressWarnings("unused") @FXML private Button addServiceButton;
+    @SuppressWarnings("unused") @FXML private Button addProductButton;
 
-    // Éléments de navigation
-    @FXML private HBox navDashboard;
-    @FXML private HBox navServices;
-    @FXML private HBox navComptes;
-    @FXML private HBox navDepenses;
-    @FXML private HBox navDocuments;
-    @FXML private HBox navPaiements;
-
-    private ServicePersonne servicePersonne;
-    private ObservableList<Service> serviceList;
-    private ObservableList<Produit> produitList;
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private ServiceService serviceService;
+    private ServiceProduit produitService;
+    private final ObservableList<Service> serviceList = FXCollections.observableArrayList();
+    private final ObservableList<Produit> produitList = FXCollections.observableArrayList();
+    private FilteredList<Service> filteredServices;
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final Logger LOGGER = Logger.getLogger(ServiceController.class.getName());
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        servicePersonne = new ServicePersonne();
-        serviceList = FXCollections.observableArrayList();
-        produitList = FXCollections.observableArrayList();
-
-        setupFilters();
-        loadData();
-    }
-
-    private void setupFilters() {
-        filterType.setItems(FXCollections.observableArrayList(Service.TypeService.values()));
-        filterStatut.setItems(FXCollections.observableArrayList(Service.StatutService.values()));
-
-        filterType.setOnAction(e -> filterServices());
-        filterStatut.setOnAction(e -> filterServices());
-        txtSearch.textProperty().addListener((obs, oldVal, newVal) -> filterServices());
-    }
-
-    private void loadData() {
+    public void initialize(URL location, ResourceBundle resources) {
         try {
-            List<Service> services = servicePersonne.afficherTousServices();
-            serviceList.setAll(services);
+            serviceService = new ServiceService();
+            produitService = new ServiceProduit();
 
-            List<Produit> produits = servicePersonne.afficherTousProduits();
-            produitList.setAll(produits);
+            initialiserFiltres();
+            chargerDonnees();
+            configurerRecherche();
 
-            displayAll();
-            updateStats();
-        } catch (SQLException e) {
-            showAlert("Erreur", "Impossible de charger les données: " + e.getMessage());
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Impossible d'initialiser le contrôleur car la connexion à la base de données a échoué.", e);
+            afficherErreurCritique("Erreur de connexion", "Impossible de se connecter à la base de données.",
+                    "Veuillez vérifier que le serveur de base de données est démarré et que la base 'service_et_produit' existe. L'application ne peut pas continuer sans cela.");
+
+            if (searchServiceField != null) searchServiceField.setDisable(true);
+            if (filterStatutService != null) filterStatutService.setDisable(true);
+            if (servicesFlow != null) servicesFlow.setDisable(true);
+            if (produitsFlow != null) produitsFlow.setDisable(true);
+            if (addServiceButton != null) addServiceButton.setDisable(true);
+            if (addProductButton != null) addProductButton.setDisable(true);
         }
     }
 
-    private void updateStats() {
+    private void initialiserFiltres() {
+        if (filterStatutService != null) {
+            filterStatutService.getItems().addAll("Tous", "actif", "suspendu", "expire");
+            filterStatutService.setValue("Tous");
+            filterStatutService.setOnAction(e -> filtrerServices());
+        }
+    }
+
+    private void configurerRecherche() {
+        if (searchServiceField != null) {
+            searchServiceField.textProperty().addListener((obs, old, n) -> filtrerServices());
+        }
+    }
+
+    public void chargerDonnees() {
         try {
-            List<Service> allServices = servicePersonne.afficherTousServices();
-            List<Produit> allProduits = servicePersonne.afficherTousProduits();
-
-            if (totalServices != null) totalServices.setText(String.valueOf(allServices.size()));
-            if (totalProduits != null) totalProduits.setText(String.valueOf(allProduits.size()));
-
+            serviceList.setAll(serviceService.recupererTous());
+            produitList.setAll(produitService.recupererTous());
+            afficherServices();
+            afficherProduits();
+            mettreAJourStatistiques();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Erreur lors du chargement des données", e);
         }
     }
 
-    private void filterServices() {
-        String searchText = txtSearch.getText().toLowerCase();
-        Service.TypeService typeFilter = filterType.getValue();
-        Service.StatutService statutFilter = filterStatut.getValue();
-
-        List<Service> filtered = serviceList.stream()
-                .filter(s -> searchText.isEmpty() ||
-                        s.getNomService().toLowerCase().contains(searchText))
-                .filter(s -> typeFilter == null || s.getTypeService() == typeFilter)
-                .filter(s -> statutFilter == null || s.getStatut() == statutFilter)
-                .toList();
-
-        displayServices(filtered);
-    }
-
-    private void displayAll() {
-        displayServices(serviceList);
-        displayProduits(produitList);
-    }
-
-    private void displayServices(List<Service> services) {
-        if (servicesFlow != null) servicesFlow.getChildren().clear();
-
-        for (Service service : services) {
-            VBox card = createServiceCard(service);
-            servicesFlow.getChildren().add(card);
-        }
-    }
-
-    private void displayProduits(List<Produit> produits) {
-        if (produitsFlow != null) produitsFlow.getChildren().clear();
-
-        for (Produit produit : produits) {
-            VBox card = createProduitCard(produit);
-            produitsFlow.getChildren().add(card);
+    private void afficherServices() {
+        if (servicesFlow != null) {
+            servicesFlow.getChildren().clear();
+            for (Service service : serviceList) {
+                servicesFlow.getChildren().add(createServiceCard(service));
+            }
         }
     }
 
     private VBox createServiceCard(Service service) {
-        VBox card = new VBox(12);
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;");
-        card.setPadding(new Insets(20));
-        card.setPrefWidth(320);
-        card.setMaxWidth(320);
-        card.getStyleClass().add("card");
+        VBox card = createBaseCard();
 
-        // Double-clic pour voir les détails
-        card.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                openServiceDetails(service);
-            }
-        });
+        Label nomLabel = new Label(service.getNomService());
+        nomLabel.getStyleClass().add("header-text");
 
-        // Effet d'ombre
-        DropShadow shadow = new DropShadow();
-        shadow.setRadius(8);
-        shadow.setOffsetX(0);
-        shadow.setOffsetY(2);
-        shadow.setColor(Color.rgb(24, 45, 136, 0.1));
-        card.setEffect(shadow);
+        Label typeLabel = new Label("Type: " + service.getTypeService());
 
-        // En-tête
-        HBox header = new HBox(15);
-        header.setAlignment(Pos.CENTER_LEFT);
+        Label tarifLabel = new Label(String.format("%.2f DT", service.getTarif()));
+        tarifLabel.getStyleClass().add("header-text");
 
-        Circle iconCircle = new Circle(25);
-        if (service.getTypeService() == Service.TypeService.abonnement) {
-            iconCircle.setFill(Color.web("#8dbc71"));
-        } else {
-            iconCircle.setFill(Color.web("#f78f34"));
+        long jours = 0;
+        if (service.getDateDebut() != null && service.getDateFin() != null) {
+            jours = ChronoUnit.DAYS.between(service.getDateDebut(), service.getDateFin());
         }
+        Label dureeLabel = new Label("Durée: " + jours + " jours");
 
-        VBox titleBox = new VBox(5);
-        Text title = new Text(service.getNomService());
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #182d88;");
+        Label statutLabel = createStatutLabel(service.getStatut());
 
-        Text type = new Text(service.getTypeService().toString());
-        type.setStyle("-fx-font-size: 12px; -fx-fill: #182d88; -fx-opacity: 0.7;");
+        HBox actions = createActionBox(
+                e -> afficherDetailsService(service),
+                e -> showServiceEditDialog(service),
+                e -> supprimerService(service)
+        );
 
-        titleBox.getChildren().addAll(title, type);
-        header.getChildren().addAll(iconCircle, titleBox);
-
-        // Détails
-        VBox details = new VBox(8);
-        details.setStyle("-fx-padding: 10 0;");
-
-        // Prix
-        HBox priceRow = new HBox(10);
-        priceRow.setAlignment(Pos.CENTER_LEFT);
-        Text priceIcon = new Text("💰");
-        Text priceLabel = new Text("Tarif: " + service.getTarif() + " TND");
-        priceLabel.setStyle("-fx-font-size: 14px; -fx-fill: #182d88;");
-        priceRow.getChildren().addAll(priceIcon, priceLabel);
-        details.getChildren().add(priceRow);
-
-        // Infos supplémentaires pour abonnements
-        if (service.getTypeService() == Service.TypeService.abonnement) {
-            if (service.getFrequence() != null) {
-                HBox freqRow = new HBox(10);
-                freqRow.setAlignment(Pos.CENTER_LEFT);
-                Text freqIcon = new Text("📅");
-                Text freqText = new Text("Fréquence: " + service.getFrequence().toString());
-                freqText.setStyle("-fx-font-size: 13px; -fx-fill: #182d88; -fx-opacity: 0.7;");
-                freqRow.getChildren().addAll(freqIcon, freqText);
-                details.getChildren().add(freqRow);
-            }
-
-            if (service.getDateDebut() != null) {
-                HBox dateRow = new HBox(10);
-                dateRow.setAlignment(Pos.CENTER_LEFT);
-                Text dateIcon = new Text("⏰");
-                Text dateText = new Text("Début: " + service.getDateDebut().format(dateFormatter));
-                dateText.setStyle("-fx-font-size: 13px; -fx-fill: #182d88; -fx-opacity: 0.7;");
-                dateRow.getChildren().addAll(dateIcon, dateText);
-                details.getChildren().add(dateRow);
-            }
-        }
-
-        // Statut
-        HBox statusRow = new HBox(10);
-        statusRow.setAlignment(Pos.CENTER_LEFT);
-
-        Circle statusDot = new Circle(6);
-        Text statusText = new Text(service.getStatut().toString());
-        statusText.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-
-        switch (service.getStatut()) {
-            case actif:
-                statusDot.setFill(Color.web("#8dbc71"));
-                statusText.setFill(Color.web("#8dbc71"));
-                break;
-            case suspendu:
-                statusDot.setFill(Color.web("#fecf47"));
-                statusText.setFill(Color.web("#fecf47"));
-                break;
-            case expire:
-                statusDot.setFill(Color.web("#f78f34"));
-                statusText.setFill(Color.web("#f78f34"));
-                break;
-        }
-
-        statusRow.getChildren().addAll(statusDot, statusText);
-
-        // Boutons
-        HBox actions = new HBox(10);
-        actions.setAlignment(Pos.CENTER_RIGHT);
-
-        Button editBtn = new Button("Modifier");
-        editBtn.setStyle("-fx-background-color: #182d88; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 12px; -fx-cursor: hand;");
-        editBtn.setPadding(new Insets(6, 15, 6, 15));
-        editBtn.setOnAction(e -> handleEditService(service));
-
-        Button deleteBtn = new Button("Supprimer");
-        deleteBtn.setStyle("-fx-background-color: #f78f34; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 12px; -fx-cursor: hand;");
-        deleteBtn.setPadding(new Insets(6, 15, 6, 15));
-        deleteBtn.setOnAction(e -> handleDeleteService(service));
-
-        actions.getChildren().addAll(editBtn, deleteBtn);
-
-        card.getChildren().addAll(header, details, statusRow, actions);
+        card.getChildren().addAll(nomLabel, typeLabel, tarifLabel, dureeLabel, statutLabel, actions);
         return card;
+    }
+
+    private void afficherProduits() {
+        if (produitsFlow != null) {
+            produitsFlow.getChildren().clear();
+            for (Produit produit : produitList) {
+                produitsFlow.getChildren().add(createProduitCard(produit));
+            }
+        }
     }
 
     private VBox createProduitCard(Produit produit) {
-        VBox card = new VBox(12);
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 15; -fx-border-radius: 15;");
-        card.setPadding(new Insets(20));
-        card.setPrefWidth(320);
-        card.getStyleClass().add("card");
+        VBox card = createBaseCard();
 
-        // Double-clic pour détails (à implémenter)
-        card.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                showAlert("Info", "Détails du produit à venir");
-            }
-        });
+        Label nomLabel = new Label(produit.getNomProduit());
+        nomLabel.getStyleClass().add("header-text");
 
-        DropShadow shadow = new DropShadow();
-        shadow.setRadius(8);
-        shadow.setColor(Color.rgb(24, 45, 136, 0.1));
-        card.setEffect(shadow);
+        Label typeLabel = new Label("Type: " + produit.getTypeProduit());
 
-        // En-tête
-        HBox header = new HBox(15);
-        header.setAlignment(Pos.CENTER_LEFT);
+        Label montantLabel = new Label(String.format("%.2f DT", produit.getMontant()));
+        montantLabel.getStyleClass().add("header-text");
 
-        Circle iconCircle = new Circle(25);
-        iconCircle.setFill(Color.web("#8dbc71"));
+        Label codeLabel = new Label("Code: " + produit.getCodeUnique());
 
-        VBox titleBox = new VBox(5);
-        Text title = new Text(produit.getNomProduit());
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #182d88;");
+        Label statutLabel = createStatutLabel(produit.getStatut());
 
-        Text type = new Text(produit.getTypeProduit().toString());
-        type.setStyle("-fx-font-size: 12px; -fx-fill: #182d88; -fx-opacity: 0.7;");
+        HBox actions = createActionBox(
+                e -> afficherDetailsProduit(produit),
+                e -> showProduitEditDialog(produit),
+                e -> supprimerProduit(produit)
+        );
 
-        titleBox.getChildren().addAll(title, type);
-        header.getChildren().addAll(iconCircle, titleBox);
-
-        // Détails
-        VBox details = new VBox(8);
-
-        HBox montantRow = new HBox(10);
-        montantRow.setAlignment(Pos.CENTER_LEFT);
-        Text montantIcon = new Text("💰");
-        Text montantLabel = new Text("Montant: " + produit.getMontant() + " TND");
-        montantLabel.setStyle("-fx-font-size: 14px; -fx-fill: #182d88;");
-        montantRow.getChildren().addAll(montantIcon, montantLabel);
-
-        HBox codeRow = new HBox(10);
-        codeRow.setAlignment(Pos.CENTER_LEFT);
-        Text codeIcon = new Text("🔑");
-        Text codeLabel = new Text("Code: " + produit.getCodeUnique());
-        codeLabel.setStyle("-fx-font-size: 13px; -fx-fill: #182d88; -fx-opacity: 0.7;");
-        codeRow.getChildren().addAll(codeIcon, codeLabel);
-
-        details.getChildren().addAll(montantRow, codeRow);
-
-        // Statut
-        HBox statusRow = new HBox(10);
-        statusRow.setAlignment(Pos.CENTER_LEFT);
-
-        Circle statusDot = new Circle(6);
-        Text statusText = new Text(produit.getStatut().toString());
-        statusText.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
-
-        switch (produit.getStatut()) {
-            case disponible:
-                statusDot.setFill(Color.web("#8dbc71"));
-                statusText.setFill(Color.web("#8dbc71"));
-                break;
-            case vendu:
-                statusDot.setFill(Color.web("#f78f34"));
-                statusText.setFill(Color.web("#f78f34"));
-                break;
-            case expire:
-                statusDot.setFill(Color.web("#fecf47"));
-                statusText.setFill(Color.web("#fecf47"));
-                break;
-        }
-
-        statusRow.getChildren().addAll(statusDot, statusText);
-
-        // Boutons
-        HBox actions = new HBox(10);
-        actions.setAlignment(Pos.CENTER_RIGHT);
-
-        Button editBtn = new Button("Modifier");
-        editBtn.setStyle("-fx-background-color: #182d88; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 12px; -fx-cursor: hand;");
-        editBtn.setPadding(new Insets(6, 15, 6, 15));
-        editBtn.setOnAction(e -> handleEditProduit(produit));
-
-        Button deleteBtn = new Button("Supprimer");
-        deleteBtn.setStyle("-fx-background-color: #f78f34; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-size: 12px; -fx-cursor: hand;");
-        deleteBtn.setPadding(new Insets(6, 15, 6, 15));
-        deleteBtn.setOnAction(e -> handleDeleteProduit(produit));
-
-        actions.getChildren().addAll(editBtn, deleteBtn);
-
-        card.getChildren().addAll(header, details, statusRow, actions);
+        card.getChildren().addAll(nomLabel, typeLabel, montantLabel, codeLabel, statutLabel, actions);
         return card;
     }
 
-    // ========== MÉTHODES CRUD ==========
+    private VBox createBaseCard() {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("card");
+        card.setPrefWidth(250);
+        return card;
+    }
+
+    private HBox createActionBox(EventHandler<ActionEvent> detailsAction, EventHandler<ActionEvent> modifierAction, EventHandler<ActionEvent> supprimerAction) {
+        HBox actions = new HBox(10);
+        Button btnDetails = createStyledButton("👁️", "button-primary", detailsAction);
+        Button btnModifier = createStyledButton("✏️", "button-success", modifierAction);
+        Button btnSupprimer = createStyledButton("🗑️", "button-danger", supprimerAction);
+
+        actions.getChildren().addAll(btnDetails, btnModifier, btnSupprimer);
+        return actions;
+    }
+
+    private Button createStyledButton(String text, String styleClass, EventHandler<ActionEvent> action) {
+        Button button = new Button(text);
+        button.getStyleClass().add(styleClass);
+        button.setOnAction(action);
+        return button;
+    }
+
+    private Label createStatutLabel(String statut) {
+        Label statutLabel = new Label(statut);
+        String statutColor = switch (statut) {
+            case "actif", "disponible" -> "success-label";
+            case "suspendu" -> "warning-label";
+            default -> "error-label";
+        };
+        statutLabel.getStyleClass().add(statutColor);
+        return statutLabel;
+    }
+
+    private void filtrerServices() {
+        if (filteredServices == null) {
+            filteredServices = new FilteredList<>(serviceList, p -> true);
+        }
+        String searchText = searchServiceField != null ? searchServiceField.getText().toLowerCase() : "";
+        String statutFilter = filterStatutService != null ? filterStatutService.getValue() : "Tous";
+
+        filteredServices.setPredicate(service -> {
+            boolean searchMatch = searchText.isEmpty() || service.getNomService().toLowerCase().contains(searchText);
+            boolean statutMatch = "Tous".equals(statutFilter) || statutFilter.equals(service.getStatut());
+            return searchMatch && statutMatch;
+        });
+
+        if (servicesFlow != null) {
+            servicesFlow.getChildren().clear();
+            for (Service service : filteredServices) {
+                servicesFlow.getChildren().add(createServiceCard(service));
+            }
+        }
+    }
+
+    public void mettreAJourStatistiques() {
+        if (totalServices != null) totalServices.setText(String.valueOf(serviceList.size()));
+        if (totalProduits != null) totalProduits.setText(String.valueOf(produitList.size()));
+    }
 
     @FXML
-    private void handleAjouterService() {
+    private void ajouterService(@SuppressWarnings("unused") ActionEvent event) {
+        showServiceEditDialog(null);
+    }
+
+    private void showServiceEditDialog(Service service) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/AjoutServiceDialog.fxml"));
-            DialogPane dialogPane = loader.load();
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
 
             AjoutServiceController controller = loader.getController();
-
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Ajouter un service");
-            dialog.setDialogPane(dialogPane);
-
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Service newService = controller.getService();
-                if (newService != null) {
-                    try {
-                        int newId = generateNewServiceId();
-                        newService.setIdService(newId);
-                        servicePersonne.ajouterService(newService);
-                        loadData();
-                        showAlert("Succès", "Service ajouté avec succès!");
-                    } catch (SQLException e) {
-                        showAlert("Erreur", "Erreur lors de l'ajout: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                } else {
-                    showAlert("Erreur", "Formulaire invalide!");
-                }
-            }
-        } catch (Exception e) {
-            showAlert("Erreur", "Impossible d'ouvrir le formulaire: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void handleAjouterProduit() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/AjoutProduitDialog.fxml"));
-            DialogPane dialogPane = loader.load();
-
-            AjoutProduitController controller = loader.getController();
-
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Ajouter un produit");
-            dialog.setDialogPane(dialogPane);
-
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Produit newProduit = controller.getProduit();
-                if (newProduit != null) {
-                    try {
-                        int newId = generateNewProduitId();
-                        newProduit.setIdProduit(newId);
-                        servicePersonne.ajouterProduit(newProduit);
-                        loadData();
-                        showAlert("Succès", "Produit ajouté avec succès!");
-                    } catch (SQLException e) {
-                        showAlert("Erreur", "Erreur lors de l'ajout: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                } else {
-                    showAlert("Erreur", "Formulaire invalide!");
-                }
-            }
-        } catch (Exception e) {
-            showAlert("Erreur", "Impossible d'ouvrir le formulaire: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void openAjoutService() {
-        handleAjouterService();
-    }
-
-    @FXML
-    private void openAjoutProduit() {
-        handleAjouterProduit();
-    }
-
-    private void handleEditService(Service service) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/ModifierServiceDialog.fxml"));
-            DialogPane dialogPane = loader.load();
-
-            AjoutServiceController controller = loader.getController();
+            controller.setDialogStage(stage);
             controller.setService(service);
 
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Modifier le service");
-            dialog.setDialogPane(dialogPane);
+            stage.showAndWait();
 
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Service updatedService = controller.getService();
-                if (updatedService != null) {
-                    updatedService.setIdService(service.getIdService());
-                    try {
-                        servicePersonne.modifierService(updatedService);
-                        loadData();
-                        showAlert("Succès", "Service modifié avec succès!");
-                    } catch (SQLException e) {
-                        showAlert("Erreur", "Erreur lors de la modification: " + e.getMessage());
-                    }
-                }
+            if (controller.isOkClicked()) {
+                chargerDonnees();
             }
-        } catch (Exception e) {
-            showAlert("Erreur", "Impossible d'ouvrir le formulaire: " + e.getMessage());
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors de l'ouverture de la fenêtre d'ajout/modification de service", e);
         }
     }
 
-    private void handleDeleteService(Service service) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmation");
-        confirm.setHeaderText("Supprimer le service");
-        confirm.setContentText("Voulez-vous vraiment supprimer " + service.getNomService() + " ?");
-
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    servicePersonne.supprimerService(service.getIdService());
-                    loadData();
-                    showAlert("Succès", "Service supprimé avec succès!");
-                } catch (SQLException e) {
-                    showAlert("Erreur", "Erreur lors de la suppression: " + e.getMessage());
-                }
-            }
-        });
+    @FXML
+    private void ajouterProduit(@SuppressWarnings("unused") ActionEvent event) {
+        showProduitEditDialog(null);
     }
 
-    private void handleEditProduit(Produit produit) {
+    private void showProduitEditDialog(Produit produit) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/ModifierProduitDialog.fxml"));
-            DialogPane dialogPane = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/AjoutProduitDialog.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
 
             AjoutProduitController controller = loader.getController();
+            controller.setDialogStage(stage);
             controller.setProduit(produit);
 
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Modifier le produit");
-            dialog.setDialogPane(dialogPane);
+            stage.showAndWait();
 
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                Produit updatedProduit = controller.getProduit();
-                if (updatedProduit != null) {
-                    updatedProduit.setIdProduit(produit.getIdProduit());
-                    updatedProduit.setDateCreation(produit.getDateCreation());
-                    try {
-                        servicePersonne.modifierProduit(updatedProduit);
-                        loadData();
-                        showAlert("Succès", "Produit modifié avec succès!");
-                    } catch (SQLException e) {
-                        showAlert("Erreur", "Erreur lors de la modification: " + e.getMessage());
-                    }
-                }
+            if (controller.isOkClicked()) {
+                chargerDonnees();
             }
-        } catch (Exception e) {
-            showAlert("Erreur", "Impossible d'ouvrir le formulaire: " + e.getMessage());
-            e.printStackTrace();
+
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors de l'ouverture de la fenêtre d'ajout/modification de produit", e);
         }
     }
 
-    private void handleDeleteProduit(Produit produit) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmation");
-        confirm.setHeaderText("Supprimer le produit");
-        confirm.setContentText("Voulez-vous vraiment supprimer " + produit.getNomProduit() + " ?");
+    private void supprimerService(Service service) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer le service " + service.getNomService() + "?");
+        alert.setContentText("Êtes-vous sûr de vouloir continuer?");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
 
-        confirm.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    servicePersonne.supprimerProduit(produit.getIdProduit());
-                    loadData();
-                    showAlert("Succès", "Produit supprimé avec succès!");
-                } catch (SQLException e) {
-                    showAlert("Erreur", "Erreur lors de la suppression: " + e.getMessage());
-                }
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                serviceService.supprimer(service.getIdService());
+                chargerDonnees();
+            }  catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, "Erreur lors de la suppression du service", e);
             }
-        });
+        }
     }
 
-    // ========== MÉTHODES DE DÉTAILS ==========
-
-    private void openServiceDetails(Service service) {
+    private void afficherDetailsService(Service service) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/ServiceDetailsView.fxml"));
             Parent root = loader.load();
 
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
             ServiceDetailsController controller = loader.getController();
+            controller.setDialogStage(stage);
             controller.setService(service);
 
-            Stage stage = new Stage();
-            stage.setTitle("Détails du service - " + service.getNomService());
-            stage.setScene(new Scene(root, 600, 700));
-            stage.show();
-        } catch (Exception e) {
-            showAlert("Erreur", "Impossible d'ouvrir les détails: " + e.getMessage());
-            e.printStackTrace();
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors de l'ouverture de la fenêtre de détails du service", e);
         }
     }
 
-    // ========== MÉTHODES DE GÉNÉRATION D'ID ==========
+    private void supprimerProduit(Produit produit) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer le produit " + produit.getNomProduit() + "?");
+        alert.setContentText("Êtes-vous sûr de vouloir continuer?");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
 
-    private int generateNewServiceId() throws SQLException {
-        List<Service> services = servicePersonne.afficherTousServices();
-        return services.stream()
-                .mapToInt(Service::getIdService)
-                .max()
-                .orElse(0) + 1;
-    }
-
-    private int generateNewProduitId() throws SQLException {
-        List<Produit> produits = servicePersonne.afficherTousProduits();
-        return produits.stream()
-                .mapToInt(Produit::getIdProduit)
-                .max()
-                .orElse(0) + 1;
-    }
-
-    // ========== MÉTHODES DE NAVIGATION ==========
-
-    @FXML
-    private void handleNavigation(MouseEvent event) {
-        HBox clicked = (HBox) event.getSource();
-
-        resetNavStyles();
-        clicked.setStyle("-fx-background-color: #d2e7fe; -fx-background-radius: 10; -fx-padding: 12 15;");
-
-        if (clicked == navDashboard) {
-            openDashboard();
-        } else if (clicked == navServices) {
-            System.out.println("Navigation vers Services");
-        } else if (clicked == navComptes) {
-            openComptes();
-        } else if (clicked == navDepenses) {
-            openDepenses();
-        } else if (clicked == navDocuments) {
-            openDocuments();
-        } else if (clicked == navPaiements) {
-            openPaiements();
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                produitService.supprimer(produit.getIdProduit());
+                chargerDonnees();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, "Erreur lors de la suppression du produit", e);
+            }
         }
     }
 
-    private void resetNavStyles() {
-        if (navDashboard != null)
-            navDashboard.setStyle("-fx-background-radius: 10; -fx-padding: 12 15;");
-        if (navServices != null)
-            navServices.setStyle("-fx-background-radius: 10; -fx-padding: 12 15;");
-        if (navComptes != null)
-            navComptes.setStyle("-fx-background-radius: 10; -fx-padding: 12 15;");
-        if (navDepenses != null)
-            navDepenses.setStyle("-fx-background-radius: 10; -fx-padding: 12 15;");
-        if (navDocuments != null)
-            navDocuments.setStyle("-fx-background-radius: 10; -fx-padding: 12 15;");
-        if (navPaiements != null)
-            navPaiements.setStyle("-fx-background-radius: 10; -fx-padding: 12 15;");
-    }
-
-    private void openDashboard() {
+    private void afficherDetailsProduit(Produit produit) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/DashboardView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/ProduitDetailsView.fxml"));
             Parent root = loader.load();
 
             Stage stage = new Stage();
-            stage.setTitle("Dashboard Administrateur - FinTrack");
-            stage.setScene(new Scene(root, 1200, 800));
-            stage.show();
-        } catch (Exception e) {
-            showAlert("Erreur", "Impossible d'ouvrir le dashboard: " + e.getMessage());
-            e.printStackTrace();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
+            ProduitDetailsController controller = loader.getController();
+            controller.setDialogStage(stage);
+            controller.setProduit(produit);
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Erreur lors de l'ouverture de la fenêtre de détails du produit", e);
         }
     }
 
-    private void openComptes() {
-        showAlert("Info", "Module Comptes en cours de développement");
-    }
-
-    private void openDepenses() {
-        showAlert("Info", "Module Dépenses en cours de développement");
-    }
-
-    private void openDocuments() {
-        showAlert("Info", "Module Documents en cours de développement");
-    }
-
-    private void openPaiements() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/PaiementView.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
-            stage.setTitle("Gestion des Paiements - FinTrack");
-            stage.setScene(new Scene(root, 1000, 700));
-            stage.show();
-        } catch (Exception e) {
-            showAlert("Erreur", "Impossible d'ouvrir la vue des paiements: " + e.getMessage());
-        }
-    }
-
-    // ========== MÉTHODE D'ALERTE ==========
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
+    private void afficherErreurCritique(String titre, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titre);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
         alert.showAndWait();
     }
+
+    @FXML
+    private void handleFactures() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/FactureView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Gestion des factures");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible d'ouvrir la fenêtre des factures:\n" + e.getMessage());
+        }
+    }
+
+    private void showAlert(String erreur, String s) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(erreur);
+        alert.setHeaderText(null);
+        alert.setContentText(s);
+        alert.showAndWait();
+
+    }
+
 }

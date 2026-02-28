@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" styleClass="main-container" stylesheets="@/styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.FactureController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <!-- En-tête -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Gestion des factures" styleClass="header-title-blue" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="+ Nouvelle facture" styleClass="btn-add" onAction="#ajouterFacture" />
+    </HBox>
+
+    <!-- Filtres -->
+    <HBox spacing="10">
+        <TextField fx:id="searchField" promptText="Rechercher une facture..." HBox.hgrow="ALWAYS" />
+        <ComboBox fx:id="statutFilter" promptText="Statut" prefWidth="120" />
+        <Button text="Réinitialiser" onAction="#resetFiltres" styleClass="btn-cancel-flat" />
+    </HBox>
+
+    <!-- Statistiques -->
+    <HBox spacing="10">
+        <VBox styleClass="stats-card">
+            <Label text="Total" styleClass="stats-label" />
+            <Label fx:id="totalFacturesLabel" text="0" styleClass="stats-number" />
+        </VBox>
+        <VBox styleClass="stats-card">
+            <Label text="Payées" styleClass="stats-label" />
+            <Label fx:id="totalPayeesLabel" text="0" styleClass="stats-number" style="-fx-text-fill: #3e893e;" />
+        </VBox>
+        <VBox styleClass="stats-card">
+            <Label text="Impayées" styleClass="stats-label" />
+            <Label fx:id="totalImpayeesLabel" text="0" styleClass="stats-number" style="-fx-text-fill: #f44336;" />
+        </VBox>
+    </HBox>
+
+    <!-- Tableau des factures -->
+    <TableView fx:id="tableViewFactures" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colIdFacture" text="ID" prefWidth="50" />
+            <TableColumn fx:id="colNumeroFacture" text="Numéro" prefWidth="150" />
+            <TableColumn fx:id="colMontantFacture" text="Montant" prefWidth="100" />
+            <TableColumn fx:id="colDateFacture" text="Date" prefWidth="100" />
+            <TableColumn fx:id="colDateEcheance" text="Échéance" prefWidth="100" />
+            <TableColumn fx:id="colStatutFacture" text="Statut" prefWidth="100" />
+        </columns>
+    </TableView>
+
+    <!-- Boutons d'action -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="📧 Envoyer" styleClass="btn-success" onAction="#handleEnvoyerFacture" />
+        <Button text="📥 PDF" styleClass="btn-action" onAction="#handleTelechargerPDF" />
+        <Button text="🔄 Rafraîchir" styleClass="btn-action" onAction="#refreshAll" />
+        <Button text="Fermer" styleClass="btn-cancel-flat" onAction="#handleFermer" />
+    </HBox>
+</VBox>

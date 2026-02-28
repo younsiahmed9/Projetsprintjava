@@ -1,225 +1,218 @@
 package controllers;
 
 import models.Produit;
+import services.ServiceProduit;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.collections.FXCollections;
-import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class AjoutProduitController {
 
     @FXML private TextField nomField;
-    @FXML private ComboBox<Produit.TypeProduit> typeCombo;
+    @FXML private ComboBox<String> typeCombo;
     @FXML private TextField montantField;
-    @FXML private TextField codeField;
-    @FXML private ComboBox<Produit.StatutProduit> statutCombo;
+    @FXML private TextField codeUniqueField;
+    @FXML private DatePicker dateCreationPicker;
+    @FXML private ComboBox<String> statutCombo;
 
     @FXML private Label nomError;
     @FXML private Label typeError;
     @FXML private Label montantError;
     @FXML private Label codeError;
+    @FXML private Label dateError;
     @FXML private Label statutError;
+    @FXML private Button okButton;
 
+    private final ServiceProduit produitService = new ServiceProduit();
+    private Stage dialogStage;
     private Produit produit;
-    private boolean isEditMode = false;
+    private boolean okClicked = false;
 
     @FXML
     public void initialize() {
-        // Initialiser les combobox
-        typeCombo.setItems(FXCollections.observableArrayList(Produit.TypeProduit.values()));
-        statutCombo.setItems(FXCollections.observableArrayList(Produit.StatutProduit.values()));
-        statutCombo.setValue(Produit.StatutProduit.disponible);
+        typeCombo.setItems(FXCollections.observableArrayList(
+                "carte_prepayee",
+                "carte_abonnement",
+                "carte_cadeau"
+        ));
 
-        // Validation en temps réel
-        setupRealTimeValidation();
+        statutCombo.setItems(FXCollections.observableArrayList(
+                "disponible",
+                "vendu",
+                "expire"
+        ));
+
+        statutCombo.setValue("disponible");
+        dateCreationPicker.setValue(LocalDate.now());
+
+        okButton.setDisable(true);
+        setupValidation();
     }
 
-    private void setupRealTimeValidation() {
-        // Validation du nom
-        nomField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null || newVal.trim().isEmpty()) {
-                nomError.setText("Le nom est obligatoire");
-                nomError.setTextFill(Color.RED);
-            } else if (newVal.length() < 3) {
-                nomError.setText("Le nom doit contenir au moins 3 caractères");
-                nomError.setTextFill(Color.RED);
-            } else {
-                nomError.setText("✓");
-                nomError.setTextFill(Color.GREEN);
-            }
-        });
-
-        // Validation du montant
-        montantField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null || newVal.trim().isEmpty()) {
-                montantError.setText("Le montant est obligatoire");
-                montantError.setTextFill(Color.RED);
-            } else {
-                try {
-                    double montant = Double.parseDouble(newVal);
-                    if (montant <= 0) {
-                        montantError.setText("Le montant doit être > 0");
-                        montantError.setTextFill(Color.RED);
-                    } else if (montant > 1000000) {
-                        montantError.setText("Montant trop élevé (max 1M)");
-                        montantError.setTextFill(Color.RED);
-                    } else {
-                        montantError.setText("✓");
-                        montantError.setTextFill(Color.GREEN);
-                    }
-                } catch (NumberFormatException e) {
-                    montantError.setText("Format invalide");
-                    montantError.setTextFill(Color.RED);
-                }
-            }
-        });
-
-        // Validation du code
-        codeField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null || newVal.trim().isEmpty()) {
-                codeError.setText("Le code est obligatoire");
-                codeError.setTextFill(Color.RED);
-            } else if (newVal.length() < 5) {
-                codeError.setText("Le code doit contenir au moins 5 caractères");
-                codeError.setTextFill(Color.RED);
-            } else if (!newVal.matches("^[A-Z0-9-]+$")) {
-                codeError.setText("Uniquement lettres majuscules, chiffres et -");
-                codeError.setTextFill(Color.RED);
-            } else {
-                codeError.setText("✓");
-                codeError.setTextFill(Color.GREEN);
-            }
-        });
-
-        // Validation du type
-        typeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) {
-                typeError.setText("Le type est obligatoire");
-                typeError.setTextFill(Color.RED);
-            } else {
-                typeError.setText("✓");
-                typeError.setTextFill(Color.GREEN);
-            }
-        });
-
-        // Validation du statut
-        statutCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) {
-                statutError.setText("Le statut est obligatoire");
-                statutError.setTextFill(Color.RED);
-            } else {
-                statutError.setText("✓");
-                statutError.setTextFill(Color.GREEN);
-            }
-        });
+    private void setupValidation() {
+        nomField.textProperty().addListener((obs, old, n) -> validateForm());
+        montantField.textProperty().addListener((obs, old, n) -> validateForm());
+        codeUniqueField.textProperty().addListener((obs, old, n) -> validateForm());
+        typeCombo.valueProperty().addListener((obs, old, n) -> validateForm());
+        statutCombo.valueProperty().addListener((obs, old, n) -> validateForm());
+        dateCreationPicker.valueProperty().addListener((obs, o, n) -> validateForm());
     }
 
-    public boolean validateForm() {
-        boolean isValid = true;
-
-        // Validation nom
-        if (nomField.getText() == null || nomField.getText().trim().isEmpty()) {
-            nomError.setText("Le nom est obligatoire");
-            nomError.setTextFill(Color.RED);
-            isValid = false;
-        } else if (nomField.getText().length() < 3) {
-            nomError.setText("Minimum 3 caractères");
-            nomError.setTextFill(Color.RED);
-            isValid = false;
+    private boolean validateNom() {
+        String text = nomField.getText();
+        if (text == null || text.trim().isEmpty()) {
+            nomError.setText("Nom obligatoire");
+            return false;
+        } else if (text.length() < 3) {
+            nomError.setText("Min 3 caractères");
+            return false;
+        } else {
+            nomError.setText("✓");
+            return true;
         }
+    }
 
-        // Validation type
-        if (typeCombo.getValue() == null) {
-            typeError.setText("Type obligatoire");
-            typeError.setTextFill(Color.RED);
-            isValid = false;
-        }
-
-        // Validation montant
-        if (montantField.getText() == null || montantField.getText().trim().isEmpty()) {
+    private boolean validateMontant() {
+        String text = montantField.getText();
+        if (text == null || text.trim().isEmpty()) {
             montantError.setText("Montant obligatoire");
-            montantError.setTextFill(Color.RED);
-            isValid = false;
+            return false;
         } else {
             try {
-                double montant = Double.parseDouble(montantField.getText());
-                if (montant <= 0) {
-                    montantError.setText("Montant doit être > 0");
-                    montantError.setTextFill(Color.RED);
-                    isValid = false;
+                BigDecimal montant = new BigDecimal(text.trim());
+                if (montant.signum() <= 0) {
+                    montantError.setText("Montant > 0");
+                    return false;
+                } else {
+                    montantError.setText("✓");
+                    return true;
                 }
             } catch (NumberFormatException e) {
                 montantError.setText("Format invalide");
-                montantError.setTextFill(Color.RED);
-                isValid = false;
+                return false;
             }
         }
+    }
 
-        // Validation code
-        if (codeField.getText() == null || codeField.getText().trim().isEmpty()) {
+    private boolean validateCode() {
+        String text = codeUniqueField.getText();
+        if (text == null || text.trim().isEmpty()) {
             codeError.setText("Code obligatoire");
-            codeError.setTextFill(Color.RED);
-            isValid = false;
-        } else if (codeField.getText().length() < 5) {
-            codeError.setText("Minimum 5 caractères");
-            codeError.setTextFill(Color.RED);
-            isValid = false;
-        } else if (!codeField.getText().matches("^[A-Z0-9-]+$")) {
-            codeError.setText("Format invalide (ex: CODE-123)");
-            codeError.setTextFill(Color.RED);
-            isValid = false;
+            return false;
+        } else if (text.trim().length() < 3) {
+            codeError.setText("Min 3 caractères");
+            return false;
+        } else {
+            codeError.setText("✓");
+            return true;
         }
+    }
 
-        // Validation statut
-        if (statutCombo.getValue() == null) {
+    private boolean validateType() {
+        String value = typeCombo.getValue();
+        if (value == null) {
+            typeError.setText("Type obligatoire");
+            return false;
+        } else {
+            typeError.setText("✓");
+            return true;
+        }
+    }
+
+    private boolean validateStatut() {
+        String value = statutCombo.getValue();
+        if (value == null) {
             statutError.setText("Statut obligatoire");
-            statutError.setTextFill(Color.RED);
-            isValid = false;
+            return false;
+        } else {
+            statutError.setText("✓");
+            return true;
         }
+    }
 
+    private boolean validateDate() {
+        boolean isValid = dateCreationPicker.getValue() != null;
+        dateError.setText(isValid ? "✓" : "Date obligatoire");
         return isValid;
     }
 
-    public Produit getProduit() {
-        if (!validateForm()) {
-            return null;
-        }
-
-        try {
-            Produit p = new Produit();
-            p.setNomProduit(nomField.getText().trim());
-            p.setTypeProduit(typeCombo.getValue());
-            p.setMontant(new BigDecimal(montantField.getText().trim()));
-            p.setCodeUnique(codeField.getText().trim().toUpperCase());
-            p.setStatut(statutCombo.getValue());
-            p.setDateCreation(LocalDate.now());
-            return p;
-        } catch (Exception e) {
-            showAlert("Erreur", "Données invalides: " + e.getMessage());
-            return null;
-        }
+    private void validateForm() {
+        boolean isNomValid = validateNom();
+        boolean isMontantValid = validateMontant();
+        boolean isCodeValid = validateCode();
+        boolean isTypeValid = validateType();
+        boolean isStatutValid = validateStatut();
+        boolean isDateValid = validateDate();
+        
+        boolean isFormValid = isNomValid && isMontantValid && isCodeValid && isTypeValid && isStatutValid && isDateValid;
+        okButton.setDisable(!isFormValid);
     }
 
     public void setProduit(Produit produit) {
         this.produit = produit;
-        this.isEditMode = true;
-
         if (produit != null) {
             nomField.setText(produit.getNomProduit());
             typeCombo.setValue(produit.getTypeProduit());
             montantField.setText(produit.getMontant().toString());
-            codeField.setText(produit.getCodeUnique());
+            codeUniqueField.setText(produit.getCodeUnique());
             statutCombo.setValue(produit.getStatut());
+            dateCreationPicker.setValue(produit.getDateCreation());
+            validateForm();
         }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    public boolean isOkClicked() {
+        return okClicked;
+    }
+
+    @FXML
+    private void handleOk() {
+        try {
+            boolean isNew = (produit == null);
+            if (isNew) {
+                produit = new Produit();
+            }
+
+            produit.setNomProduit(nomField.getText().trim());
+            produit.setTypeProduit(typeCombo.getValue());
+            produit.setMontant(new BigDecimal(montantField.getText().trim()));
+            produit.setCodeUnique(codeUniqueField.getText().trim());
+            produit.setStatut(statutCombo.getValue());
+            produit.setDateCreation(dateCreationPicker.getValue());
+
+            if (isNew) {
+                produitService.ajouter(produit);
+            } else {
+                produitService.modifier(produit);
+            }
+
+            okClicked = true;
+            dialogStage.close();
+
+        } catch (IllegalArgumentException | SQLException e) {
+            showAlert("Erreur de Données", "Impossible de sauvegarder le produit.", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleCancel() {
+        dialogStage.close();
+    }
+
+    private void showAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }

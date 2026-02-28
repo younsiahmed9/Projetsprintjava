@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" styleClass="form-container" stylesheets="@/styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjoutFactureController">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Ajouter une facture" styleClass="header-title-blue" />
+
+    <GridPane hgap="10" vgap="10">
+        <!-- Numéro facture -->
+        <Label text="Numéro facture:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="numeroFactureField" promptText="Ex: FAC-2024-001" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label fx:id="numeroError" styleClass="error-label" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+
+        <!-- Montant -->
+        <Label text="Montant (DT):" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="montantField" promptText="Ex: 150.00" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+        <Label fx:id="montantError" styleClass="error-label" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+
+        <!-- Date facture -->
+        <Label text="Date facture:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <DatePicker fx:id="dateFacturePicker" promptText="Choisir une date" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+        <Label fx:id="dateError" styleClass="error-label" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+
+        <!-- Date échéance -->
+        <Label text="Date échéance:" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <DatePicker fx:id="dateEcheancePicker" promptText="Choisir une date" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+        <!-- Type -->
+        <Label text="Type:" styleClass="field-label" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+        <ComboBox fx:id="typeCombo" promptText="Choisir un type" prefWidth="200" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+        <Label fx:id="typeError" styleClass="error-label" GridPane.rowIndex="4" GridPane.columnIndex="2" />
+
+        <!-- Référence -->
+        <Label text="Référence:" styleClass="field-label" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+        <ComboBox fx:id="referenceCombo" promptText="Choisir une référence" prefWidth="200" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+        <Label fx:id="referenceError" styleClass="error-label" GridPane.rowIndex="5" GridPane.columnIndex="2" />
+
+        <!-- Statut -->
+        <Label text="Statut:" styleClass="field-label" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+        <ComboBox fx:id="statutCombo" promptText="Choisir un statut" prefWidth="200" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+        <Label fx:id="statutError" styleClass="error-label" GridPane.rowIndex="6" GridPane.columnIndex="2" />
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#handleCancel" styleClass="btn-cancel-flat" />
+        <Button text="Enregistrer" onAction="#handleOk" styleClass="btn-save" />
+    </HBox>
+</VBox>

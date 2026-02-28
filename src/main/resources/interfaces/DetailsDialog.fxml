@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DetailsController"
+      styleClass="details-dialog" stylesheets="@/styles/style.css">
+    <padding><Insets top="20" right="30" bottom="30" left="30"/></padding>
+    <Label fx:id="titleLabel" styleClass="details-title"/>
+    <GridPane fx:id="detailsGrid" styleClass="details-grid">
+        <padding><Insets top="20"/></padding>
+    </GridPane>
+    <VBox alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button text="Fermer" onAction="#closeDialog" styleClass="button-primary"/>
+    </VBox>
+</VBox>

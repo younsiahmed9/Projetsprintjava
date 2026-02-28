@@ -1,130 +1,155 @@
 package controllers;
 
 import models.Service;
-import models.Produit;
-import services.ServiceService;
-import services.ServiceProduit;
+import services.ServicePersonne;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class ServiceDetailsController implements Initializable {
 
-    @FXML private Text idValue;
-    @FXML private Text nomValue;
-    @FXML private Text typeValue;
-    @FXML private Text tarifValue;
-    @FXML private Text frequenceValue;
-    @FXML private Text dateDebutValue;
-    @FXML private Text dateFinValue;
-    @FXML private Text statutValue;
-    @FXML private Text produitLieValue;
-    @FXML private Text produitCodeValue;
-    @FXML private Label statutLabel;
-
-    @FXML private Button modifierBtn;
-    @FXML private Button fermerBtn;
+    @FXML private Label titleLabel;
+    @FXML private TextField idField;
+    @FXML private TextField nomField;
+    @FXML private TextField typeField;
+    @FXML private TextField tarifField;
+    @FXML private TextField frequenceField;
+    @FXML private DatePicker dateDebutPicker;
+    @FXML private DatePicker dateFinPicker;
+    @FXML private TextField statutField;
+    // NOTE: Il n'y a PAS de descriptionArea dans votre FXML, donc pas de variable ici
 
     private Service service;
-    private ServiceService serviceService;
-    private ServiceProduit produitService;
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private ServicePersonne servicePersonne;
+    private Stage dialogStage;
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        serviceService = new ServiceService();
-        produitService = new ServiceProduit();
+    public void initialize(URL location, ResourceBundle resources) {
+        servicePersonne = new ServicePersonne();
+        System.out.println("✅ ServiceDetailsController initialisé");
     }
 
     public void setService(Service service) {
         this.service = service;
-        afficherDetails();
+        if (service != null) {
+            titleLabel.setText("Détails du service : " + service.getNomService());
+            idField.setText(String.valueOf(service.getIdService()));
+            nomField.setText(service.getNomService());
+            typeField.setText(service.getTypeService());
+            tarifField.setText(String.format("%.2f DT", service.getTarif()));
+            frequenceField.setText(service.getFrequence());
+            dateDebutPicker.setValue(service.getDateDebut());
+            dateFinPicker.setValue(service.getDateFin());
+            statutField.setText(service.getStatut());
+
+            // Colorer le statut selon sa valeur
+            colorerStatut();
+        }
     }
 
-    private void afficherDetails() {
-        if (service == null) return;
+    private void colorerStatut() {
+        if (statutField == null) return;
 
-        idValue.setText(String.valueOf(service.getIdService()));
-        nomValue.setText(service.getNomService());
-        typeValue.setText(service.getTypeService().toString());
-        tarifValue.setText(service.getTarif() + " TND");
-
-        if (service.getFrequence() != null) {
-            frequenceValue.setText(service.getFrequence().toString());
-        } else {
-            frequenceValue.setText("Non applicable");
-        }
-
-        if (service.getDateDebut() != null) {
-            dateDebutValue.setText(service.getDateDebut().format(dateFormatter));
-        } else {
-            dateDebutValue.setText("Non définie");
-        }
-
-        if (service.getDateFin() != null) {
-            dateFinValue.setText(service.getDateFin().format(dateFormatter));
-        } else {
-            dateFinValue.setText("Non définie");
-        }
-
-        statutValue.setText(service.getStatut().toString());
-
-        // Changer la couleur du statut
         switch (service.getStatut()) {
-            case actif:
-                statutLabel.setStyle("-fx-background-color: #8dbc71; -fx-text-fill: white; -fx-padding: 5 10; -fx-background-radius: 5;");
-                statutLabel.setText("ACTIF");
+            case "actif":
+                statutField.setStyle("-fx-text-fill: #3e893e; -fx-font-weight: bold;");
                 break;
-            case suspendu:
-                statutLabel.setStyle("-fx-background-color: #fecf47; -fx-text-fill: #182d88; -fx-padding: 5 10; -fx-background-radius: 5;");
-                statutLabel.setText("SUSPENDU");
+            case "suspendu":
+                statutField.setStyle("-fx-text-fill: #f78f34; -fx-font-weight: bold;");
                 break;
-            case expire:
-                statutLabel.setStyle("-fx-background-color: #f78f34; -fx-text-fill: white; -fx-padding: 5 10; -fx-background-radius: 5;");
-                statutLabel.setText("EXPIRÉ");
+            case "expire":
+                statutField.setStyle("-fx-text-fill: #f44336; -fx-font-weight: bold;");
+                break;
+            default:
+                statutField.setStyle("");
                 break;
         }
+    }
 
-        // ✅ CORRECTION ICI - Vérification explicite avec Integer
-        Integer idProduit = service.getIdProduit();
-        if (idProduit != null) {
-            try {
-                Produit produit = produitService.getById(idProduit);
-                if (produit != null) {
-                    produitLieValue.setText(produit.getNomProduit());
-                    produitCodeValue.setText(produit.getCodeUnique());
-                } else {
-                    produitLieValue.setText("Aucun");
-                    produitCodeValue.setText("");
-                }
-            } catch (SQLException e) {
-                produitLieValue.setText("Erreur chargement");
-                e.printStackTrace();
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    @FXML
+    private void handleRefresh() {
+        try {
+            if (service == null) return;
+
+            Service refreshed = servicePersonne.getServiceById(service.getIdService());
+            if (refreshed != null) {
+                setService(refreshed);
+                showInfo("Succès", "Données rafraîchies avec succès");
+            } else {
+                showAlert("Erreur", "Service non trouvé");
             }
-        } else {
-            produitLieValue.setText("Aucun");
-            produitCodeValue.setText("");
+        } catch (SQLException e) {
+            showAlert("Erreur", "Impossible de rafraîchir: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
     private void handleModifier() {
-        // Implémenter la modification
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setHeaderText(null);
-        alert.setContentText("Fonctionnalité de modification à venir");
-        alert.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/interfaces/ModifierServiceDialog.fxml"));
+            Parent root = loader.load();
+
+            ModifierServiceController controller = loader.getController();
+            controller.setService(service);
+
+            Stage stage = new Stage();
+            stage.setTitle("Modifier le service");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            if (controller.isOkClicked()) {
+                handleRefresh();
+            }
+
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible d'ouvrir la fenêtre de modification: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void handleFermer() {
-        // Fermer la fenêtre
-        fermerBtn.getScene().getWindow().hide();
+        if (dialogStage != null) {
+            dialogStage.close();
+        } else {
+            // Si pas de stage dédié, chercher le stage parent
+            Stage stage = (Stage) titleLabel.getScene().getWindow();
+            stage.close();
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

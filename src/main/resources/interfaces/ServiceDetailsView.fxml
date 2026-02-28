@@ -1,92 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
 
-<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServiceDetailsController">
-    <VBox spacing="20" style="-fx-background-color: #f5f7fa; -fx-padding: 30;">
+<ScrollPane fitToWidth="true"  xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServiceDetailsController">
+    <content>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <!-- En-tête avec titre -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label fx:id="titleLabel" prefHeight="19.0" prefWidth="130.0" styleClass="header-title-blue" text="Détails du service" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleRefresh" prefHeight="27.0" prefWidth="94.0" styleClass="btn-action-light-blue" text="🔄 Rafraîchir" />
+                <Button onAction="#handleModifier" prefHeight="27.0" prefWidth="103.0" styleClass="btn-action-light-blue" text="✏️ Modifier" />
+                <Button onAction="#handleFermer" prefHeight="27.0" prefWidth="80.0" styleClass="btn-cancel-flat" text="❌ Fermer" />
+            </HBox>
 
-        <!-- En-tête -->
-        <HBox alignment="CENTER_LEFT" spacing="15">
-            <Circle radius="30" fill="#182d88" />
-            <VBox>
-                <Text style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #182d88;" text="Détails du service" />
-                <HBox spacing="5">
-                    <Text style="-fx-font-size: 14px; -fx-fill: #718096;" text="ID:" />
-                    <Text fx:id="idValue" style="-fx-font-size: 14px; -fx-fill: #718096;" text="0" />
-                </HBox>
-            </VBox>
-            <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="statutLabel" style="-fx-font-weight: bold; -fx-padding: 5 15;" text="ACTIF" />
-        </HBox>
+            <Separator />
 
-        <!-- Informations principales -->
-        <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" spacing="15">
-            <Text style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #182d88;" text="Informations générales" />
+            <!-- Informations générales -->
+            <TitledPane collapsible="false" styleClass="form-container" text="Informations générales">
+                <GridPane hgap="10" vgap="10">
+                    <Label styleClass="field-label" text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="idField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <GridPane hgap="20" vgap="15">
-                <columnConstraints>
-                    <ColumnConstraints halignment="RIGHT" minWidth="120" />
-                    <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
-                </columnConstraints>
+                    <Label styleClass="field-label" text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="nomField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <!-- Ligne 1 : Nom -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Nom :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Text fx:id="nomValue" style="-fx-fill: #182d88;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label styleClass="field-label" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="typeField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                <!-- Ligne 2 : Type -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Type :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <Text fx:id="typeValue" style="-fx-fill: #182d88;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label styleClass="field-label" text="Tarif:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="tarifField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                <!-- Ligne 3 : Tarif -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Tarif :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <Text fx:id="tarifValue" style="-fx-fill: #182d88; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label styleClass="field-label" text="Fréquence:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                    <TextField fx:id="frequenceField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-                <!-- Ligne 4 : Fréquence -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Fréquence :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <Text fx:id="frequenceValue" style="-fx-fill: #182d88;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                    <Label styleClass="field-label" text="Date début:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                    <DatePicker fx:id="dateDebutPicker" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-                <!-- Ligne 5 : Date début -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Date début :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <Text fx:id="dateDebutValue" style="-fx-fill: #182d88;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    <Label styleClass="field-label" text="Date fin:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <DatePicker fx:id="dateFinPicker" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-                <!-- Ligne 6 : Date fin -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Date fin :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                <Text fx:id="dateFinValue" style="-fx-fill: #182d88;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                    <Label styleClass="field-label" text="Statut:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                    <TextField fx:id="statutField" editable="false" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
-                <!-- Ligne 7 : Statut -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Statut :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                <Text fx:id="statutValue" style="-fx-fill: #182d88;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            </GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                    </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+                </GridPane>
+            </TitledPane>
         </VBox>
-
-        <!-- Produit lié -->
-        <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" spacing="15">
-            <Text style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #182d88;" text="Produit lié" />
-
-            <GridPane hgap="20" vgap="15">
-                <columnConstraints>
-                    <ColumnConstraints halignment="RIGHT" minWidth="120" />
-                    <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
-                </columnConstraints>
-
-                <!-- Ligne 1 : Nom du produit -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Produit :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Text fx:id="produitLieValue" style="-fx-fill: #182d88;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-                <!-- Ligne 2 : Code unique -->
-                <Text style="-fx-font-weight: bold; -fx-fill: #182d88;" text="Code :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <Text fx:id="produitCodeValue" style="-fx-fill: #182d88; -fx-font-family: monospace;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            </GridPane>
-        </VBox>
-
-        <!-- Boutons d'action -->
-        <HBox alignment="CENTER" spacing="20">
-            <Button fx:id="modifierBtn" onAction="#handleModifier" style="-fx-background-color: #182d88; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 30;" text="Modifier" />
-            <Button fx:id="fermerBtn" onAction="#handleFermer" style="-fx-background-color: #f78f34; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 30;" text="Fermer" />
-        </HBox>
-    </VBox>
+    </content>
 </ScrollPane>

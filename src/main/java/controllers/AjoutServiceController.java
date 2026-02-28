@@ -1,378 +1,196 @@
 package controllers;
 
 import models.Service;
-import models.Produit;
-import services.ServiceProduit;
+import services.ServiceService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.paint.Color;
-import javafx.util.StringConverter;
+import javafx.stage.Stage;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.time.LocalDate;
+import java.sql.SQLException;
 
 public class AjoutServiceController {
-
     @FXML private TextField nomField;
-    @FXML private ComboBox<Service.TypeService> typeCombo;
+    @FXML private ComboBox<String> typeCombo;
     @FXML private TextField tarifField;
-    @FXML private ComboBox<Service.Frequence> frequenceCombo;
-    @FXML private DatePicker dateDebut;
-    @FXML private DatePicker dateFin;
-    @FXML private ComboBox<Service.StatutService> statutCombo;
-    @FXML private ComboBox<Produit> produitCombo;  // ComboBox de type Produit
+    @FXML private ComboBox<String> frequenceCombo;
+    @FXML private DatePicker dateDebutPicker;
+    @FXML private DatePicker dateFinPicker;
+    @FXML private ComboBox<String> statutCombo;
+    @FXML private Label nomError, typeError, tarifError, frequenceError, dateError, statutError;
+    @FXML private Button okButton;
 
-    @FXML private Label nomError;
-    @FXML private Label typeError;
-    @FXML private Label tarifError;
-    @FXML private Label frequenceError;
-    @FXML private Label dateError;
-    @FXML private Label statutError;
-    @FXML private Label dateFinError;  // Ajouté pour éviter l'erreur
-
-    private ServiceProduit serviceProduit;
-    private Service service;
-    private boolean isEditMode = false;
+    private Stage dialogStage;
+    private Service service; // Pour savoir si on est en mode ajout ou modification
+    private boolean okClicked = false;
+    private final ServiceService serviceService = new ServiceService();
 
     @FXML
     public void initialize() {
-        serviceProduit = new ServiceProduit();
-
-        // Initialiser les combobox
-        typeCombo.setItems(FXCollections.observableArrayList(Service.TypeService.values()));
-        frequenceCombo.setItems(FXCollections.observableArrayList(Service.Frequence.values()));
-        statutCombo.setItems(FXCollections.observableArrayList(Service.StatutService.values()));
-        statutCombo.setValue(Service.StatutService.actif);
-
-        // Charger les produits disponibles
-        chargerProduits();
-
-        // Configuration de l'affichage des produits dans la ComboBox
-        setupProduitCombo();
-
-        // Désactiver la fréquence par défaut
-        frequenceCombo.setDisable(true);
-        dateDebut.setDisable(true);
-        dateFin.setDisable(true);
-
-        // Écouter le changement de type
-        typeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            boolean isAbonnement = newVal == Service.TypeService.abonnement;
-            frequenceCombo.setDisable(!isAbonnement);
-            dateDebut.setDisable(!isAbonnement);
-            dateFin.setDisable(!isAbonnement);
-            if (!isAbonnement) {
-                frequenceCombo.setValue(null);
-                dateDebut.setValue(null);
-                dateFin.setValue(null);
-            }
-        });
-
-        // Validation en temps réel
-        setupRealTimeValidation();
+        typeCombo.setItems(FXCollections.observableArrayList("abonnement", "facture"));
+        frequenceCombo.setItems(FXCollections.observableArrayList("mensuel", "annuel"));
+        statutCombo.setItems(FXCollections.observableArrayList("actif", "suspendu", "expire"));
+        statutCombo.setValue("actif");
+        
+        // Disable OK button by default
+        okButton.setDisable(true);
+        
+        setupValidation();
     }
 
-    private void chargerProduits() {
-        try {
-            // Charger tous les produits disponibles
-            ObservableList<Produit> produits = FXCollections.observableArrayList(
-                    serviceProduit.getProduitsDisponibles()
-            );
-
-            // Ajouter null en première position (option "Aucun produit")
-            produits.add(0, null);
-
-            produitCombo.setItems(produits);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger les produits: " + e.getMessage());
-        }
-    }
-
-    private void setupProduitCombo() {
-        // Configuration de l'affichage dans la ComboBox (quand un élément est sélectionné)
-        produitCombo.setConverter(new StringConverter<Produit>() {
-            @Override
-            public String toString(Produit produit) {
-                if (produit == null) return "Aucun produit";
-                // Afficher "Nom - Code" dans le champ
-                return produit.getNomProduit() + " - " + produit.getCodeUnique();
-            }
-
-            @Override
-            public Produit fromString(String string) {
-                return null; // Non utilisé
-            }
-        });
-
-        // Personnaliser l'affichage de chaque élément dans la liste déroulante
-        produitCombo.setCellFactory(lv -> new ListCell<Produit>() {
-            @Override
-            protected void updateItem(Produit item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Aucun produit");
-                } else {
-                    // Afficher avec plus de détails : "Nom - Code (Montant TND)"
-                    setText(item.getNomProduit() + " - " + item.getCodeUnique() +
-                            " (" + item.getMontant() + " TND)");
-                }
-            }
-        });
-    }
-
-    private void setupRealTimeValidation() {
-        // Validation du nom
-        nomField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null || newVal.trim().isEmpty()) {
-                nomError.setText("Le nom est obligatoire");
-                nomError.setTextFill(Color.RED);
-            } else if (newVal.length() < 3) {
-                nomError.setText("Le nom doit contenir au moins 3 caractères");
-                nomError.setTextFill(Color.RED);
-            } else {
-                nomError.setText("✓");
-                nomError.setTextFill(Color.GREEN);
-            }
-        });
-
-        // Validation du tarif
-        tarifField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null || newVal.trim().isEmpty()) {
-                tarifError.setText("Le tarif est obligatoire");
-                tarifError.setTextFill(Color.RED);
-            } else {
-                try {
-                    double tarif = Double.parseDouble(newVal);
-                    if (tarif <= 0) {
-                        tarifError.setText("Le tarif doit être > 0");
-                        tarifError.setTextFill(Color.RED);
-                    } else if (tarif > 1000000) {
-                        tarifError.setText("Tarif trop élevé (max 1M)");
-                        tarifError.setTextFill(Color.RED);
-                    } else {
-                        tarifError.setText("✓");
-                        tarifError.setTextFill(Color.GREEN);
-                    }
-                } catch (NumberFormatException e) {
-                    tarifError.setText("Format invalide");
-                    tarifError.setTextFill(Color.RED);
-                }
-            }
-        });
-
-        // Validation du type
-        typeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) {
-                typeError.setText("Le type est obligatoire");
-                typeError.setTextFill(Color.RED);
-            } else {
-                typeError.setText("✓");
-                typeError.setTextFill(Color.GREEN);
-            }
-        });
-
-        // Validation de la fréquence pour les abonnements
-        frequenceCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (typeCombo.getValue() == Service.TypeService.abonnement && newVal == null) {
-                frequenceError.setText("Fréquence obligatoire");
-                frequenceError.setTextFill(Color.RED);
-            } else {
-                frequenceError.setText("✓");
-                frequenceError.setTextFill(Color.GREEN);
-            }
-        });
-
-        // Validation des dates
-        dateDebut.valueProperty().addListener((obs, oldVal, newVal) -> {
-            validateDates();
-        });
-
-        dateFin.valueProperty().addListener((obs, oldVal, newVal) -> {
-            validateDates();
-        });
-
-        // Validation du statut
-        statutCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) {
-                statutError.setText("Le statut est obligatoire");
-                statutError.setTextFill(Color.RED);
-            } else {
-                statutError.setText("✓");
-                statutError.setTextFill(Color.GREEN);
-            }
-        });
-    }
-
-    private void validateDates() {
-        LocalDate debut = dateDebut.getValue();
-        LocalDate fin = dateFin.getValue();
-
-        if (typeCombo.getValue() == Service.TypeService.abonnement) {
-            if (debut == null) {
-                dateError.setText("Date début obligatoire");
-                dateError.setTextFill(Color.RED);
-            } else if (fin != null && fin.isBefore(debut)) {
-                dateError.setText("Date fin > date début");
-                dateError.setTextFill(Color.RED);
-            } else if (fin != null && fin.isBefore(LocalDate.now())) {
-                dateError.setText("Date fin déjà passée");
-                dateError.setTextFill(Color.ORANGE);
-            } else {
-                dateError.setText("✓");
-                dateError.setTextFill(Color.GREEN);
-            }
-        } else {
-            dateError.setText("");
-            if (dateFinError != null) dateFinError.setText("");
-        }
-    }
-
-    public boolean validateForm() {
-        boolean isValid = true;
-
-        // Validation nom
-        if (nomField.getText() == null || nomField.getText().trim().isEmpty()) {
-            nomError.setText("Le nom est obligatoire");
-            nomError.setTextFill(Color.RED);
-            isValid = false;
-        } else if (nomField.getText().length() < 3) {
-            nomError.setText("Minimum 3 caractères");
-            nomError.setTextFill(Color.RED);
-            isValid = false;
-        }
-
-        // Validation type
-        if (typeCombo.getValue() == null) {
-            typeError.setText("Type obligatoire");
-            typeError.setTextFill(Color.RED);
-            isValid = false;
-        }
-
-        // Validation tarif
-        if (tarifField.getText() == null || tarifField.getText().trim().isEmpty()) {
-            tarifError.setText("Tarif obligatoire");
-            tarifError.setTextFill(Color.RED);
-            isValid = false;
-        } else {
-            try {
-                double tarif = Double.parseDouble(tarifField.getText());
-                if (tarif <= 0) {
-                    tarifError.setText("Tarif doit être > 0");
-                    tarifError.setTextFill(Color.RED);
-                    isValid = false;
-                }
-            } catch (NumberFormatException e) {
-                tarifError.setText("Format invalide");
-                tarifError.setTextFill(Color.RED);
-                isValid = false;
-            }
-        }
-
-        // Validation pour les abonnements
-        if (typeCombo.getValue() == Service.TypeService.abonnement) {
-            if (frequenceCombo.getValue() == null) {
-                frequenceError.setText("Fréquence obligatoire");
-                frequenceError.setTextFill(Color.RED);
-                isValid = false;
-            }
-
-            if (dateDebut.getValue() == null) {
-                dateError.setText("Date début obligatoire");
-                dateError.setTextFill(Color.RED);
-                isValid = false;
-            }
-
-            LocalDate debut = dateDebut.getValue();
-            LocalDate fin = dateFin.getValue();
-            if (debut != null && fin != null && fin.isBefore(debut)) {
-                dateError.setText("Date fin doit être après début");
-                dateError.setTextFill(Color.RED);
-                isValid = false;
-            }
-        }
-
-        // Validation statut
-        if (statutCombo.getValue() == null) {
-            statutError.setText("Statut obligatoire");
-            statutError.setTextFill(Color.RED);
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-    public Service getService() {
-        if (!validateForm()) {
-            return null;
-        }
-
-        try {
-            Service s = new Service();
-            s.setNomService(nomField.getText().trim());
-            s.setTypeService(typeCombo.getValue());
-            s.setTarif(new BigDecimal(tarifField.getText().trim()));
-            s.setFrequence(frequenceCombo.getValue());
-            s.setDateDebut(dateDebut.getValue());
-            s.setDateFin(dateFin.getValue());
-            s.setStatut(statutCombo.getValue());
-
-            // Récupérer l'ID du produit sélectionné (peut être null)
-            Produit selectedProduit = produitCombo.getValue();
-            if (selectedProduit != null) {
-                s.setIdProduit(selectedProduit.getIdProduit());
-            } else {
-                s.setIdProduit(null);
-            }
-
-            return s;
-        } catch (Exception e) {
-            showAlert("Erreur", "Données invalides: " + e.getMessage());
-            return null;
-        }
-    }
-
+    /**
+     * Pré-remplit le formulaire avec les données d'un service existant pour la modification.
+     */
     public void setService(Service service) {
         this.service = service;
-        this.isEditMode = true;
 
         if (service != null) {
             nomField.setText(service.getNomService());
             typeCombo.setValue(service.getTypeService());
             tarifField.setText(service.getTarif().toString());
             frequenceCombo.setValue(service.getFrequence());
-            dateDebut.setValue(service.getDateDebut());
-            dateFin.setValue(service.getDateFin());
+            dateDebutPicker.setValue(service.getDateDebut());
+            dateFinPicker.setValue(service.getDateFin());
             statutCombo.setValue(service.getStatut());
+            validateForm(); // Validate pre-filled data
+        }
+    }
 
-            // ✅ CORRIGÉ : Utilisation de equals() au lieu de ==
-            Integer idProduit = service.getIdProduit();
-            if (idProduit != null) {
-                try {
-                    // Chercher le produit dans la liste
-                    for (Produit p : produitCombo.getItems()) {
-                        if (p != null && idProduit.equals(p.getIdProduit())) {
-                            produitCombo.setValue(p);
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+    private void setupValidation() {
+        // Add a listener to each field to re-validate the form on any change
+        nomField.textProperty().addListener((obs, old, n) -> validateForm());
+        tarifField.textProperty().addListener((obs, old, n) -> validateForm());
+        typeCombo.valueProperty().addListener((obs, old, n) -> validateForm());
+        frequenceCombo.valueProperty().addListener((obs, old, n) -> validateForm());
+        statutCombo.valueProperty().addListener((obs, old, n) -> validateForm());
+        dateDebutPicker.valueProperty().addListener((obs, old, n) -> validateForm());
+        dateFinPicker.valueProperty().addListener((obs, old, n) -> validateForm());
+    }
+
+    private boolean validateNom() {
+        String text = nomField.getText();
+        if (text == null || text.trim().isEmpty()) {
+            nomError.setText("Nom obligatoire");
+            return false;
+        } else if (text.length() < 3) {
+            nomError.setText("Min 3 caractères");
+            return false;
+        } else {
+            nomError.setText("✓");
+            return true;
+        }
+    }
+
+    private boolean validateTarif() {
+        String text = tarifField.getText();
+        if (text == null || text.trim().isEmpty()) {
+            tarifError.setText("Tarif obligatoire");
+            return false;
+        } else {
+            try {
+                double tarif = Double.parseDouble(text);
+                if (tarif <= 0) {
+                    tarifError.setText("Tarif > 0");
+                    return false;
+                } else {
+                    tarifError.setText("✓");
+                    return true;
                 }
-            } else {
-                produitCombo.setValue(null); // Sélectionner "Aucun produit"
+            } catch (NumberFormatException e) {
+                tarifError.setText("Format invalide");
+                return false;
             }
         }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+    private boolean validateType() {
+        boolean isValid = typeCombo.getValue() != null;
+        typeError.setText(isValid ? "✓" : "Type obligatoire");
+        return isValid;
+    }
+
+    private boolean validateFrequence() {
+        boolean isValid = frequenceCombo.getValue() != null;
+        frequenceError.setText(isValid ? "✓" : "Fréquence obligatoire");
+        return isValid;
+    }
+
+    private boolean validateStatut() {
+        boolean isValid = statutCombo.getValue() != null;
+        statutError.setText(isValid ? "✓" : "Statut obligatoire");
+        return isValid;
+    }
+
+    private boolean validateDates() {
+        LocalDate debut = dateDebutPicker.getValue();
+        LocalDate fin = dateFinPicker.getValue();
+        if (debut == null) {
+            dateError.setText("Date début obligatoire");
+            return false;
+        } else if (fin != null && fin.isBefore(debut)) {
+            dateError.setText("Date fin > début");
+            return false;
+        } else {
+            dateError.setText("✓");
+            return true;
+        }
+    }
+
+    private void validateForm() {
+        boolean isNomValid = validateNom();
+        boolean isTarifValid = validateTarif();
+        boolean isTypeValid = validateType();
+        boolean isFrequenceValid = validateFrequence();
+        boolean isDatesValid = validateDates();
+        boolean isStatutValid = validateStatut();
+
+        boolean isFormValid = isNomValid && isTarifValid && isTypeValid && isFrequenceValid && isDatesValid && isStatutValid;
+        okButton.setDisable(!isFormValid);
+    }
+
+    public void setDialogStage(Stage stage) { this.dialogStage = stage; }
+    public boolean isOkClicked() { return okClicked; }
+
+    @FXML private void handleOk() {
+        try {
+            boolean isNew = (service == null);
+            if (isNew) {
+                service = new Service();
+            }
+
+            service.setNomService(nomField.getText().trim());
+            service.setTypeService(typeCombo.getValue());
+            service.setTarif(new BigDecimal(tarifField.getText().trim()));
+            service.setFrequence(frequenceCombo.getValue());
+            service.setDateDebut(dateDebutPicker.getValue());
+            service.setDateFin(dateFinPicker.getValue());
+            service.setStatut(statutCombo.getValue());
+
+            if (isNew) {
+                serviceService.ajouter(service);
+            } else {
+                serviceService.modifier(service);
+            }
+
+            okClicked = true;
+            dialogStage.close();
+
+        } catch (SQLException e) {
+            showAlert("Erreur Base de Données", "Impossible de sauvegarder le service.", e.getMessage());
+        }
+    }
+
+    @FXML private void handleCancel() {
+        dialogStage.close();
+    }
+
+    private void showAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }

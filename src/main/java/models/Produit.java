@@ -4,70 +4,80 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Produit {
-    private int idProduit;
+    private Integer idProduit;
     private String nomProduit;
-    private TypeProduit typeProduit;
+    private String typeProduit;
     private BigDecimal montant;
     private String codeUnique;
-    private StatutProduit statut;
+    private String statut;
     private LocalDate dateCreation;
 
-    public enum TypeProduit {
-        carte_cadeau, carte_abonnement, carte_prepayee
-    }
-
-    public enum StatutProduit {
-        disponible, vendu, expire
-    }
-
-    // Constructeur vide
+    // Constructeurs
     public Produit() {}
 
-    // Constructeur complet
-    public Produit(int idProduit, String nomProduit, TypeProduit typeProduit,
-                   BigDecimal montant, String codeUnique, StatutProduit statut,
-                   LocalDate dateCreation) {
+    public Produit(Integer idProduit, String nomProduit, String typeProduit, BigDecimal montant,
+                   String codeUnique, String statut, LocalDate dateCreation) {
         this.idProduit = idProduit;
-        this.nomProduit = nomProduit;
-        this.typeProduit = typeProduit;
-        this.montant = montant;
-        this.codeUnique = codeUnique;
-        this.statut = statut;
-        this.dateCreation = dateCreation;
-    }
-
-    // Constructeur simplifié
-    public Produit(String nomProduit, TypeProduit typeProduit, double montant,
-                   String codeUnique, StatutProduit statut) {
-        this.nomProduit = nomProduit;
-        this.typeProduit = typeProduit;
-        this.montant = BigDecimal.valueOf(montant);
-        this.codeUnique = codeUnique;
-        this.statut = statut;
-        this.dateCreation = LocalDate.now();
+        // Utilisation des setters pour la validation dès la construction
+        setNomProduit(nomProduit);
+        setTypeProduit(typeProduit);
+        setMontant(montant);
+        setCodeUnique(codeUnique);
+        setStatut(statut);
+        setDateCreation(dateCreation);
     }
 
     // Getters et Setters
-    public int getIdProduit() { return idProduit; }
-    public void setIdProduit(int idProduit) { this.idProduit = idProduit; }
+    public Integer getIdProduit() { return idProduit; }
+    public void setIdProduit(Integer idProduit) { this.idProduit = idProduit; }
 
     public String getNomProduit() { return nomProduit; }
-    public void setNomProduit(String nomProduit) { this.nomProduit = nomProduit; }
+    public void setNomProduit(String nomProduit) {
+        if (nomProduit == null || nomProduit.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le nom du produit ne peut pas être vide.");
+        }
+        this.nomProduit = nomProduit;
+    }
 
-    public TypeProduit getTypeProduit() { return typeProduit; }
-    public void setTypeProduit(TypeProduit typeProduit) { this.typeProduit = typeProduit; }
+    public String getTypeProduit() { return typeProduit; }
+    public void setTypeProduit(String typeProduit) {
+        if (typeProduit == null || typeProduit.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le type de produit ne peut pas être vide.");
+        }
+        this.typeProduit = typeProduit;
+    }
 
     public BigDecimal getMontant() { return montant; }
-    public void setMontant(BigDecimal montant) { this.montant = montant; }
+    public void setMontant(BigDecimal montant) {
+        if (montant == null || montant.signum() < 0) {
+            throw new IllegalArgumentException("Le montant ne peut pas être nul ou négatif.");
+        }
+        this.montant = montant;
+    }
 
     public String getCodeUnique() { return codeUnique; }
-    public void setCodeUnique(String codeUnique) { this.codeUnique = codeUnique; }
+    public void setCodeUnique(String codeUnique) {
+        if (codeUnique == null || codeUnique.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le code unique ne peut pas être vide.");
+        }
+        this.codeUnique = codeUnique;
+    }
 
-    public StatutProduit getStatut() { return statut; }
-    public void setStatut(StatutProduit statut) { this.statut = statut; }
+    public String getStatut() { return statut; }
+    public void setStatut(String statut) {
+        if (statut == null || statut.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le statut ne peut pas être vide.");
+        }
+        this.statut = statut;
+    }
 
     public LocalDate getDateCreation() { return dateCreation; }
-    public void setDateCreation(LocalDate dateCreation) { this.dateCreation = dateCreation; }
+    public void setDateCreation(LocalDate dateCreation) {
+        if (dateCreation == null) {
+            throw new IllegalArgumentException("La date de création ne peut pas être nulle.");
+        }
+        this.dateCreation = dateCreation;
+    }
 
     @Override
     public String toString() {

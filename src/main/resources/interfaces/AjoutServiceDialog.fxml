@@ -3,61 +3,39 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<DialogPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjoutServiceController">
-    <header>
-        <Text style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #182d88;" text="Ajouter un nouveau service" />
-    </header>
+<VBox spacing="15" styleClass="form-container" stylesheets="/styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AjoutServiceController" >
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+    <GridPane hgap="10" vgap="15">
+        <Label text="Nom du service:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="nomField" promptText="Ex: Facture STEG" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label fx:id="nomError" styleClass="error-label" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
-    <content>
-        <GridPane hgap="10" vgap="10">
-            <padding>
-                <Insets bottom="20" left="20" right="20" top="20" />
-            </padding>
+        <Label text="Type:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <ComboBox fx:id="typeCombo" prefWidth="200" promptText="Choisir un type" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label fx:id="typeError" styleClass="error-label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-            <!-- Ligne 0 : Nom -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Nom :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="nomField" promptText="Nom du service" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <Label fx:id="nomError" style="-fx-font-size: 11px; -fx-text-fill: red;" text="" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <Label text="Tarif (DT):" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="tarifField" promptText="Ex: 45.500" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label fx:id="tarifError" styleClass="error-label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
-            <!-- Ligne 1 : Type -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Type :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <ComboBox fx:id="typeCombo" prefWidth="200" promptText="Sélectionner le type" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="typeError" style="-fx-font-size: 11px; -fx-text-fill: red;" text="" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Label text="Fréquence:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <ComboBox fx:id="frequenceCombo" prefWidth="200" promptText="Choisir une fréquence" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label fx:id="frequenceError" styleClass="error-label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 
-            <!-- Ligne 2 : Tarif -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Tarif (TND) :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <TextField fx:id="tarifField" promptText="0.00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label fx:id="tarifError" style="-fx-font-size: 11px; -fx-text-fill: red;" text="" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Label text="Date de début:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <DatePicker fx:id="dateDebutPicker" promptText="choisir date de debut" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Label fx:id="dateError" styleClass="error-label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
 
-            <!-- Ligne 3 : Fréquence -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Fréquence :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <ComboBox fx:id="frequenceCombo" prefWidth="200" promptText="Fréquence (pour abonnement)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="frequenceError" style="-fx-font-size: 11px; -fx-text-fill: red;" text="" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Label text="Date de fin:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <DatePicker fx:id="dateFinPicker" promptText="choisir date de fn" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-            <!-- Ligne 4 : Date début -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Date début :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <DatePicker fx:id="dateDebut" promptText="JJ/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label fx:id="dateError" style="-fx-font-size: 11px; -fx-text-fill: red;" text="" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-
-            <!-- Ligne 5 : Date fin -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Date fin :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-            <DatePicker fx:id="dateFin" promptText="JJ/MM/AAAA (optionnel)" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label fx:id="dateFinError" style="-fx-font-size: 11px; -fx-text-fill: red;" text="" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-
-            <!-- Ligne 6 : Statut -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Statut :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-            <ComboBox fx:id="statutCombo" prefWidth="200" promptText="Statut" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label fx:id="statutError" style="-fx-font-size: 11px; -fx-text-fill: red;" text="" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-
-            <!-- Ligne 7 : Produit lié (optionnel) -->
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #182d88;" text="Produit lié :" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-            <ComboBox fx:id="produitCombo" prefWidth="250" promptText="Sélectionner un produit (optionnel)" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label style="-fx-font-size: 10px; -fx-text-fill: #718096;" text="Laissez vide si aucun produit" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-        </GridPane>
-    </content>
-
-    <ButtonType fx:constant="OK" />
-    <ButtonType fx:constant="CANCEL" />
-</DialogPane>
+        <Label text="Statut:" styleClass="field-label" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <ComboBox fx:id="statutCombo" prefWidth="200" promptText="choisir un satatut " styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <Label fx:id="statutError" styleClass="error-label" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+    </GridPane>
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button fx:id="okButton" onAction="#handleOk" styleClass="btn-save" text="Enregistrer" />
+        <Button onAction="#handleCancel" styleClass="btn-cancel-flat" text="Annuler" />
+    </HBox>
+</VBox>
