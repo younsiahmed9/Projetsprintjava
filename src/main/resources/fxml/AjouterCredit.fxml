@@ -39,6 +39,12 @@
             </VBox>
         </HBox>
 
+        <VBox spacing="5">
+            <Label text="NUMÉRO DE TÉLÉPHONE (OPTIONNEL)" styleClass="card-type-header" style="-fx-font-size: 10;"/>
+            <TextField fx:id="txtTelephone" promptText="Ex: +21655123456" styleClass="modern-input"/>
+            <Label text="Format : + (code pays) (numéro)" style="-fx-font-size: 9; -fx-text-fill: #aaa;"/>
+        </VBox>
+
         <VBox spacing="5" style="-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 10; -fx-border-color: #eee;">
             <Label text="MENSUALITÉ ESTIMÉE" styleClass="card-type-header" style="-fx-text-fill: #666; -fx-font-size: 9;"/>
             <Label fx:id="lblMensualite" text="0.00 DT" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #3e893e;"/>

@@ -10,11 +10,21 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+// Imports Twilio
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+
 public class AjouterCreditController {
 
-    @FXML private TextField txtMontant, txtTaux, txtDuree;
+    @FXML private TextField txtMontant, txtTaux, txtDuree, txtTelephone;
     @FXML private Label lblMensualite, lblScore;
     @FXML private ProgressBar progressScore;
+
+    // --- CONFIGURATION TWILIO ---
+    public static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+    public static final String AUTH_TOKEN = "dc84443342ebb24150aa2b9d82eb2bb6";
+    public static final String TWILIO_NUMBER = "+18126668106";
 
     private StackPane parentStack;
     private Region overlay;
@@ -29,7 +39,6 @@ public class AjouterCreditController {
 
     @FXML
     public void initialize() {
-        // Déclencher le calcul et le score dès qu'un champ change
         txtMontant.textProperty().addListener((obs, old, newVal) -> mettreAJourInterface());
         txtTaux.textProperty().addListener((obs, old, newVal) -> mettreAJourInterface());
         txtDuree.textProperty().addListener((obs, old, newVal) -> mettreAJourInterface());
@@ -79,32 +88,22 @@ public class AjouterCreditController {
             if (mStr.isEmpty()) { resetScore(); return; }
 
             double montantDemande = Double.parseDouble(mStr);
-            Compte compte = serviceCompte.getCompteById(this.idCompte); // Méthode supposée existante
+            Compte compte = serviceCompte.recupererParId(this.idCompte);
 
             if (compte == null) return;
 
-            int score = 50; // Base neutre
-
-            // 1. État du compte
+            int score = 50;
             if ("BLOQUE".equalsIgnoreCase(compte.getEtat())) {
                 appliquerStyleScore(-1, "REFUSÉ (Bloqué)");
                 return;
             }
-
-            // 2. Ratio Solde/Crédit
             if (compte.getSolde() >= montantDemande * 0.25) score += 25;
             else if (compte.getSolde() < 0) score -= 20;
 
-            // 3. Antécédents (Vérification si d'autres crédits existent)
-            if (service.aDesCreditsEnCours(this.idCompte)) {
-                score -= 30;
-            }
+            if (service.aDesCreditsEnCours(this.idCompte)) score -= 30;
 
             appliquerStyleScore(Math.min(100, Math.max(0, score)), null);
-
-        } catch (Exception e) {
-            resetScore();
-        }
+        } catch (Exception e) { resetScore(); }
     }
 
     private void appliquerStyleScore(int score, String forceMsg) {
@@ -151,7 +150,6 @@ public class AjouterCreditController {
             c.setDureeMois(Integer.parseInt(txtDuree.getText()));
             c.setDateDebut(java.time.LocalDate.now());
 
-            // LOGIQUE DE STATUT BASÉE SUR LE SCORE
             if (progressScore.getProgress() >= 0.5 && !lblScore.getText().contains("REFUSÉ")) {
                 c.setStatut("EN_COURS");
             } else {
@@ -161,7 +159,15 @@ public class AjouterCreditController {
             String mStr = lblMensualite.getText().replaceAll("[^0-9.,]", "").replace(",", ".");
             c.setMensualite(Double.parseDouble(mStr));
 
+            // Ajout DB
             service.ajouter(c);
+
+            // LOGIQUE SMS
+            String phone = txtTelephone.getText().trim();
+            if (!phone.isEmpty()) {
+                envoyerSmsNotification(phone, c.getStatut(), c.getMontant());
+            }
+
             Alert success = new Alert(Alert.AlertType.INFORMATION, "Traitement terminé. Statut : " + c.getStatut());
             success.showAndWait();
             handleAnnuler();
@@ -171,14 +177,34 @@ public class AjouterCreditController {
         }
     }
 
+    private void envoyerSmsNotification(String toPhone, String statut, double montant) {
+        try {
+            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+            String corpsMessage = statut.equals("EN_COURS")
+                    ? "Fintrack: Votre demande de credit de " + montant + " DT est ACCEPTEE."
+                    : "Fintrack: Desole, votre demande de credit de " + montant + " DT a ete REFUSEE.";
+
+            Message.creator(new PhoneNumber(toPhone), new PhoneNumber(TWILIO_NUMBER), corpsMessage).create();
+            System.out.println("SMS envoyé !");
+        } catch (Exception e) {
+            System.err.println("Échec SMS: " + e.getMessage());
+        }
+    }
+
     private boolean validerSaisie() {
         try {
             Double.parseDouble(txtMontant.getText().replace(",", "."));
             Double.parseDouble(txtTaux.getText().replace(",", "."));
             Integer.parseInt(txtDuree.getText());
+
+            String phone = txtTelephone.getText().trim();
+            if (!phone.isEmpty() && !phone.matches("^\\+[1-9]\\d{1,14}$")) {
+                showError("Le format du téléphone doit être international (ex: +21655123456)");
+                return false;
+            }
             return true;
         } catch (Exception e) {
-            showError("Veuillez remplir tous les champs avec des nombres valides.");
+            showError("Veuillez remplir les champs obligatoires avec des nombres valides.");
             return false;
         }
     }
