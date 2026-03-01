@@ -10,89 +10,92 @@
             style="-fx-background-color: #f5f7fa;">
 
     <top>
-        <VBox style="-fx-background-color: #ffffff; -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0; -fx-padding: 20;">
+        <VBox styleClass="detail-header">
             <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label fx:id="lblTitle" text="Détail du Document" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+                <Label fx:id="lblTitle" text="Détail du Document" style="-fx-font-size: 28; -fx-font-weight: 900; -fx-text-fill: #1e293b;"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="btnEdit" text="✎ Modifier" styleClass="btn-primary" />
+                <Button fx:id="btnTranslate" text="🌐 Traduire" styleClass="btn-secondary, btn-detail-action" />
+                <Button fx:id="btnShare" text="↗ Partager" styleClass="btn-secondary, btn-detail-action" />
+                <Button fx:id="btnEdit" text="✎ Modifier" styleClass="btn-primary, btn-detail-action" />
                 <Button fx:id="btnClose" text="✕" styleClass="btn-icon-small"/>
             </HBox>
-            <Label fx:id="lblPath" text="Chemin: " style="-fx-font-size: 11; -fx-text-fill: #6b7280; -fx-padding: 10 0 0 0;"/>
+            <Label fx:id="lblPath" text="Chemin: " style="-fx-font-size: 12; -fx-text-fill: #64748b; -fx-padding: 12 0 0 0;"/>
         </VBox>
     </top>
 
     <center>
-        <ScrollPane fitToWidth="true" style="-fx-padding: 0; -fx-border-color: transparent;">
-            <VBox spacing="20" style="-fx-padding: 20;">
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll">
+            <VBox spacing="24" style="-fx-padding: 30;">
                 <!-- Informations du document -->
-                <VBox spacing="10" styleClass="card" style="-fx-padding: 20;">
-                    <Label text="📋 INFORMATIONS DU DOCUMENT" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
-                    <Separator/>
+                <VBox spacing="15" styleClass="detail-card-premium">
+                    <Label text="📋 INFORMATIONS DU DOCUMENT" styleClass="detail-section-title"/>
+                    <Separator style="-fx-opacity: 0.3;"/>
 
-                    <HBox spacing="20">
-                        <VBox spacing="8" HBox.hgrow="ALWAYS">
-                            <HBox spacing="10">
-                                <Label text="Description:" style="-fx-font-weight: bold; -fx-min-width: 120;"/>
-                                <Label fx:id="lblDescription" text="-" wrapText="true" HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                            <HBox spacing="10">
-                                <Label text="Catégorie:" style="-fx-font-weight: bold; -fx-min-width: 120;"/>
-                                <Label fx:id="lblCategory" text="-" HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                            <HBox spacing="10">
-                                <Label text="Dossier:" style="-fx-font-weight: bold; -fx-min-width: 120;"/>
-                                <Label fx:id="lblFolder" text="-" HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                            <HBox spacing="10">
-                                <Label text="Date de création:" style="-fx-font-weight: bold; -fx-min-width: 120;"/>
-                                <Label fx:id="lblCreatedDate" text="-" HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                        </VBox>
-                    </HBox>
+                    <VBox spacing="12">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Description:" styleClass="detail-label"/>
+                            <Label fx:id="lblDescription" text="-" wrapText="true" styleClass="detail-value" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Catégorie:" styleClass="detail-label"/>
+                            <Label fx:id="lblCategory" text="-" styleClass="detail-value"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Dossier:" styleClass="detail-label"/>
+                            <Label fx:id="lblFolder" text="-" styleClass="detail-value"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Date de création:" styleClass="detail-label"/>
+                            <Label fx:id="lblCreatedDate" text="-" styleClass="detail-value"/>
+                        </HBox>
+                    </VBox>
                 </VBox>
 
                 <!-- Relevé Financier -->
-                <VBox spacing="10" styleClass="card" style="-fx-padding: 20; -fx-background-color: #f0f9ff; -fx-border-color: #0284c7; -fx-border-width: 1; -fx-border-radius: 8;">
-                    <Label text="💰 RELEVÉ FINANCIER" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
-                    <Separator/>
-
-                    <HBox spacing="30" alignment="CENTER_LEFT">
-                        <VBox spacing="5">
-                            <Label text="Montant" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
-                            <Label fx:id="lblBudget" text="0.00 €" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #0284c7;"/>
+                <!-- (Déjà mis à jour avec le style premium dans l'étape précédente, on peut encore l'affiner si besoin, mais restons cohérent) -->
+                <VBox spacing="15" styleClass="detail-card-premium" style="-fx-border-color: #3b82f6; -fx-border-width: 2;">
+                    <Label text="💰 RELEVÉ FINANCIER" styleClass="detail-section-title" style="-fx-text-fill: #2563eb;"/>
+                    <Separator style="-fx-opacity: 0.3;"/>
+                    
+                    <HBox spacing="50" alignment="CENTER_LEFT">
+                        <VBox spacing="8">
+                            <Label text="Montant Total" styleClass="detail-label" style="-fx-min-width: 0;"/>
+                            <Label fx:id="lblBudget" text="0.000 TND" style="-fx-font-size: 26; -fx-font-weight: 900; -fx-text-fill: #2563eb;"/>
                         </VBox>
-                        <VBox spacing="5">
-                            <Label text="Statut" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
-                            <Label fx:id="lblBudgetStatus" text="N/A" style="-fx-padding: 5 10; -fx-background-color: #f3f4f6; -fx-border-radius: 5;"/>
+                        <VBox spacing="8">
+                            <Label text="Statut du Budget" styleClass="detail-label" style="-fx-min-width: 0;"/>
+                            <Label fx:id="lblBudgetStatus" text="N/A" style="-fx-padding: 8 16; -fx-background-radius: 25; -fx-font-weight: 800; -fx-font-size: 12;"/>
                         </VBox>
-                        <VBox spacing="5">
-                            <Label text="Devise" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
-                            <Label text="EUR" style="-fx-font-size: 14;"/>
+                        <VBox spacing="8">
+                            <Label text="Devise Locale" styleClass="detail-label" style="-fx-min-width: 0;"/>
+                            <Label text="TND (Dinar Tunisien)" style="-fx-font-size: 15; -fx-font-weight: 700; -fx-text-fill: #1e293b;"/>
                         </VBox>
                     </HBox>
                 </VBox>
 
                 <!-- Fichier associé -->
-                <VBox spacing="10" styleClass="card" style="-fx-padding: 20;">
-                    <Label text="📁 FICHIER ASSOCIÉ" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
-                    <Separator/>
+                <VBox spacing="15" styleClass="detail-card-premium">
+                    <Label text="📁 FICHIER ASSOCIÉ" styleClass="detail-section-title"/>
+                    <Separator style="-fx-opacity: 0.3;"/>
 
-                    <HBox spacing="10">
-                        <Label text="Type:" style="-fx-font-weight: bold; -fx-min-width: 100;"/>
-                        <Label fx:id="lblFileType" text="-"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <Label text="Taille:" style="-fx-font-weight: bold; -fx-min-width: 100;"/>
-                        <Label fx:id="lblFileSize" text="-"/>
-                    </HBox>
-                    <HBox spacing="10">
-                        <Label text="Chemin:" style="-fx-font-weight: bold; -fx-min-width: 100;"/>
-                        <Label fx:id="lblFilePath" text="-" wrapText="true" HBox.hgrow="ALWAYS"/>
-                    </HBox>
+                    <VBox spacing="10">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Type de document:" styleClass="detail-label"/>
+                            <Label fx:id="lblFileType" text="-" styleClass="detail-value"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Taille du fichier:" styleClass="detail-label"/>
+                            <Label fx:id="lblFileSize" text="-" styleClass="detail-value"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="TOP_LEFT">
+                            <Label text="Emplacement:" styleClass="detail-label"/>
+                            <Label fx:id="lblFilePath" text="-" wrapText="true" styleClass="detail-value" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                    </VBox>
 
-                    <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
-                        <Button fx:id="btnOpenFile" text="🔓 Ouvrir" styleClass="btn-secondary" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="btnOpenFolder" text="📁 Dossier" styleClass="btn-secondary" HBox.hgrow="ALWAYS"/>
+                    <HBox spacing="12" style="-fx-padding: 15 0 0 0;">
+                        <Button fx:id="btnOpenFile" text="📂 Ouvrir le fichier" styleClass="btn-secondary, btn-detail-action" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Button fx:id="btnOpenFolder" text="📂 Voir le dossier" styleClass="btn-secondary, btn-detail-action" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                     </HBox>
                 </VBox>
             </VBox>

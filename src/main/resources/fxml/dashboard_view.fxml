@@ -17,6 +17,8 @@
             <HBox alignment="CENTER_LEFT" spacing="20">
                 <Label text="Dashboard Documents" styleClass="header-title-blue"/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button text="📥 PDF" onAction="#onExportPDF" styleClass="btn-primary"
+                        style="-fx-font-size: 14; -fx-padding: 8 20; -fx-background-radius: 30;"/>
                 <Button text="🔄" onAction="#onRefresh" styleClass="btn-add-circle"
                         style="-fx-font-size: 20; -fx-min-width: 50; -fx-max-width: 50; -fx-min-height: 50; -fx-max-height: 50;"/>
             </HBox>
@@ -57,6 +59,16 @@
                 <Label text="Nouveaux documents" style="-fx-text-fill: #999; -fx-font-size: 11;"/>
             </VBox>
         </HBox>
+
+        <!-- Alerts Section -->
+        <VBox fx:id="containerAlerts" spacing="10" styleClass="card" style="-fx-border-color: #ef4444; -fx-border-width: 0 0 0 5; -fx-background-color: #fff5f5; -fx-padding: 15;" visible="false" managed="false">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="⚠️ Échéances Proches &amp; Alertes" style="-fx-text-fill: #b91c1c; -fx-font-size: 16; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Actions requises" style="-fx-text-fill: #ef4444; -fx-font-size: 12;"/>
+            </HBox>
+            <VBox fx:id="listAlerts" spacing="8" style="-fx-padding: 5 0 0 0;"/>
+        </VBox>
 
         <!-- Charts Section -->
         <HBox spacing="20">

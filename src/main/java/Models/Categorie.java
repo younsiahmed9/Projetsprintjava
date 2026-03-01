@@ -4,18 +4,21 @@ public class Categorie {
     private int id;
     private String nom;
     private String description;
+    private double budgetMax;
 
-    public Categorie() {}
+    public Categorie() {
+    }
 
     public Categorie(String nom, String description) {
         this.nom = nom;
         this.description = description;
     }
 
-    public Categorie(int id, String nom, String description) {
+    public Categorie(int id, String nom, String description, double budgetMax) {
         this.id = id;
         this.nom = nom;
         this.description = description;
+        this.budgetMax = budgetMax;
     }
 
     public int getId() {
@@ -42,6 +45,13 @@ public class Categorie {
         this.description = description;
     }
 
+    public double getBudgetMax() {
+        return budgetMax;
+    }
+
+    public void setBudgetMax(double budgetMax) {
+        this.budgetMax = budgetMax;
+    }
 
     @Override
     public String toString() {
@@ -50,8 +60,10 @@ public class Categorie {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         Categorie categorie = (Categorie) obj;
         return id == categorie.id;
     }
@@ -61,4 +73,3 @@ public class Categorie {
         return Integer.hashCode(id);
     }
 }
-

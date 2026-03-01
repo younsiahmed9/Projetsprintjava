@@ -19,12 +19,18 @@ import java.io.File;
 import java.sql.SQLException;
 
 public class DocumentController {
-    @FXML private VBox containerDocuments;
-    @FXML private TextField tfTitre;
-    @FXML private TextArea taDesc;
-    @FXML private TextField tfPath;
-    @FXML private ComboBox<Dossier> cbDossier;
-    @FXML private ComboBox<Categorie> cbCategorie;
+    @FXML
+    private VBox containerDocuments;
+    @FXML
+    private TextField tfTitre;
+    @FXML
+    private TextArea taDesc;
+    @FXML
+    private TextField tfPath;
+    @FXML
+    private ComboBox<Dossier> cbDossier;
+    @FXML
+    private ComboBox<Categorie> cbCategorie;
 
     private final ServiceDocument docService = new ServiceDocument();
     private final ServiceDossier dossierService = new ServiceDossier();
@@ -58,13 +64,29 @@ public class DocumentController {
 
     private VBox createDocumentCard(Document doc) {
         VBox card = new VBox(5);
-        card.setStyle("-fx-padding: 12; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
+        card.setStyle(
+                "-fx-padding: 12; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
 
         Label lblTitle = new Label("📄 " + doc.getTitre());
-        lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13; -fx-text-fill: #1d4ed8;");
+        lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13; -fx-text-fill: #1e293b;");
+
+        Label lblStatus = new Label(doc.getStatus());
+        String statusColor = "#64748b"; // default
+        if ("VALIDATED".equals(doc.getStatus()))
+            statusColor = "#22c55e";
+        else if ("REJECTED".equals(doc.getStatus()))
+            statusColor = "#ef4444";
+        else if ("PENDING".equals(doc.getStatus()))
+            statusColor = "#f59e0b";
+        lblStatus.setStyle("-fx-background-color: " + statusColor
+                + "; -fx-text-fill: white; -fx-padding: 2 6; -fx-background-radius: 4; -fx-font-size: 9; -fx-font-weight: bold;");
+
+        HBox titleStatus = new HBox(8, lblTitle, lblStatus);
+        titleStatus.setAlignment(Pos.CENTER_LEFT);
 
         Label lblDesc = new Label(doc.getDescription() != null && !doc.getDescription().isEmpty()
-                ? doc.getDescription() : "(Pas de description)");
+                ? doc.getDescription()
+                : "(Pas de description)");
         lblDesc.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
         lblDesc.setWrapText(true);
 
@@ -92,7 +114,7 @@ public class DocumentController {
 
         btnBox.getChildren().addAll(btnEdit, btnDelete);
 
-        card.getChildren().addAll(lblTitle, lblDesc, hboxMeta, btnBox);
+        card.getChildren().addAll(titleStatus, lblDesc, hboxMeta, btnBox);
         return card;
     }
 
@@ -173,7 +195,6 @@ public class DocumentController {
         }
     }
 
-
     @FXML
     private void onBrowse() {
         FileChooser fc = new FileChooser();
@@ -186,7 +207,8 @@ public class DocumentController {
 
     @FXML
     private void onAdd() {
-        if (!validateForm()) return;
+        if (!validateForm())
+            return;
 
         try {
             docService.add(readForm());
@@ -205,7 +227,8 @@ public class DocumentController {
             return;
         }
 
-        if (!validateForm()) return;
+        if (!validateForm())
+            return;
 
         try {
             Document d = readForm();
@@ -345,4 +368,3 @@ public class DocumentController {
         return d;
     }
 }
-

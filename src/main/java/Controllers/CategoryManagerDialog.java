@@ -8,8 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import utils.UiStyles;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -29,13 +30,13 @@ public class CategoryManagerDialog {
         Dialog<Void> dialog = new Dialog<>();
         UiStyles.applyDialogStyles(dialog.getDialogPane());
         dialog.setTitle("Gestion des Catégories");
-        dialog.setHeaderText("Créer, modifier ou supprimer des catégories");
-        dialog.setWidth(800);
-        dialog.setHeight(600);
+        dialog.setHeaderText("Personnalisez vos catégories de documents");
+        dialog.getDialogPane().setPrefWidth(700);
+        dialog.getDialogPane().setPrefHeight(600);
 
         ListView<Categorie> categoryList = new ListView<>();
         categoryList.getStyleClass().add("documents-list");
-        categoryList.setPrefHeight(300);
+        categoryList.setPrefHeight(350);
         refreshCategoryList(categoryList);
         categoryList.setCellFactory(param -> new CategoryListCell());
 
@@ -48,75 +49,72 @@ public class CategoryManagerDialog {
                 dialogManager.showCategoryDialog(selected, true).ifPresent(updated -> {
                     try {
                         categorieService.update(updated);
-                        AlertUtils.showSuccess("Succès", "Catégorie modifiée avec succès !");
+                        AlertUtils.showSuccess("Succès", "Catégorie modifiée !");
                         refreshCategoryList(categoryList);
                     } catch (SQLException ex) {
-                        AlertUtils.showError("Erreur", "Impossible de modifier la catégorie: " + ex.getMessage());
+                        AlertUtils.showError("Erreur", "Modification impossible: " + ex.getMessage());
                     }
                 });
             } else {
-                AlertUtils.showError("Erreur", "Veuillez sélectionner une catégorie !");
+                AlertUtils.showError("Sélection requise", "Veuillez sélectionner une catégorie.");
             }
         });
 
         Button btnDelete = new Button("🗑️ Supprimer");
         btnDelete.getStyleClass().add("btn-danger");
         btnDelete.setPrefWidth(120);
-        btnDelete.setOnMouseEntered(e -> btnDelete.setStyle("-fx-padding: 10 20; -fx-font-size: 12; -fx-background-color: #b91c1c; -fx-text-fill: white; -fx-border-radius: 6;"));
-        btnDelete.setOnMouseExited(e -> btnDelete.setStyle("-fx-padding: 10 20; -fx-font-size: 12; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-border-radius: 6;"));
         btnDelete.setOnAction(e -> {
             Categorie selected = categoryList.getSelectionModel().getSelectedItem();
             if (selected != null) {
                 if (dialogManager.showDeleteCategoryConfirmation(selected)) {
                     try {
                         categorieService.delete(selected.getId());
-                        AlertUtils.showSuccess("Succès", "Catégorie supprimée avec succès !");
+                        AlertUtils.showSuccess("Succès", "Catégorie supprimée.");
                         refreshCategoryList(categoryList);
                     } catch (SQLException ex) {
-                        AlertUtils.showError("Erreur", "Impossible de supprimer la catégorie: " + ex.getMessage());
+                        AlertUtils.showError("Erreur", "Suppression impossible: " + ex.getMessage());
                     }
                 }
             } else {
-                AlertUtils.showError("Erreur", "Veuillez sélectionner une catégorie !");
+                AlertUtils.showError("Sélection requise", "Veuillez sélectionner une catégorie.");
             }
         });
 
-        Button btnAddCategory = new Button("+ Ajouter une catégorie");
+        Button btnAddCategory = new Button("+ Nouvelle Catégorie");
         btnAddCategory.getStyleClass().add("btn-primary");
-        btnAddCategory.setPrefWidth(200);
+        btnAddCategory.setPrefWidth(220);
+        btnAddCategory.setStyle("-fx-font-size: 14; -fx-padding: 10 25; -fx-background-radius: 30;");
         btnAddCategory.setOnAction(e -> {
             dialogManager.showCategoryDialog(null, false).ifPresent(category -> {
                 try {
                     categorieService.add(category);
-                    AlertUtils.showSuccess("Succès", "Catégorie créée avec succès !");
+                    AlertUtils.showSuccess("Succès", "Catégorie créée !");
                     refreshCategoryList(categoryList);
                 } catch (SQLException ex) {
-                    AlertUtils.showError("Erreur", "Impossible de créer la catégorie: " + ex.getMessage());
+                    AlertUtils.showError("Erreur", "Création impossible: " + ex.getMessage());
                 }
             });
         });
 
-        javafx.scene.layout.HBox btnBox = new javafx.scene.layout.HBox(10);
-        btnBox.getStyleClass().add("card");
-        btnBox.setStyle("-fx-padding: 10;");
-        btnBox.getChildren().addAll(btnEdit, btnDelete);
+        HBox btnBox = new HBox(15, btnEdit, btnDelete);
+        btnBox.setAlignment(Pos.CENTER_LEFT);
+        btnBox.setPadding(new Insets(10, 0, 0, 0));
 
-        VBox content = new VBox(15);
-        content.getStyleClass().add("card");
-        content.setStyle("-fx-padding: 20;");
+        VBox content = new VBox(20);
+        content.setPadding(new Insets(25));
+        content.setStyle("-fx-background-color: white;");
+
+        Label lblListTitle = new Label("Catégories Actives");
+        lblListTitle.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1e293b;");
+
         content.getChildren().addAll(
-            new Label("Liste des catégories :"),
-            new Separator(),
-            categoryList,
-            new Separator(),
-            btnBox,
-            new Separator(),
-            btnAddCategory
-        );
+                lblListTitle,
+                categoryList,
+                btnBox,
+                new Separator(),
+                btnAddCategory);
 
-        ScrollPane scroll = new ScrollPane(content);
-        scroll.setFitToWidth(true);
-        dialog.getDialogPane().setContent(scroll);
+        dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
         dialog.showAndWait();
@@ -127,7 +125,7 @@ public class CategoryManagerDialog {
             List<Categorie> categories = categorieService.findAll();
             listView.setItems(FXCollections.observableArrayList(categories));
         } catch (SQLException e) {
-            AlertUtils.showError("Erreur", "Impossible de charger les catégories: " + e.getMessage());
+            AlertUtils.showError("Erreur", "Chargement impossible: " + e.getMessage());
         }
     }
 
@@ -136,17 +134,23 @@ public class CategoryManagerDialog {
         protected void updateItem(Categorie category, boolean empty) {
             super.updateItem(category, empty);
             if (empty || category == null) {
+                setGraphic(null);
                 setText(null);
-                setStyle(null);
             } else {
-                setText("📁 " + category.getNom());
-                if (category.getDescription() != null && !category.getDescription().isEmpty()) {
-                    setText(getText() + "\n   " + category.getDescription());
-                }
-                setPrefHeight(60);
-                setStyle("-fx-text-fill: #333; -fx-font-size: 12;");
+                VBox box = new VBox(5);
+                box.setPadding(new Insets(10));
+
+                Label lblName = new Label("📁 " + category.getNom());
+                lblName.setStyle("-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: #182d88;");
+
+                Label lblDesc = new Label(category.getDescription() != null && !category.getDescription().isEmpty()
+                        ? category.getDescription()
+                        : "Aucune description");
+                lblDesc.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12;");
+
+                box.getChildren().addAll(lblName, lblDesc);
+                setGraphic(box);
             }
         }
     }
 }
-

@@ -4,16 +4,18 @@ import Models.Document;
 import Services.ServiceCategorie;
 import Services.ServiceDocument;
 import Services.ServiceDossier;
+import Services.AlertService;
+import Models.Echeance;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -26,39 +28,71 @@ import java.util.Map;
 
 public class DashboardController {
 
-    @FXML private Label lblTotalDocuments;
-    @FXML private Label lblTotalDossiers;
-    @FXML private Label lblTotalCategories;
-    @FXML private Label lblDocumentsThisMonth;
+    @FXML
+    private Label lblTotalDocuments;
+    @FXML
+    private Label lblTotalDossiers;
+    @FXML
+    private Label lblTotalCategories;
+    @FXML
+    private Label lblDocumentsThisMonth;
 
-    @FXML private Label lblMontantTotal;
-    @FXML private Label lblMontantAvg;
-    @FXML private Label lblMontantMax;
-    @FXML private Label lblMontantMin;
+    @FXML
+    private Label lblMontantTotal;
+    @FXML
+    private Label lblMontantAvg;
+    @FXML
+    private Label lblMontantMax;
+    @FXML
+    private Label lblMontantMin;
 
-    @FXML private PieChart pieChartCategories;
-    @FXML private BarChart<String, Number> barChartDossiers;
+    @FXML
+    private PieChart pieChartCategories;
+    @FXML
+    private BarChart<String, Number> barChartDossiers;
 
-    @FXML private PieChart pieChartMontantCategories;
-    @FXML private BarChart<String, Number> barChartMontantDossiers;
+    @FXML
+    private PieChart pieChartMontantCategories;
+    @FXML
+    private BarChart<String, Number> barChartMontantDossiers;
 
-    @FXML private ListView<Document> lvRecentDocuments;
-    @FXML private VBox containerTopDocuments;
+    @FXML
+    private ListView<Document> lvRecentDocuments;
+    @FXML
+    private VBox containerTopDocuments;
+    @FXML
+    private VBox containerAlerts;
+    @FXML
+    private VBox listAlerts;
 
     private final ServiceDocument documentService = new ServiceDocument();
     private final ServiceDossier dossierService = new ServiceDossier();
     private final ServiceCategorie categorieService = new ServiceCategorie();
+    private AlertService alertService;
 
     @FXML
     public void initialize() {
-        loadStatistics();
-        loadCategoriesChart();
-        loadDossiersChart();
-        loadRecentDocuments();
-        loadMontantStats();
-        loadMontantByCategorieChart();
-        loadMontantByDossierChart();
-        loadTopDocuments();
+        try {
+            try {
+                alertService = new AlertService();
+            } catch (Exception e) {
+                System.err.println("Could not init AlertService: " + e.getMessage());
+            }
+
+            loadStatistics();
+            loadCategoriesChart();
+            loadDossiersChart();
+            loadRecentDocuments();
+            loadMontantStats();
+            loadMontantByCategorieChart();
+            loadMontantByDossierChart();
+            loadTopDocuments();
+            loadAlerts();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error during Dashboard initialization: " + e.getMessage());
+            // We don't show a blocking alert here to avoid interfering with FXMLLoader
+        }
     }
 
     /**
@@ -66,13 +100,15 @@ public class DashboardController {
      */
     private VBox createRecentDocumentCard(Document doc) {
         VBox card = new VBox(5);
-        card.setStyle("-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
+        card.setStyle(
+                "-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
 
         Label lblTitle = new Label(doc.getTitre());
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: #182d88;");
 
         Label lblDesc = new Label(doc.getDescription() != null && !doc.getDescription().isEmpty()
-                ? doc.getDescription() : "Pas de description");
+                ? doc.getDescription()
+                : "Pas de description");
         lblDesc.setStyle("-fx-font-size: 11; -fx-text-fill: #666;");
         lblDesc.setWrapText(true);
         lblDesc.setMaxWidth(500);
@@ -97,15 +133,16 @@ public class DashboardController {
 
     private VBox createTopDocumentCard(Document doc) {
         VBox card = new VBox(8);
-        card.setStyle("-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
+        card.setStyle(
+                "-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8;");
 
         HBox row = new HBox(10);
-        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        row.setAlignment(Pos.CENTER_LEFT);
 
         Label lblTitle = new Label(doc.getTitre());
         lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13; -fx-text-fill: #182d88;");
 
-        Label lblMontant = new Label(String.format("%.2f €", doc.getMontant()));
+        Label lblMontant = new Label(String.format("%.2f TND", doc.getMontant()));
         lblMontant.setStyle("-fx-font-size: 12; -fx-text-fill: #111827; -fx-font-weight: bold;");
 
         Region spacer = new Region();
@@ -151,7 +188,8 @@ public class DashboardController {
             });
 
         } catch (SQLException e) {
-            AlertUtils.showError("Erreur Base de Données", "Impossible de charger les stats des catégories: " + e.getMessage());
+            AlertUtils.showError("Erreur Base de Données",
+                    "Impossible de charger les stats des catégories: " + e.getMessage());
         }
     }
 
@@ -171,7 +209,8 @@ public class DashboardController {
             barChartDossiers.setLegendVisible(false);
 
         } catch (SQLException e) {
-            AlertUtils.showError("Erreur Base de Données", "Impossible de charger les stats des dossiers: " + e.getMessage());
+            AlertUtils.showError("Erreur Base de Données",
+                    "Impossible de charger les stats des dossiers: " + e.getMessage());
         }
     }
 
@@ -191,18 +230,20 @@ public class DashboardController {
                 }
             });
         } catch (SQLException e) {
-            AlertUtils.showError("Erreur Base de Données", "Impossible de charger les documents récents: " + e.getMessage());
+            AlertUtils.showError("Erreur Base de Données",
+                    "Impossible de charger les documents récents: " + e.getMessage());
         }
     }
 
     private void loadMontantStats() {
         try {
-            lblMontantTotal.setText(String.format("%.2f €", documentService.getMontantTotal()));
-            lblMontantAvg.setText(String.format("%.2f €", documentService.getMontantAverage()));
-            lblMontantMax.setText(String.format("%.2f €", documentService.getMontantMax()));
-            lblMontantMin.setText(String.format("%.2f €", documentService.getMontantMin()));
+            lblMontantTotal.setText(String.format("%.2f TND", documentService.getMontantTotal()));
+            lblMontantAvg.setText(String.format("%.2f TND", documentService.getMontantAverage()));
+            lblMontantMax.setText(String.format("%.2f TND", documentService.getMontantMax()));
+            lblMontantMin.setText(String.format("%.2f TND", documentService.getMontantMin()));
         } catch (SQLException e) {
-            AlertUtils.showError("Erreur Base de Données", "Impossible de charger l'analyse montant: " + e.getMessage());
+            AlertUtils.showError("Erreur Base de Données",
+                    "Impossible de charger l'analyse montant: " + e.getMessage());
         }
     }
 
@@ -215,7 +256,8 @@ public class DashboardController {
             pieChartMontantCategories.setTitle("Montant par Catégorie");
             pieChartMontantCategories.setLegendVisible(true);
         } catch (SQLException e) {
-            AlertUtils.showError("Erreur Base de Données", "Impossible de charger le montant par catégorie: " + e.getMessage());
+            AlertUtils.showError("Erreur Base de Données",
+                    "Impossible de charger le montant par catégorie: " + e.getMessage());
         }
     }
 
@@ -231,7 +273,8 @@ public class DashboardController {
             barChartMontantDossiers.setTitle("Montant par Dossier");
             barChartMontantDossiers.setLegendVisible(false);
         } catch (SQLException e) {
-            AlertUtils.showError("Erreur Base de Données", "Impossible de charger le montant par dossier: " + e.getMessage());
+            AlertUtils.showError("Erreur Base de Données",
+                    "Impossible de charger le montant par dossier: " + e.getMessage());
         }
     }
 
@@ -247,6 +290,71 @@ public class DashboardController {
         }
     }
 
+    private void loadAlerts() {
+        if (alertService == null || containerAlerts == null)
+            return;
+        try {
+            alertService.generateAlerts();
+            List<Echeance> activeAlerts = alertService.getActiveAlerts();
+
+            listAlerts.getChildren().clear();
+            if (activeAlerts.isEmpty()) {
+                containerAlerts.setVisible(false);
+                containerAlerts.setManaged(false);
+            } else {
+                containerAlerts.setVisible(true);
+                containerAlerts.setManaged(true);
+                for (Echeance alert : activeAlerts) {
+                    listAlerts.getChildren().add(createAlertCard(alert));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private HBox createAlertCard(Echeance alert) {
+        HBox card = new HBox(15);
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.setStyle(
+                "-fx-padding: 10; -fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #fca5a5; -fx-border-radius: 5; -fx-cursor: hand;");
+
+        Label lblUrgency = new Label(alert.getUrgence());
+        lblUrgency.setStyle(
+                "-fx-font-weight: bold; -fx-padding: 2 8; -fx-background-radius: 3; -fx-background-color: #fee2e2; -fx-text-fill: #991b1b;");
+
+        VBox info = new VBox(2);
+        Label lblTitle = new Label(alert.getDocument().getTitre() + " (" + alert.getTypeEcheance() + ")");
+        lblTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13;");
+
+        Label lblDate = new Label(
+                "Échéance: " + alert.getDateEcheance().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        lblDate.setStyle("-fx-text-fill: #ef4444; -fx-font-size: 11;");
+
+        info.getChildren().addAll(lblTitle, lblDate);
+        HBox.setHgrow(info, Priority.ALWAYS);
+
+        Button btnView = new Button("Voir");
+        btnView.setStyle(
+                "-fx-background-color: #182d88; -fx-text-fill: white; -fx-background-radius: 15; -fx-font-size: 10;");
+        btnView.setOnAction(e -> onViewDocument(alert));
+
+        card.getChildren().addAll(lblUrgency, info, btnView);
+        card.setOnMouseClicked(e -> onViewDocument(alert));
+
+        return card;
+    }
+
+    private void onViewDocument(Echeance alert) {
+        try {
+            alertService.markAsSeen(alert.getId());
+            // Global navigation
+            MainController.navigateToDocumentsWithSelect(alert.getDocument().getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void onRefresh() {
         loadStatistics();
@@ -257,7 +365,32 @@ public class DashboardController {
         loadMontantByCategorieChart();
         loadMontantByDossierChart();
         loadTopDocuments();
+        loadAlerts();
         AlertUtils.showSuccess("Succès", "Dashboard actualisé !");
     }
-}
 
+    @FXML
+    private void onExportPDF() {
+        try {
+            Map<String, Integer> catStats = documentService.getStatsDocsByCategorie();
+            List<Document> recentDocsList = documentService.getRecentDocuments(5);
+            List<String> recentTitles = new java.util.ArrayList<>();
+            for (Document d : recentDocsList) {
+                recentTitles.add(d.getTitre() + " (" + d.getMontant() + " TND)");
+            }
+
+            utils.PdfReportService.generateDashboardReport(
+                    lblTotalDocuments.getText(),
+                    lblTotalDossiers.getText(),
+                    lblTotalCategories.getText(),
+                    lblDocumentsThisMonth.getText(),
+                    lblMontantTotal.getText(),
+                    lblMontantAvg.getText(),
+                    catStats,
+                    recentTitles);
+            AlertUtils.showSuccess("Export Réussi", "Le rapport PDF a été généré avec succès.");
+        } catch (SQLException e) {
+            AlertUtils.showError("Erreur Export", "Impossible de générer le PDF : " + e.getMessage());
+        }
+    }
+}

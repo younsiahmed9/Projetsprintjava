@@ -5,31 +5,56 @@ import Models.Document;
 import Services.ServiceDocument;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
 import javafx.stage.Stage;
 
 import java.awt.Desktop;
 import java.io.File;
+
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 
 public class DocumentDetailController {
 
-    @FXML private Label lblTitle;
-    @FXML private Label lblPath;
-    @FXML private Label lblDescription;
-    @FXML private Label lblCategory;
-    @FXML private Label lblFolder;
-    @FXML private Label lblCreatedDate;
-    @FXML private Label lblFileType;
-    @FXML private Label lblFileSize;
-    @FXML private Label lblFilePath;
-    @FXML private Label lblBudget;
-    @FXML private Label lblBudgetStatus;
-    @FXML private Label lblStatus;
-    @FXML private Button btnOpenFile;
-    @FXML private Button btnOpenFolder;
-    @FXML private Button btnEdit;
-    @FXML private Button btnClose;
+    @FXML
+    private Label lblTitle;
+    @FXML
+    private Label lblPath;
+    @FXML
+    private Label lblDescription;
+    @FXML
+    private Label lblCategory;
+    @FXML
+    private Label lblFolder;
+    @FXML
+    private Label lblCreatedDate;
+    @FXML
+    private Label lblFileType;
+    @FXML
+    private Label lblFileSize;
+    @FXML
+    private Label lblFilePath;
+    @FXML
+    private Label lblBudget;
+    @FXML
+    private Label lblBudgetStatus;
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private Button btnOpenFile;
+    @FXML
+    private Button btnOpenFolder;
+    @FXML
+    private Button btnEdit;
+    @FXML
+    private Button btnClose;
+
+    // Nouveaux boutons (présents dans document_detail_simple.fxml; peuvent être
+    // absents dans d’autres variantes)
+    @FXML
+    private Button btnTranslate;
+    @FXML
+    private Button btnShare;
 
     private Document currentDocument;
     private ServiceDocument docService = new ServiceDocument();
@@ -43,6 +68,15 @@ public class DocumentDetailController {
         btnOpenFile.setOnAction(e -> openFile());
         btnOpenFolder.setOnAction(e -> openFileFolder());
         btnEdit.setOnAction(e -> editDocument());
+
+        // Les FXML ne contiennent pas forcément ces boutons: on protège avec
+        // null-check.
+        if (btnTranslate != null) {
+            btnTranslate.setOnAction(e -> translateDocument());
+        }
+        if (btnShare != null) {
+            btnShare.setOnAction(e -> shareDocument());
+        }
     }
 
     public void showDocument(Document doc) {
@@ -56,20 +90,21 @@ public class DocumentDetailController {
 
     private void loadDocumentDetails() {
         try {
-            if (currentDocument == null) return;
+            if (currentDocument == null)
+                return;
 
             lblTitle.setText("📄 " + currentDocument.getTitre());
             lblPath.setText("Chemin: " + currentDocument.getFilePath());
 
-            lblDescription.setText(currentDocument.getDescription() != null ?
-                currentDocument.getDescription() : "Pas de description");
+            lblDescription.setText(
+                    currentDocument.getDescription() != null ? currentDocument.getDescription() : "Pas de description");
 
-            String categoryName = currentDocument.getCategorie() != null ?
-                currentDocument.getCategorie().getNom() : "Non assignée";
+            String categoryName = currentDocument.getCategorie() != null ? currentDocument.getCategorie().getNom()
+                    : "Non assignée";
             lblCategory.setText(categoryName);
 
-            String folderName = currentDocument.getDossier() != null ?
-                currentDocument.getDossier().getNom() : "Inconnu";
+            String folderName = currentDocument.getDossier() != null ? currentDocument.getDossier().getNom()
+                    : "Inconnu";
             lblFolder.setText(folderName);
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -91,7 +126,8 @@ public class DocumentDetailController {
     }
 
     private void displayFinancialData() {
-        DecimalFormat df = new DecimalFormat("#,##0.00 €");
+        // TND use 3 decimal places
+        DecimalFormat df = new DecimalFormat("#,##0.000 TND");
 
         double montant = currentDocument.getMontant();
         lblBudget.setText(df.format(montant));
@@ -99,15 +135,15 @@ public class DocumentDetailController {
         if (montant > 0) {
             lblBudgetStatus.setText("✓ Alloué");
             lblBudgetStatus.setStyle("-fx-padding: 5 10; -fx-background-color: #dcfce7; " +
-                "-fx-text-fill: #166534; -fx-border-radius: 5; -fx-font-weight: bold;");
+                    "-fx-text-fill: #166534; -fx-border-radius: 5; -fx-font-weight: bold;");
         } else if (montant == 0) {
             lblBudgetStatus.setText("○ Zéro");
             lblBudgetStatus.setStyle("-fx-padding: 5 10; -fx-background-color: #f3f4f6; " +
-                "-fx-text-fill: #6b7280; -fx-border-radius: 5;");
+                    "-fx-text-fill: #6b7280; -fx-border-radius: 5;");
         } else {
             lblBudgetStatus.setText("✗ Négatif");
             lblBudgetStatus.setStyle("-fx-padding: 5 10; -fx-background-color: #fee2e2; " +
-                "-fx-text-fill: #991b1b; -fx-border-radius: 5; -fx-font-weight: bold;");
+                    "-fx-text-fill: #991b1b; -fx-border-radius: 5; -fx-font-weight: bold;");
         }
     }
 
@@ -133,6 +169,18 @@ public class DocumentDetailController {
             AlertUtils.showError("Erreur", "Erreur lors de l'édition: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void translateDocument() {
+        if (currentDocument == null)
+            return;
+        Controllers.Dialogs.TranslateActionDialog.showTranslateDialog(currentDocument);
+    }
+
+    private void shareDocument() {
+        if (currentDocument == null)
+            return;
+        Controllers.Dialogs.ShareActionDialog.showShareDialog(currentDocument);
     }
 
     private void openFile() {
@@ -179,8 +227,9 @@ public class DocumentDetailController {
     }
 
     private String formatFileSize(long bytes) {
-        if (bytes <= 0) return "0 B";
-        final String[] units = new String[]{"B", "KB", "MB", "GB"};
+        if (bytes <= 0)
+            return "0 B";
+        final String[] units = new String[] { "B", "KB", "MB", "GB" };
         int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
         return String.format("%.2f %s", bytes / Math.pow(1024, digitGroups), units[digitGroups]);
     }
@@ -193,4 +242,3 @@ public class DocumentDetailController {
         this.onDocumentUpdated = callback;
     }
 }
-

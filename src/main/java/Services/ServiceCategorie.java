@@ -11,21 +11,25 @@ public class ServiceCategorie implements Iservice<Categorie> {
 
     @Override
     public void add(Categorie categorie) throws SQLException {
-        String sql = "INSERT INTO categorie(nom, description) VALUES(?,?)";
+        new ServiceDocument().ensureMigration();
+        String sql = "INSERT INTO categorie(nom, description, budget_max) VALUES(?,?,?)";
         try (PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(sql)) {
             ps.setString(1, categorie.getNom());
             ps.setString(2, categorie.getDescription());
+            ps.setDouble(3, categorie.getBudgetMax());
             ps.executeUpdate();
         }
     }
 
     @Override
     public void update(Categorie categorie) throws SQLException {
-        String sql = "UPDATE categorie SET nom=?, description=? WHERE id=?";
+        new ServiceDocument().ensureMigration();
+        String sql = "UPDATE categorie SET nom=?, description=?, budget_max=? WHERE id=?";
         try (PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(sql)) {
             ps.setString(1, categorie.getNom());
             ps.setString(2, categorie.getDescription());
-            ps.setInt(3, categorie.getId());
+            ps.setDouble(3, categorie.getBudgetMax());
+            ps.setInt(4, categorie.getId());
             ps.executeUpdate();
         }
     }
@@ -41,11 +45,13 @@ public class ServiceCategorie implements Iservice<Categorie> {
 
     @Override
     public Categorie findById(int id) throws SQLException {
-        String sql = "SELECT id, nom, description FROM categorie WHERE id=?";
+        new ServiceDocument().ensureMigration();
+        String sql = "SELECT id, nom, description, budget_max FROM categorie WHERE id=?";
         try (PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
+                if (rs.next())
+                    return mapRow(rs);
             }
         }
         return null;
@@ -53,11 +59,13 @@ public class ServiceCategorie implements Iservice<Categorie> {
 
     @Override
     public List<Categorie> findAll() throws SQLException {
+        new ServiceDocument().ensureMigration();
         List<Categorie> list = new ArrayList<>();
-        String sql = "SELECT id, nom, description FROM categorie ORDER BY nom";
+        String sql = "SELECT id, nom, description, budget_max FROM categorie ORDER BY nom";
         try (Statement st = MyDatabase.getInstance().getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) list.add(mapRow(rs));
+                ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next())
+                list.add(mapRow(rs));
         }
         return list;
     }
@@ -73,9 +81,10 @@ public class ServiceCategorie implements Iservice<Categorie> {
     }
 
     public int countCategories() throws SQLException {
+        new ServiceDocument().ensureMigration();
         String sql = "SELECT COUNT(*) AS total FROM categorie";
         try (Statement st = MyDatabase.getInstance().getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+                ResultSet rs = st.executeQuery(sql)) {
             if (rs.next()) {
                 return rs.getInt("total");
             }
@@ -84,6 +93,7 @@ public class ServiceCategorie implements Iservice<Categorie> {
     }
 
     private Categorie mapRow(ResultSet rs) throws SQLException {
-        return new Categorie(rs.getInt("id"), rs.getString("nom"), rs.getString("description"));
+        return new Categorie(rs.getInt("id"), rs.getString("nom"), rs.getString("description"),
+                rs.getDouble("budget_max"));
     }
 }

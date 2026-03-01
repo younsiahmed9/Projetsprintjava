@@ -7,51 +7,99 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 public class MainController {
-    @FXML private StackPane contentArea;
-    @FXML private Button btnDashboard;
-    @FXML private Button btnDocuments;
+    @FXML
+    private StackPane contentArea;
+    @FXML
+    private Button btnDashboard;
+    @FXML
+    private Button btnDocuments;
+    @FXML
+    private Button btnTrash;
+
+    private static MainController instance;
+
+    public MainController() {
+        instance = this;
+    }
+
+    public static MainController getInstance() {
+        return instance;
+    }
 
     @FXML
     public void initialize() {
         loadDashboardView();
-        setActiveButton(btnDashboard);
+        if (btnDashboard != null)
+            setActiveButton(btnDashboard);
     }
 
     /**
-     * Charge la vue Dashboard
+     * Navigation globale avec sélection de document
      */
+    public static void navigateToDocumentsWithSelect(int documentId) {
+        if (instance != null) {
+            instance.loadDocumentView();
+            // Attendre un peu que la vue soit chargée pour sélectionner
+            javafx.application.Platform.runLater(() -> {
+                DocumentViewController controller = DocumentViewController.getCurrentInstance();
+                if (controller != null) {
+                    controller.selectDocumentById(documentId);
+                }
+            });
+        }
+    }
+
     @FXML
-    private void loadDashboardView() {
+    public void loadDashboardView() {
         loadView("/fxml/dashboard_view.fxml");
-        setActiveButton(btnDashboard);
+        if (btnDashboard != null)
+            setActiveButton(btnDashboard);
     }
 
-    /**
-     * Charge la vue principale des documents
-     */
     @FXML
-    private void loadDocumentView() {
+    public void loadDocumentView() {
         loadView("/fxml/document_view.fxml");
-        setActiveButton(btnDocuments);
+        if (btnDocuments != null)
+            setActiveButton(btnDocuments);
+    }
+
+    @FXML
+    public void loadTrashView() {
+        loadView("/fxml/trash_view.fxml");
+        if (btnTrash != null)
+            setActiveButton(btnTrash);
     }
 
     private void loadView(String fxmlPath) {
         try {
-            Node view = FXMLLoader.load(getClass().getResource(fxmlPath));
+            java.net.URL resource = getClass().getResource(fxmlPath);
+            if (resource == null) {
+                throw new java.io.IOException("Le fichier FXML est introuvable au chemin : " + fxmlPath);
+            }
+            FXMLLoader loader = new FXMLLoader(resource);
+            Node view = loader.load();
             contentArea.getChildren().setAll(view);
         } catch (Exception e) {
             e.printStackTrace();
-            AlertUtils.showError("Erreur de chargement", "Impossible de charger la vue: " + e.getMessage());
+            String errorMsg = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+            if (e.getCause() != null) {
+                errorMsg += "\n\nCause probable : " + e.getCause().getMessage();
+            }
+            AlertUtils.showError("Erreur de chargement",
+                    "Erreur fatale lors du chargement de la vue [" + fxmlPath + "]\n\nDétails : " + errorMsg);
         }
     }
 
     private void setActiveButton(Button activeBtn) {
-        if (btnDashboard != null) btnDashboard.getStyleClass().removeAll("active-menu", "nav-btn-active");
-        if (btnDocuments != null) btnDocuments.getStyleClass().removeAll("active-menu", "nav-btn-active");
+        if (btnDashboard != null)
+            btnDashboard.getStyleClass().removeAll("active-menu", "nav-btn-active");
+        if (btnDocuments != null)
+            btnDocuments.getStyleClass().removeAll("active-menu", "nav-btn-active");
+        if (btnTrash != null)
+            btnTrash.getStyleClass().removeAll("active-menu", "nav-btn-active");
 
-        if (activeBtn != null && !activeBtn.getStyleClass().contains("active-menu")) {
+        if (activeBtn != null) {
             activeBtn.getStyleClass().add("active-menu");
         }
     }
 }
-

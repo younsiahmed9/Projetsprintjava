@@ -56,24 +56,20 @@
         <HBox spacing="15" alignment="CENTER_LEFT">
             <TextField fx:id="tfSearch"
                        promptText="🔍 Rechercher un document par titre..."
-                       styleClass="search-field"
-                       HBox.hgrow="ALWAYS"
-                       style="-fx-padding: 12 20; -fx-font-size: 13; -fx-border-radius: 10; -fx-background-radius: 10;"/>
+                        styleClass="search-field-premium"
+                        HBox.hgrow="ALWAYS"/>
 
             <ComboBox fx:id="cbFolderFilter"
                       promptText="📁 Tous les dossiers"
-                      styleClass="filter-combo"
-                      prefWidth="200"
-                      style="-fx-font-size: 12;"/>
+                      styleClass="filter-combo-premium"
+                      prefWidth="200"/>
 
             <ComboBox fx:id="cbCategory"
                       promptText="🏷️ Toutes les catégories"
-                      styleClass="filter-combo"
-                      prefWidth="200"
-                      style="-fx-font-size: 12;"/>
+                      styleClass="filter-combo-premium"
+                      prefWidth="200"/>
 
-            <Button fx:id="btnRefresh" text="🔄" styleClass="btn-refresh"
-                    style="-fx-font-size: 18; -fx-min-width: 45; -fx-max-width: 45; -fx-min-height: 45; -fx-max-height: 45;"/>
+            <Button fx:id="btnRefresh" styleClass="btn-refresh-premium"/>
         </HBox>
 
         <!-- Filter Tags -->

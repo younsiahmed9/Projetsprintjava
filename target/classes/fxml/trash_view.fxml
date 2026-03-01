@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.TrashViewController"
+            prefHeight="600.0" prefWidth="800.0"
+            style="-fx-background-color: #f8fafc;">
+
+    <top>
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button fx:id="btnBack" text="← Retour" styleClass="btn-secondary-premium"/>
+                <Label text="🗑️ Corbeille Intelligente" styleClass="section-title" style="-fx-font-size: 24;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblTrashInfo" text="Les fichiers seront supprimés après 30 jours" 
+                       style="-fx-text-fill: #64748b; -fx-font-style: italic;"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button fx:id="btnPurge" text="Vider la corbeille" styleClass="btn-delete-small" 
+                        style="-fx-background-color: #ef4444; -fx-text-fill: white; -fx-padding: 8 15;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll" style="-fx-background-color: transparent;">
+            <VBox fx:id="containerTrash" spacing="15" style="-fx-padding: 20;">
+                <!-- Trash cards will be added here -->
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-padding: 15; -fx-background-color: #f1f5f9;">
+            <Label fx:id="lblCount" text="0 document(s) dans la corbeille" style="-fx-text-fill: #475569; -fx-font-weight: bold;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

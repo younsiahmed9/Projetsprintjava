@@ -14,16 +14,12 @@
     <left>
         <VBox styleClass="sidebar" spacing="10">
             <!-- Logo + Titre -->
-            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 30 0;">
-                <ImageView fitHeight="48" fitWidth="48" preserveRatio="true" smooth="true" styleClass="app-logo">
+            <VBox alignment="CENTER" spacing="15" style="-fx-padding: 0 0 40 0;">
+                <ImageView fitHeight="120" fitWidth="120" preserveRatio="true" smooth="true" styleClass="app-logo">
                     <Image url="@../assets/logo.png"/>
                 </ImageView>
-                <Label text="FinTrack" styleClass="app-title" style="-fx-font-size: 24;"/>
+                <Label text="FinTrack" styleClass="app-title" style="-fx-font-size: 36; -fx-font-weight: 900;"/>
             </VBox>
-
-            <!-- Boutons de navigation -->
-            <Button fx:id="btnDashboard" text="📊 Dashboard" styleClass="menu-button"
-                    onAction="#loadDashboardView" maxWidth="Infinity"/>
 
             <Button fx:id="btnDocuments" text="📄 Documents" styleClass="menu-button"
                     onAction="#loadDocumentView" maxWidth="Infinity"/>
