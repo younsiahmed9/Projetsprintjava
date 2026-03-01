@@ -7,6 +7,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import Models.Budget;
 import Services.ServiceBudget;
 
@@ -84,6 +87,7 @@ public class ModifierBudgetController implements Initializable {
 
             ServiceBudget serviceBudget = new ServiceBudget();
             serviceBudget.modifier(budgetEnCours);
+            nettoyerNotificationsBudget(budgetEnCours.getIdBudget());
 
             System.out.println("Budget modifié avec succès!");
 
@@ -98,6 +102,19 @@ public class ModifierBudgetController implements Initializable {
             lblError.setText("Le montant doit être un nombre valide.");
         } catch (Exception e) {
             System.err.println("Erreur lors de la modification du budget:");
+            e.printStackTrace();
+        }
+    }
+
+    private void nettoyerNotificationsBudget(int idBudget) {
+        String sql = "DELETE FROM budget_notification WHERE id_budget = ?";
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/fintrack", "root", "");
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idBudget);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.err.println("Erreur lors du nettoyage des notifications budget:");
             e.printStackTrace();
         }
     }
@@ -117,4 +134,3 @@ public class ModifierBudgetController implements Initializable {
         }
     }
 }
-

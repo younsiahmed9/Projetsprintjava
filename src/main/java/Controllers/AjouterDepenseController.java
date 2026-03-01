@@ -4,6 +4,7 @@ import Models.Depense;
 import Models.Budget;
 import Services.ServiceDepense;
 import Services.ServiceBudget;
+import Services.SmsService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +36,7 @@ public class AjouterDepenseController {
 
     private final ServiceDepense service = new ServiceDepense();
     private final ServiceBudget serviceBudget = new ServiceBudget();
+    private final SmsService smsService = new SmsService();
     private MainPageController mainPageController;
     private Budget budget;
     private boolean listeAffichee = false;
@@ -92,8 +94,8 @@ public class AjouterDepenseController {
     private VBox creerCarteDepense(Depense depense) {
         VBox carte = new VBox(10);
         carte.setStyle("-fx-background-color: white; -fx-padding: 15; -fx-border-color: #E0E0E0; " +
-                      "-fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; " +
-                      "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+                "-fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);");
 
         // Header: ID et Catégorie
         HBox header = new HBox(15);
@@ -145,14 +147,14 @@ public class AjouterDepenseController {
 
         Button btnModifier = new Button("✏️ Modifier");
         btnModifier.setStyle("-fx-background-color: #E8F5E9; -fx-text-fill: #175905; " +
-                           "-fx-font-weight: bold; -fx-padding: 8 15; -fx-border-radius: 8; " +
-                           "-fx-background-radius: 8; -fx-cursor: hand;");
+                "-fx-font-weight: bold; -fx-padding: 8 15; -fx-border-radius: 8; " +
+                "-fx-background-radius: 8; -fx-cursor: hand;");
         btnModifier.setOnAction(e -> modifierDepense(depense));
 
         Button btnSupprimer = new Button("🗑️ Supprimer");
         btnSupprimer.setStyle("-fx-background-color: #FFEBEE; -fx-text-fill: #C62828; " +
-                            "-fx-font-weight: bold; -fx-padding: 8 15; -fx-border-radius: 8; " +
-                            "-fx-background-radius: 8; -fx-cursor: hand;");
+                "-fx-font-weight: bold; -fx-padding: 8 15; -fx-border-radius: 8; " +
+                "-fx-background-radius: 8; -fx-cursor: hand;");
         btnSupprimer.setOnAction(e -> supprimerDepense(depense));
 
         footer.getChildren().addAll(btnModifier, btnSupprimer);
@@ -306,8 +308,9 @@ public class AjouterDepenseController {
             }
 
             if (montant > budget.getMontantTotal()) {
-                showError("❌ Budget insuffisant!");
-                return;
+                SmsService.SmsResult smsResult = smsService.sendBudgetExceededSms(budget, montant);
+                showError("❌ Budget insuffisant! " + smsResult.getUserMessage()
+                        + " La depense sera enregistree.");
             }
 
             Depense d = new Depense(0, idUtilisateur, idBudget, categorie, montant, dateD, description, modePaiement);
@@ -380,6 +383,3 @@ public class AjouterDepenseController {
         alert.showAndWait();
     }
 }
-
-
-

@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceDepenseTest {
     static ServiceDepense service;
+    private static Integer depenseIdForCleanup;
 
     @BeforeAll
     static void setUp() {
@@ -46,22 +47,46 @@ public class ServiceDepenseTest {
     @Order(2)
     @Test
     void testModifierDepense() {
-        Depense d = new Depense(
-                4, // ⚠️ id_depense existant en base
+        String description = "TaxiTest-" + System.currentTimeMillis();
+
+        Depense aCreer = new Depense(
+                0,
                 1,
                 2,
-                "Transport",
+                "Init",
                 80.00,
                 new Date(),
-                "Taxi",
+                description,
                 "cash"
         );
 
         try {
-            service.modifier(d);
+            service.ajouter(aCreer);
             List<Depense> depenses = service.recuperer();
-            assertTrue(depenses.stream()
-                    .anyMatch(depense -> depense.getCategorie().equals("Transport")));
+
+            Depense cree = depenses.stream()
+                    .filter(depense -> description.equals(depense.getDescription()))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Depense de test introuvable"));
+
+            depenseIdForCleanup = cree.getIdDepense();
+
+            Depense aModifier = new Depense(
+                    cree.getIdDepense(),
+                    cree.getIdUtilisateur(),
+                    cree.getIdBudget(),
+                    "Transport",
+                    90.00,
+                    new Date(),
+                    cree.getDescription(),
+                    cree.getModePaiement()
+            );
+
+            service.modifier(aModifier);
+            List<Depense> apres = service.recuperer();
+            assertTrue(apres.stream()
+                    .anyMatch(depense -> depense.getIdDepense() == cree.getIdDepense()
+                            && "Transport".equals(depense.getCategorie())));
         } catch (SQLDataException e) {
             throw new RuntimeException(e);
         }
@@ -71,10 +96,30 @@ public class ServiceDepenseTest {
     @Test
     void testSupprimerDepense() {
         try {
-            service.supprimer(4); // ⚠️ id_depense existant
+            if (depenseIdForCleanup == null) {
+                Depense d = new Depense(
+                        0,
+                        1,
+                        2,
+                        "Temp",
+                        10.00,
+                        new Date(),
+                        "TempDelete-" + System.currentTimeMillis(),
+                        "cash"
+                );
+                service.ajouter(d);
+                depenseIdForCleanup = service.recuperer().stream()
+                        .filter(depense -> depense.getDescription().startsWith("TempDelete-"))
+                        .findFirst()
+                        .map(Depense::getIdDepense)
+                        .orElse(null);
+            }
+
+            assertNotNull(depenseIdForCleanup, "ID de depense manquant pour suppression");
+            service.supprimer(depenseIdForCleanup);
             List<Depense> depenses = service.recuperer();
             assertTrue(depenses.stream()
-                    .noneMatch(depense -> depense.getIdDepense() == 4));
+                    .noneMatch(depense -> depense.getIdDepense() == depenseIdForCleanup));
         } catch (SQLDataException e) {
             throw new RuntimeException(e);
         }

@@ -40,14 +40,14 @@ public class AjouterBudgetController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialiser les ComboBox avec les valeurs de la base de données
+        // Initialiser les ComboBox avec les valeurs
         comboPeriode.getItems().addAll("mensuel", "annuel");
         comboStatut.getItems().addAll("actif", "clôturé");
 
         comboPeriode.setValue("mensuel");
         comboStatut.setValue("actif");
 
-        // Pré-remplir l'ID utilisateur (modifiable si besoin)
+        // Pré-remplir l'ID utilisateur
         txtIdUtilisateur.setText("1");
         lblError.setText("");
     }
@@ -62,21 +62,47 @@ public class AjouterBudgetController implements Initializable {
         String periode = comboPeriode.getValue();
         String statut = comboStatut.getValue();
 
-        // Validations
-        if (idUtilisateurText.isEmpty() || nom.isEmpty() || montantText.isEmpty() || periode == null || statut == null) {
+        // Vérification des champs vides
+        if (idUtilisateurText.isEmpty() || nom.isEmpty() || montantText.isEmpty()) {
             lblError.setText("Tous les champs sont obligatoires.");
             return;
         }
 
+        // Vérification format numérique
+        int idUtilisateur;
+        double montant;
         try {
-            int idUtilisateur = Integer.parseInt(idUtilisateurText);
-            double montant = Double.parseDouble(montantText);
+            idUtilisateur = Integer.parseInt(idUtilisateurText);
+            montant = Double.parseDouble(montantText);
+        } catch (NumberFormatException e) {
+            lblError.setText("ID utilisateur et montant doivent être des nombres valides.");
+            return;
+        }
 
-            if (idUtilisateur <= 0 || montant <= 0) {
-                lblError.setText("ID utilisateur et montant doivent etre positifs.");
-                return;
-            }
+        // Vérification valeurs positives
+        if (idUtilisateur <= 0) {
+            lblError.setText("L'ID utilisateur doit être positif.");
+            return;
+        }
+        if (montant <= 0) {
+            lblError.setText("Le montant doit être supérieur à zéro.");
+            return;
+        }
 
+        // Vérification longueur du nom
+        if (nom.length() < 3) {
+            lblError.setText("Le nom du budget doit contenir au moins 3 caractères.");
+            return;
+        }
+
+        // Vérification choix période/statut
+        if (periode == null || statut == null) {
+            lblError.setText("Veuillez sélectionner une période et un statut.");
+            return;
+        }
+
+        // Si tout est correct → création du budget
+        try {
             Budget budget = new Budget();
             budget.setIdUtilisateur(idUtilisateur);
             budget.setNomBudget(nom);
@@ -88,7 +114,7 @@ public class AjouterBudgetController implements Initializable {
             ServiceBudget serviceBudget = new ServiceBudget();
             serviceBudget.ajouter(budget);
 
-            System.out.println("Budget ajoute avec succes!");
+            System.out.println("Budget ajouté avec succès!");
 
             if (mainPageController != null) {
                 mainPageController.refreshBudgets();
@@ -97,10 +123,8 @@ public class AjouterBudgetController implements Initializable {
 
             onAnnuler();
 
-        } catch (NumberFormatException e) {
-            lblError.setText("ID utilisateur et montant doivent etre des nombres valides.");
         } catch (Exception e) {
-            System.err.println("Erreur lors de l'ajout du budget:");
+            lblError.setText("Erreur lors de l'ajout du budget.");
             e.printStackTrace();
         }
     }

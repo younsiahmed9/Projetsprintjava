@@ -12,31 +12,62 @@
             styleClass="main-container"
             stylesheets="@assets/style.css">
     <left>
-        <VBox spacing="12" styleClass="sidebar">
-            <ImageView fitHeight="80" fitWidth="80" preserveRatio="true">
-                <Image url="@assets/logo.png"/>
-            </ImageView>
-            <Button text="🔄 Transactions" styleClass="menu-button"/>
-            <Button text="💳 Accounts" styleClass="menu-button"/>
-            <Label text="💰 Budget" styleClass="menu-label-active"/>
-            <Button text="🎯 Goals" styleClass="menu-button"/>
-            <Button text="⚙️ Settings" styleClass="menu-button"/>
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 30 20 20 20; -fx-pref-width: 260; -fx-border-color: #E2E8F0; -fx-border-width: 0 1 0 0;">
+            <VBox alignment="CENTER" style="-fx-padding: 0 0 30 0;">
+                <ImageView fitHeight="60" fitWidth="220" preserveRatio="true">
+                    <Image url="@assets/logo.png"/>
+                </ImageView>
+            </VBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 15 20; -fx-cursor: hand; -fx-background-color: transparent; -fx-background-radius: 12;">
+                <Label text="💳" style="-fx-font-size: 18;"/>
+                <Label text="Mes Comptes" style="-fx-text-fill: #94a3b8; -fx-font-size: 15; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 15 20; -fx-cursor: hand; -fx-background-color: transparent; -fx-background-radius: 12;">
+                <Label text="💼" style="-fx-font-size: 18;"/>
+                <Label text="Mes Portefeuilles" style="-fx-text-fill: #94a3b8; -fx-font-size: 15; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <!-- Menu Actif -->
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 15 20; -fx-cursor: hand; -fx-background-color: #f0f4ff; -fx-background-radius: 12;">
+                <Label text="📉" style="-fx-font-size: 18;"/>
+                <Label text="Mes Budgets" style="-fx-text-fill: #1e3a8a; -fx-font-size: 15; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 15 20; -fx-cursor: hand; -fx-background-color: transparent; -fx-background-radius: 12;">
+                <Label text="🛠" style="-fx-font-size: 18;"/>
+                <Label text="Mes Services" style="-fx-text-fill: #94a3b8; -fx-font-size: 15; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 15 20; -fx-cursor: hand; -fx-background-color: transparent; -fx-background-radius: 12;">
+                <Label text="📄" style="-fx-font-size: 18;"/>
+                <Label text="Mes Documents" style="-fx-text-fill: #94a3b8; -fx-font-size: 15; -fx-font-weight: bold;"/>
+            </HBox>
         </VBox>
     </left>
 
     <center>
         <AnchorPane fx:id="mainContent">
-            <VBox fx:id="mainPageContent" spacing="20" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
-                  AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
-                <padding>
-                    <Insets top="24" left="24" right="24" bottom="24"/>
-                </padding>
+            <ScrollPane fx:id="mainPageContent" fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0">
+                <content>
+                    <VBox spacing="20">
+                        <padding>
+                            <Insets top="24" left="24" right="24" bottom="24"/>
+                        </padding>
 
                 <HBox alignment="CENTER_LEFT" spacing="12">
                     <Label text="Subscription" styleClass="header-title-blue"/>
                     <Pane HBox.hgrow="ALWAYS"/>
+                    <Button text="Conseil IA" styleClass="btn-secondary" onAction="#onAiAdvice"/>
                     <Button text="+" styleClass="btn-add-circle" onAction="#onAjouter"/>
                 </HBox>
+
+                <VBox fx:id="notificationContainer" spacing="8" styleClass="card" visible="false" managed="false">
+                    <Label text="🔔 Alertes budget" styleClass="section-title"/>
+                    <VBox fx:id="notificationList" spacing="6"/>
+                </VBox>
+
 
                 <HBox spacing="20" alignment="CENTER_LEFT">
                     <Label text="All" styleClass="filter-label-active"/>
@@ -47,10 +78,16 @@
                 <FlowPane fx:id="budgetList" hgap="30" vgap="30"/>
 
                 <!-- Graphique d'analyse des dépenses -->
-                <VBox fx:id="chartContainer" spacing="10" styleClass="card" alignment="CENTER_LEFT" prefHeight="400">
+                <VBox fx:id="chartContainer" spacing="10" styleClass="card" alignment="CENTER_LEFT" prefHeight="520">
                     <Label text="📊 Analyse des Dépenses" styleClass="section-title" style="-fx-font-size: 16;"/>
                 </VBox>
-            </VBox>
+                
+                <HBox alignment="CENTER" style="-fx-padding: 10 0 20 0;">
+                    <Button text="🎯 Simulateur d'Épargne &amp; Investissement" styleClass="btn-primary" style="-fx-background-color: #182d88; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 15 40; -fx-cursor: hand;" onAction="#onOpenSimulateur"/>
+                </HBox>
+                    </VBox>
+                </content>
+            </ScrollPane>
         </AnchorPane>
     </center>
 </BorderPane>
