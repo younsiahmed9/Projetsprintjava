@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.EnvoiSMSController">
+    <content>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="📱 Envoyer un SMS"/>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Numéro:" prefWidth="80"/>
+                <TextField fx:id="numeroField" promptText="+216XXXXXXXX" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <VBox spacing="5">
+                <Label text="Message:"/>
+                <TextArea fx:id="messageField" prefRowCount="5" promptText="Saisissez votre message..."/>
+            </VBox>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button fx:id="envoyerButton" onAction="#handleEnvoyer" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="📨 Envoyer"/>
+                <Button fx:id="annulerButton" onAction="#handleAnnuler" style="-fx-background-color: #f44336; -fx-text-fill: white;" text="❌ Annuler"/>
+            </HBox>
+
+            <Label fx:id="statusLabel" style="-fx-text-fill: #666;" text="Prêt"/>
+        </VBox>
+    </content>
+</DialogPane>

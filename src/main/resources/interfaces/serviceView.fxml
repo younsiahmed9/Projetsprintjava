@@ -8,31 +8,37 @@
 
 <ScrollPane fitToWidth="true" styleClass="main-container" stylesheets="@/styles/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ServiceController">
     <content>
-        <VBox>
+        <VBox spacing="15">
             <!-- Top Bar avec tous les boutons -->
-            <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="top-bar">
                 <padding>
-                    <Insets bottom="15" left="30" right="30" top="15" />
+                    <Insets bottom="10" left="15" right="15" top="10" />
                 </padding>
 
                 <!-- Recherche -->
                 <HBox styleClass="search-box" HBox.hgrow="ALWAYS">
-                    <TextField fx:id="searchServiceField" promptText="Rechercher un service..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                    <TextField fx:id="searchServiceField" promptText="Rechercher un service..." styleClass="search-field" HBox.hgrow="ALWAYS" prefWidth="200"/>
                 </HBox>
 
                 <!-- Filtre Statut -->
                 <ComboBox fx:id="filterStatutService" prefWidth="120" promptText="Statut" styleClass="filter-combo" />
 
-                <!-- BOUTONS : Ajouter Service, Ajouter Produit, Factures -->
-                <Button fx:id="addServiceButton" onAction="#ajouterService" prefHeight="33.0" prefWidth="142.0" styleClass="btn-add" text="+ Ajouter Service" />
-                <Button fx:id="addProductButton" onAction="#ajouterProduit" prefHeight="36.0" prefWidth="141.0" styleClass="btn-add" text="+ Ajouter Produit" />
+                <!-- BOUTONS -->
+                <Button fx:id="addServiceButton" onAction="#ajouterService" styleClass="btn-add" text="+ Service" />
+                <Button fx:id="addProductButton" onAction="#ajouterProduit" styleClass="btn-add" text="+ Produit" />
                 <Button fx:id="factureButton" onAction="#handleFactures" styleClass="btn-primary" text="📄 Factures" />
                 <Button fx:id="dashboardButton" onAction="#openDashboard" styleClass="btn-primary" text="📊 Dashboard" />
-            </HBox>
+                <Button fx:id="promoButton" onAction="#handlePromotion" styleClass="btn-promo" text="🎯 Promos" />
+                <!-- Ajoutez ce bouton dans la barre d'outils -->
+                <Button fx:id="smsButton" onAction="#handleOuvrirSMS" styleClass="btn-info" text="📱 SMS"/>            </HBox>
 
-            <!-- Stats Cards -->
-            <HBox spacing="20" styleClass="stats-container">
-                <VBox styleClass="stats-card" HBox.hgrow="ALWAYS">
+            <!-- Stats Cards (simples) -->
+            <HBox spacing="20" styleClass="stats-container" alignment="CENTER">
+                <padding>
+                    <Insets left="15" right="15" top="10" />
+                </padding>
+
+                <VBox styleClass="stats-card" prefWidth="150">
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <Circle fill="#f78f34" radius="8" />
                         <Text styleClass="stats-title" text="Services" />
@@ -40,7 +46,7 @@
                     <Text fx:id="totalServices" styleClass="stats-number" text="0" />
                 </VBox>
 
-                <VBox styleClass="stats-card" HBox.hgrow="ALWAYS">
+                <VBox styleClass="stats-card" prefWidth="150">
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <Circle fill="#fecf47" radius="8" />
                         <Text styleClass="stats-title" text="Produits" />
@@ -49,21 +55,16 @@
                 </VBox>
             </HBox>
 
-            <!-- Statistiques détaillées (remplace les graphiques) -->
+            <!-- Statistiques détaillées -->
             <HBox spacing="20" styleClass="charts-container">
                 <padding>
-                    <Insets bottom="20" left="30" right="30" top="20" />
+                    <Insets left="15" right="15" />
                 </padding>
 
                 <!-- Statistiques Services -->
-                <VBox styleClass="stats-card-large" HBox.hgrow="ALWAYS" spacing="15">
+                <VBox styleClass="stats-card-large" HBox.hgrow="ALWAYS" spacing="10">
                     <Label text="📊 Statistiques Services" styleClass="stats-title-large" />
-                    <GridPane hgap="20" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
-                        </columnConstraints>
-
+                    <GridPane hgap="10" vgap="5">
                         <Label text="Total services :" styleClass="stat-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                         <Label fx:id="statTotalServices" text="0" styleClass="stat-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
@@ -79,14 +80,9 @@
                 </VBox>
 
                 <!-- Statistiques Produits -->
-                <VBox styleClass="stats-card-large" HBox.hgrow="ALWAYS" spacing="15">
+                <VBox styleClass="stats-card-large" HBox.hgrow="ALWAYS" spacing="10">
                     <Label text="📦 Statistiques Produits" styleClass="stats-title-large" />
-                    <GridPane hgap="20" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints percentWidth="50"/>
-                            <ColumnConstraints percentWidth="50"/>
-                        </columnConstraints>
-
+                    <GridPane hgap="10" vgap="5">
                         <Label text="Total produits :" styleClass="stat-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                         <Label fx:id="statTotalProduits" text="0" styleClass="stat-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
@@ -102,16 +98,21 @@
                 </VBox>
             </HBox>
 
-            <!-- Content Area with Tabs -->
-            <TabPane>
-                <Tab closable="false" text="Services">
-                    <ScrollPane fitToWidth="true">
-                        <FlowPane fx:id="servicesFlow" hgap="20" styleClass="flow-pane" vgap="20" />
+            <!-- Onglets pour Services et Produits -->
+            <TabPane VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets left="15" right="15" bottom="15" />
+                </padding>
+
+                <Tab text="Services" closable="false">
+                    <ScrollPane fitToWidth="true" fitToHeight="true">
+                        <FlowPane fx:id="servicesFlow" hgap="15" vgap="15" styleClass="flow-pane" />
                     </ScrollPane>
                 </Tab>
-                <Tab closable="false" text="Produits">
-                    <ScrollPane fitToWidth="true">
-                        <FlowPane fx:id="produitsFlow" hgap="20" styleClass="flow-pane" vgap="20" />
+
+                <Tab text="Produits" closable="false">
+                    <ScrollPane fitToWidth="true" fitToHeight="true">
+                        <FlowPane fx:id="produitsFlow" hgap="15" vgap="15" styleClass="flow-pane" />
                     </ScrollPane>
                 </Tab>
             </TabPane>
