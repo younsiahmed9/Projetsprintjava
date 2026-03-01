@@ -99,6 +99,7 @@ public class SmsService {
         return config;
     }
 
+
     private void ensureSmsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS sms_notification ("
                 + "id_sms INT AUTO_INCREMENT PRIMARY KEY, "

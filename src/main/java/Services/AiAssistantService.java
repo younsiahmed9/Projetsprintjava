@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class AiAssistantService {
@@ -20,7 +20,7 @@ public class AiAssistantService {
     public String getReply(String userMessage, AiContext context) {
         AiConfig config = loadConfig();
         if (config.endpoint == null || config.endpoint.isEmpty() || config.apiKey == null || config.apiKey.isEmpty()) {
-            return "Configuration IA manquante. Verifiez ai.properties ou la variable d’environnement AI_API_KEY.";
+            return "Configuration IA manquante. Verifiez ai.properties ou la variable d'environnement AI_API_KEY.";
         }
 
         try {
@@ -81,6 +81,10 @@ public class AiAssistantService {
         String envKey = System.getenv("AI_API_KEY");
         if (config.apiKey == null || config.apiKey.isEmpty()) {
             config.apiKey = envKey == null ? "" : envKey.trim();
+        }
+        if ((config.endpoint == null || config.endpoint.isEmpty())) {
+            String envEndpoint = System.getenv("AI_ENDPOINT");
+            config.endpoint = envEndpoint == null ? "" : envEndpoint.trim();
         }
         return config;
     }
